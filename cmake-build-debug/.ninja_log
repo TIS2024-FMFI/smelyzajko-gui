@@ -1,0 +1,14 @@
+# ninja log v6
+1	2097	1730914924401616676	CMakeFiles/imgui.dir/imgui/imgui.cpp.o	bd2d5b6f36df4a0
+1	1753	1730914924401616676	CMakeFiles/imgui.dir/imgui/imgui_widgets.cpp.o	d914df3068d3b847
+1	1494	1730914924401616676	CMakeFiles/imgui.dir/imgui/imgui_draw.cpp.o	e708b61c35c02313
+2169	2279	1730914926569627544	gui	ad64baa2fb42cdd8
+1	1084	1730914924401616676	CMakeFiles/imgui.dir/imgui/imgui_tables.cpp.o	b7b7f59046aa0e37
+1	24	1730914989929945185	build.ninja	517a622f89cf409d
+2	471	1730914924402616681	CMakeFiles/gui.dir/main.cpp.o	92345bd290ee7add
+2097	2169	1730914926497627183	libimgui.a	f25c2e80a87b5d14
+388	484	1730914959381792040	smelyzajko-gui	f3a06a3a05653c23
+1	1000	1730914924401616676	CMakeFiles/imgui.dir/imgui/imgui_demo.cpp.o	8dca65ac730a1c76
+1	142	1730914924401616676	CMakeFiles/imgui.dir/imgui/backends/imgui_impl_opengl3.cpp.o	df4059a7f43f5171
+0	195	1730914924400616671	CMakeFiles/imgui.dir/imgui/backends/imgui_impl_glfw.cpp.o	39c6ce619382674c
+1	388	1730914958994790100	CMakeFiles/smelyzajko-gui.dir/main.cpp.o	cebc3539cf09e417
