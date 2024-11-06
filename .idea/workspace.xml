@@ -14,8 +14,8 @@
   </component>
   <component name="CMakeRunConfigurationManager">
     <generated>
-      <config projectName="gui" targetName="gui" />
-      <config projectName="gui" targetName="imgui" />
+      <config projectName="smelyzajko-gui" targetName="smelyzajko-gui" />
+      <config projectName="smelyzajko-gui" targetName="imgui" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -124,7 +124,7 @@
       <workItem from="1730913686481" duration="99000" />
       <workItem from="1730913790809" duration="1100000" />
       <workItem from="1730914897461" duration="77000" />
-      <workItem from="1730914989714" duration="1000" />
+      <workItem from="1730914989714" duration="320000" />
     </task>
     <task id="LOCAL-00001" summary="commit imgui first version">
       <option name="closed" value="true" />
@@ -134,7 +134,15 @@
       <option name="project" value="LOCAL" />
       <updated>1730914213664</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="commit imgui first version">
+      <option name="closed" value="true" />
+      <created>1730915299843</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1730915299843</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
