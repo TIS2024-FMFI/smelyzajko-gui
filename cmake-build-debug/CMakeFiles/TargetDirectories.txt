@@ -1,4 +1,0 @@
-/home/tibor/skola/zima2024/tis/smelyzajko-gui/cmake-build-debug/CMakeFiles/imgui.dir
-/home/tibor/skola/zima2024/tis/smelyzajko-gui/cmake-build-debug/CMakeFiles/smelyzajko-gui.dir
-/home/tibor/skola/zima2024/tis/smelyzajko-gui/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/tibor/skola/zima2024/tis/smelyzajko-gui/cmake-build-debug/CMakeFiles/rebuild_cache.dir
