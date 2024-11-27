@@ -155,7 +155,7 @@ void setupImGui(GLFWwindow* window) {
     ImGui::StyleColorsDark();
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 130");
+    ImGui_ImplOpenGL3_Init("#version 330");
 }
 //
 //void cleanupImGui() {
@@ -173,6 +173,8 @@ MapModule mapModule;
 
 int main() {
     if (!glfwInit()) return -1;
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
     GLFWmonitor *primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode *videoMode = glfwGetVideoMode(primaryMonitor);
