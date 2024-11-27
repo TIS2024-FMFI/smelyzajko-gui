@@ -1,3 +1,5 @@
 cmake-build-debug/
 .idea/
+libs/
+imgui/
 CMakeLists.txt
