@@ -10,7 +10,6 @@ private:
     E maxValue;
 
 public:
-    // Constructor
     Slider(const std::string& lbl, const ImVec2& pos, const ImVec2& sz, E minVal, E maxVal, E initialValue)
             : Element(pos, lbl), size(sz), minValue(minVal), maxValue(maxVal), value(initialValue) {}
 

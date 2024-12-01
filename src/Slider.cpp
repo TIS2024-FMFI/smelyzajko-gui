@@ -25,20 +25,16 @@ void Slider<E>::draw(ImGuiIO& io) {
     ImGui::SetNextItemAllowOverlap();
     ImGui::SetNextItemWidth(size.x);
     if constexpr (std::is_integral<E>::value) {
-        if (ImGui::SliderInt(label.c_str(), (int*)(&value), (int)minValue, (int)maxValue)) {
-            std::cout << "Slider (int) updated: " << value << std::endl;
-        }
+        ImGui::SliderInt(label.c_str(), (int*)(&value), (int)minValue, (int)maxValue);
     } else {
-        if (ImGui::SliderFloat(label.c_str(), &value, minValue, maxValue)) {
-            std::cout << "Slider (float) updated: " << value << std::endl;
-        }
+        ImGui::SliderFloat(label.c_str(), &value, minValue, maxValue);
     }
 
     ImRect bbox = getBoundingBox();
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    ImVec2 handle_pos = ImVec2(position.x + bbox.GetSize().x + 10.0f, position.y);
-    ImVec2 handle_min = ImVec2(handle_pos.x, handle_pos.y);
-    ImVec2 handle_max = ImVec2(handle_pos.x + 10.0f, handle_pos.y + size.y);
+    ImVec2 resize_handle_pos = ImVec2(position.x + bbox.GetSize().x + 10.0f, position.y);
+    ImVec2 handle_min = ImVec2(resize_handle_pos.x, resize_handle_pos.y);
+    ImVec2 handle_max = ImVec2(resize_handle_pos.x + 10.0f, resize_handle_pos.y + size.y);
     draw_list->AddRectFilled(handle_min, handle_max, IM_COL32(255, 0, 0, 255)); // Red resize handle
 }
 
@@ -48,15 +44,13 @@ void Slider<E>::handleClicks(ImGuiIO& io) {
     ImVec2 resize_handle_pos = ImVec2(position.x + bbox.GetSize().x + 10.0f, position.y);
     ImVec2 handle_size = ImVec2(10.0f, 10.0f);
 
-    // Place the invisible button for the resize handle
-    ImGui::SetCursorScreenPos(ImVec2(resize_handle_pos.x, resize_handle_pos.y));
+    ImGui::SetCursorScreenPos(resize_handle_pos);
     ImGui::InvisibleButton(("ResizeHandle" + label).c_str(), handle_size);
 
     if (ImGui::IsItemActive() && ImGui::IsMouseDragging(0)) {
         ImVec2 delta = io.MouseDelta;
-        size.x += delta.x;           // Adjust slider width
+        size.x += delta.x;
 
-        // Ensure minimum dimensions for the slider
         size.x = std::max(size.x, 100.0f);
     }
 
