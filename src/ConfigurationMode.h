@@ -18,6 +18,8 @@ public:
     void drawGrid() const;
     void bringElementToTop(Element* element);
 
+    void setupFloatSlider();
+    void setupIntSlider();
 private:
     float gridSize = 60.0f;
     bool isSnapping = false;
