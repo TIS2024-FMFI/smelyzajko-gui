@@ -232,7 +232,6 @@ void ConfigurationMode::setupIntSlider() {
         if (initialValue < minValue) initialValue = minValue;
         if (initialValue > maxValue) initialValue = maxValue;
 
-        // "Add" button logic
         if (ImGui::Button("Add")) {
             activeElements.emplace_back(new Slider<int>(
                     label,
