@@ -3,6 +3,7 @@
 #include "Rectangle.h"
 #include "Checkbox.h"
 #include "Button.h"
+#include "Slider.h"
 
 int ConfigurationMode::run() {
 
@@ -40,6 +41,8 @@ int ConfigurationMode::run() {
             if (ImGui::Button("Add Button")) {
                 activeElements.emplace_back(new Button("Button " + std::to_string(activeElements.size()), ImVec2(100.0f, 100.0f), ImVec2(100.0f, 25.0f)));
             }
+            setupIntSlider();
+            setupFloatSlider();
         ImGui::End();
 
         drawElements();
@@ -98,7 +101,6 @@ void ConfigurationMode::drawElements() {
     }
     // If an element is clicked, bring it to the top
     if (clickedElement) {
-        std::cout << clickedElement->getLabel() << std::endl;
         bringElementToTop(clickedElement);
     }
 
@@ -206,5 +208,89 @@ void ConfigurationMode::bringElementToTop(Element* element) {
 
     for (int i = 0; i < activeElements.size(); ++i) {
         activeElements[i]->setZIndex(i);
+    }
+}
+
+void ConfigurationMode::setupIntSlider() {
+    if (ImGui::Button("Add Slider (Int)")) {
+        ImGui::OpenPopup("Add Int Slider Popup");
+    }
+
+    if (ImGui::BeginPopup("Add Int Slider Popup")) {
+        static char label[128] = "Slider (int)";
+        static float position[2] = {100.0f, 100.0f};
+        static float size[2] = {200.0f, 20.0f};
+        static int minValue = 0;
+        static int maxValue = 10;
+        static int initialValue = 5;
+
+        ImGui::InputText("Label", label, IM_ARRAYSIZE(label));
+        ImGui::InputInt("Min Value", &minValue);
+        ImGui::InputInt("Max Value", &maxValue);
+        ImGui::InputInt("Initial Value", &initialValue);
+
+        if (initialValue < minValue) initialValue = minValue;
+        if (initialValue > maxValue) initialValue = maxValue;
+
+        if (ImGui::Button("Add")) {
+            activeElements.emplace_back(new Slider<int>(
+                    label,
+                    ImVec2(position[0], position[1]),
+                    ImVec2(size[0], size[1]),
+                    minValue,
+                    maxValue,
+                    initialValue
+            ));
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel")) {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+void ConfigurationMode::setupFloatSlider() {
+    if (ImGui::Button("Add Slider (Float)")) {
+        ImGui::OpenPopup("Add Slider Popup");
+    }
+
+    if (ImGui::BeginPopup("Add Slider Popup")) {
+        static char label[128] = "Slider (float)";
+        static float position[2] = {100.0f, 100.0f};
+        static float size[2] = {200.0f, 20.0f};
+        static float minValue = 0.0f;
+        static float maxValue = 1.0f;
+        static float initialValue = 0.0f;
+
+        ImGui::InputText("Label", label, IM_ARRAYSIZE(label));
+        ImGui::InputFloat("Min Value", &minValue);
+        ImGui::InputFloat("Max Value", &maxValue);
+        ImGui::InputFloat("Initial Value", &initialValue);
+
+        if (initialValue < minValue) initialValue = minValue;
+        if (initialValue > maxValue) initialValue = maxValue;
+
+        if (ImGui::Button("Add")) {
+            activeElements.emplace_back(new Slider<float>(
+                    label,
+                    ImVec2(position[0], position[1]),
+                    ImVec2(size[0], size[1]),
+                    minValue,
+                    maxValue,
+                    initialValue
+            ));
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel")) {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
     }
 }
