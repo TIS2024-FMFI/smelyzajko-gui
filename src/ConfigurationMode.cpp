@@ -4,6 +4,8 @@
 #include "Checkbox.h"
 #include "Button.h"
 #include "Slider.h"
+#include "SingleLineLabel.h"
+#include "MultiLineLabel.h"
 
 int ConfigurationMode::run() {
 
@@ -31,21 +33,23 @@ int ConfigurationMode::run() {
                      ImGuiWindowFlags_NoScrollbar    // Disable scrollbar (optional)
         );
 
-        ImGui::Begin("Controls");
-            if (ImGui::Button("Add Rectangle")) {
-                activeElements.emplace_back(new Rectangle("Rectangle" + std::to_string(activeElements.size()), ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
-            }
-            if (ImGui::Button("Add Checkbox")) {
-                activeElements.emplace_back(new Checkbox("Checkbox " + std::to_string(activeElements.size()), ImVec2(100.0f, 100.0f), false)); // Initial state is unchecked
-            }
-            if (ImGui::Button("Add Button")) {
-                activeElements.emplace_back(new Button("Button " + std::to_string(activeElements.size()), ImVec2(100.0f, 100.0f), ImVec2(100.0f, 25.0f)));
-            }
-            setupIntSlider();
-            setupFloatSlider();
-        ImGui::End();
+            ImGui::Begin("Controls");
+                if (ImGui::Button("Add Rectangle")) {
+                    activeElements.emplace_back(new Rectangle("Rectangle" + std::to_string(activeElements.size()), ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
+                }
+                if (ImGui::Button("Add Checkbox")) {
+                    activeElements.emplace_back(new Checkbox("Checkbox " + std::to_string(activeElements.size()), ImVec2(100.0f, 100.0f), false)); // Initial state is unchecked
+                }
+                if (ImGui::Button("Add Button")) {
+                    activeElements.emplace_back(new Button("Button " + std::to_string(activeElements.size()), ImVec2(100.0f, 100.0f), ImVec2(100.0f, 25.0f)));
+                }
+                createIntSliderSettings();
+                createFloatSliderSettings();
+                createLabelSettings();
 
-        drawElements();
+            ImGui::End();
+
+            drawElements();
 
         ImGui::End();
 
@@ -211,7 +215,53 @@ void ConfigurationMode::bringElementToTop(Element* element) {
     }
 }
 
-void ConfigurationMode::setupIntSlider() {
+void ConfigurationMode::createLabelSettings() {
+    if (ImGui::Button("Add Label")) {
+        ImGui::OpenPopup("Add Label Popup");
+    }
+
+    if (ImGui::BeginPopup("Add Label Popup")) {
+        static bool isMultiLine = false;
+        static char text[256] = "Hello, World!";
+        static float position[2] = {100.0f, 100.0f};
+
+        ImGui::Checkbox("Multi-line", &isMultiLine);
+        ImGui::InputTextMultiline("Text", text, IM_ARRAYSIZE(text));
+
+        if (ImGui::Button("Add")) {
+            ImVec2 textSize = ImGui::CalcTextSize(text);
+            if (isMultiLine) {
+                activeElements.emplace_back(new MultiLineLabel(
+                        text,
+                        ImVec2(position[0], position[1]),
+                        textSize
+                ));
+            } else {
+                // sanitize text
+                for (size_t i = 0; i < strlen(text); ++i) {
+                    if (text[i] == '\n') {
+                        text[i] = ' '; // Replace newline with space
+                    }
+                }
+                activeElements.emplace_back(new SingleLineLabel(
+                        text,
+                        ImVec2(position[0], position[1]),
+                        textSize
+                ));
+            }
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel")) {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+void ConfigurationMode::createIntSliderSettings() {
     if (ImGui::Button("Add Slider (Int)")) {
         ImGui::OpenPopup("Add Int Slider Popup");
     }
@@ -253,7 +303,7 @@ void ConfigurationMode::setupIntSlider() {
     }
 }
 
-void ConfigurationMode::setupFloatSlider() {
+void ConfigurationMode::createFloatSliderSettings() {
     if (ImGui::Button("Add Slider (Float)")) {
         ImGui::OpenPopup("Add Slider Popup");
     }
