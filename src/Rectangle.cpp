@@ -28,12 +28,11 @@ void Rectangle::draw(ImGuiIO& io) {
     ImVec2 resize_handle_pos = ImVec2(position.x + size.x, position.y + size.y);
     ImVec2 handle_size = ImVec2(10, 10);
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    ImVec2 rect_min = ImVec2(position.x + ImGui::GetWindowPos().x,
-                             position.y + ImGui::GetWindowPos().y);
-    ImVec2 rect_max = ImVec2(position.x + size.x + ImGui::GetWindowPos().x,
-                             position.y + size.y + ImGui::GetWindowPos().y);
 
-    draw_list->AddRectFilled(rect_min, rect_max, IM_COL32(20, 20, 255, 255)); // White outline
+    ImVec2 rect_min = ImVec2(position.x, position.y);
+    ImVec2 rect_max = ImVec2(position.x + size.x, position.y + size.y);
+
+    draw_list->AddRectFilled(rect_min, rect_max, IM_COL32(20, 20, 255, 255));
     draw_list->AddRect(rect_min, rect_max, IM_COL32(255, 255, 255, 255)); // White outline
 
     // Draw the resizing handle
