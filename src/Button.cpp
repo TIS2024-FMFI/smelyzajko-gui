@@ -17,14 +17,14 @@ void Button::draw(ImGuiIO& io) {
     ImVec2 resize_handle_pos = ImVec2(position.x + size.x, position.y + size.y);
     ImVec2 handle_size = ImVec2(10.0f, 10.0f);
 
-    setStyles();
+    // setStyles();
 
     // Draw the button outline
     ImGui::SetCursorScreenPos(position);
     ImGui::SetNextItemAllowOverlap();
     ImGui::Button(label.c_str(), size);
 
-    removeStyles();
+    // removeStyles();
 
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
     // Draw the resize handle
@@ -70,10 +70,9 @@ void Button::setStyles() {
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, IM_COL32(30, 100, 180, 255));
     ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
     ImGui::PushStyleColor(ImGuiCol_Border, IM_COL32(255, 255, 255, 255));
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.0f);
 }
 
 void Button::removeStyles() {
-    ImGui::PopStyleVar(2); // Restore the default border size
+    ImGui::PopStyleVar(1); // Restore the default border size
     ImGui::PopStyleColor(4); // Restore the previous colors (Button, Hovered, Active, Border)
 }
