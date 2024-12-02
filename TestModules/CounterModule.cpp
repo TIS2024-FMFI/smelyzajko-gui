@@ -1,12 +1,21 @@
 #include "CounterModule.h"
 #include "imgui.h"
-#include <fstream>
-#include <vector>
-#include <string>
-#include <sstream> // Na generovanie JSON formátu
+#include <iostream>
+#include <fstream> // Add this line to include the fstream header
+
 
 void CounterModule::renderStandalone() {
-    ImGui::Begin("Counter Modul");
+    if (counter == 1){
+        ImGui::SetNextWindowPos(getPos()); // Set the position of the window
+        ImGui::SetNextWindowSize(getSize())  ; // Set the size of the window
+        ImGui::Begin(name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse); // Disable resizing
+
+    }
+    else {
+        ImGui::Begin(name.c_str());
+        setPos(ImGui::GetWindowPos());
+        setSize(ImGui::GetWindowSize());
+    }
 
     // Premenné
     static int counter = 0;
@@ -28,6 +37,9 @@ void CounterModule::renderStandalone() {
 
     // Zobrazenie aktuálneho počítadla
     ImGui::Text("Aktuálna hodnota counteru: %d", counter);
+    // Print the size of the window
+//    ImVec2 windowSize = ImGui::GetWindowSize();
+//    std::cout << "Window size: (" << windowSize.x << ", " << windowSize.y << ")" << std::endl;
 
     // Tlačidlo Start
     if (ImGui::Button("Start")) {
@@ -69,4 +81,23 @@ void CounterModule::saveLogToJson(const std::vector<int>& values) {
         outFile << "]\n}";
         outFile.close();
     }
+}
+std::string CounterModule::getName() const {
+    return name;
+}
+
+ImVec2 CounterModule::getSize() {
+    return size;
+}
+
+ImVec2 CounterModule::getPos() {
+    return pos;
+}
+
+void CounterModule::setPos(ImVec2 pos) {
+    CounterModule::pos = pos;
+}
+
+void CounterModule::setSize(ImVec2 size) {
+    CounterModule::size = size;
 }

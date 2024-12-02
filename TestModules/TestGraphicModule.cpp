@@ -2,9 +2,23 @@
 #include "TestGraphicModule.h"
 #include "imgui.h"
 #include <cmath>
+#include <iostream>
+
 
 void TestGraphicModule::renderStandalone() {
-    ImGui::Begin("Sinusoida");
+
+    if (counter ==1){
+        ImGui::SetNextWindowPos(getPos()); // Set the position of the window
+        ImGui::SetNextWindowSize(getSize()); // Set the size of the window
+        ImGui::Begin(name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse); // Disable resizing
+
+    }
+    else {
+        ImGui::Begin(name.c_str());
+        setPos(ImGui::GetWindowPos());
+        setSize(ImGui::GetWindowSize());
+    }
+
     static float phase = 0.0f;
     phase += 0.01f;
 
@@ -23,5 +37,26 @@ void TestGraphicModule::renderStandalone() {
     TestGraphicModule testGraphicModule;
     ImGui::End();
 }
+std::string TestGraphicModule::getName() const {
+    return name;
+}
+
+ImVec2 TestGraphicModule::getSize() {
+    return size;
+}
+
+ImVec2 TestGraphicModule::getPos() {
+    return pos;
+}
+
+void TestGraphicModule::setPos(ImVec2 pos) {
+    TestGraphicModule::pos = pos;
+}
+
+void TestGraphicModule::setSize(ImVec2 size) {
+    TestGraphicModule::size = size;
+}
+
+
 
 

@@ -4,7 +4,12 @@
 #include <GLFW/glfw3.h>
 
 #include <string>
-#include <vector>
+#include <iostream>
+#include <fstream>
+#include "src/ModuleManager.h"
+#include <filesystem>
+#include <sstream>
+
 
 //#include "src/ConfigurationMode.h"
 
@@ -163,15 +168,82 @@ void setupImGui(GLFWwindow* window) {
 //    ImGui_ImplGlfw_Shutdown();
 //    ImGui::DestroyContext();
 //}
-#include "TestModules/TestGraphicModule.h"
-#include "TestModules/CounterModule.h"
-#include "TestModules/MapModule.h"
 
-TestGraphicModule testGraphicModule;
-CounterModule counterModule;
-MapModule mapModule;
+ModuleManager moduleManager;
+
+
+
+void onButtonPressed() {
+    // Check if the template directory exists, if not, create it
+    std::filesystem::path templateDir("../templates");
+    if (!std::filesystem::exists(templateDir)) {
+        std::filesystem::create_directory(templateDir);
+    }
+
+    // Get the current highest template number
+    int maxNumber = 0;
+    bool foundTemplate = false;
+    for (const auto& entry : std::filesystem::directory_iterator(templateDir)) {
+        std::string filename = entry.path().filename().string();
+        if (filename.find("../template_") == 0 && filename.find(".json") != std::string::npos) {
+            int number = std::stoi(filename.substr(9, filename.size() - 14));
+            if (number > maxNumber) {
+                maxNumber = number;
+            }
+            foundTemplate = true;
+        }
+    }
+
+    // If no template files were found, start from 1
+    int newNumber = foundTemplate ? maxNumber + 1 : 1;
+    std::string newFilename = "../templates/template_" + std::to_string(newNumber) + ".json";
+
+    std::ostringstream jsonStream;
+    jsonStream << "[\n";
+
+    const auto& modules = moduleManager.getModules();
+    for (size_t i = 0; i < modules.size(); ++i) {
+        Module* module = modules[i];
+        ImVec2 pos = module->getPos();
+        ImVec2 size = module->getSize();
+        std::string name = module->getName();
+        std::cout << name << " " << pos.x << " " << pos.y << " " << size.x << " " << size.y << std::endl;
+
+        jsonStream << "  {\n";
+        jsonStream << R"(    "name": ")" << name << "\",\n";
+        jsonStream << "    \"pos\": [" << pos.x << ", " << pos.y << "],\n";
+        jsonStream << "    \"size\": [" << size.x << ", " << size.y << "]\n";
+        jsonStream << "  }";
+        if (i < modules.size() - 1) {
+            jsonStream << ",";
+        }
+        jsonStream << "\n";
+    }
+
+    jsonStream << "]";
+
+    std::ofstream file(newFilename);
+    file << jsonStream.str();
+    file.close();
+    std::cout << "Template saved to " << newFilename << std::endl;
+}
+
+// Function to create a button
+void createButton(const char* label) {
+    if (ImGui::Button(label)) {
+        onButtonPressed();
+    }
+}
+
+
+
+
 
 int main() {
+    // Create modules
+
+    moduleManager.createModules();
+
     if (!glfwInit()) return -1;
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -190,6 +262,7 @@ int main() {
     glfwMakeContextCurrent(window);
 
     setupImGui(window);
+    moduleManager.readTemplateandCreateModules("../templates/template_1.json");
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -198,10 +271,18 @@ int main() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // Vykresľovanie modulov
-        testGraphicModule.renderStandalone();
-        counterModule.renderStandalone();
-        mapModule.renderStandalone();
+
+        // Create button
+        createButton("My Button");
+
+//        moduleManager.renderModules();
+        moduleManager.renderModules();
+//        // Vykresľovanie modulov
+//        testGraphicModule.renderStandalone();
+//        counterModule.renderStandalone();
+//        mapModule.renderStandalone();
+
+
 
         ImGui::Render();
         int display_w, display_h;

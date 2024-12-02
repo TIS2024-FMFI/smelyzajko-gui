@@ -7,7 +7,20 @@
 #include <cmath> // Pre výpočet vzdialenosti
 
 void MapModule::renderStandalone() {
-    ImGui::Begin("Mapa");
+    if (MapModule::counter == 1){
+        ImGui::SetNextWindowPos(getPos()); // Set the position of the window
+        ImGui::SetNextWindowSize(getSize()); // Set the size of the window
+        ImGui::Begin(name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse); // Disable resizing
+
+    }
+    else {
+        ImGui::Begin(name.c_str());
+        setPos(ImGui::GetWindowPos());
+        setSize(ImGui::GetWindowSize());
+    }
+
+
+
 
     // Rozmery mapy a buniek
     const int rows = 10;
@@ -182,4 +195,24 @@ void MapModule::logToJson(const std::pair<int, int>& position) {
         outFile << "{ \"row\": " << position.first << ", \"col\": " << position.second << " }\n";
         outFile.close();
     }
+}
+std::string MapModule::getName() const {
+    return name;
+}
+
+ImVec2 MapModule::getSize() {
+    return size;
+}
+
+ImVec2 MapModule::getPos() {
+    return pos;
+}
+
+void MapModule::setPos(ImVec2 pos) {
+    MapModule::pos = pos;
+}
+
+void MapModule::setSize(ImVec2 size) {
+    MapModule::size = size;
+
 }
