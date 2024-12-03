@@ -47,7 +47,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/libs/glfw/include
 )
 
-add_executable(smelyzajko-gui main.cpp src/Replay/ReplayMode.cpp)
+add_executable(smelyzajko-gui main.cpp src/ConfigurationMode.cpp)
 
 
 target_link_libraries(smelyzajko-gui PRIVATE imgui glfw opengl32)
