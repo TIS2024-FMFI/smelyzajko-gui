@@ -47,7 +47,7 @@ int OperatingMode::run() {
 
         ImGui::End();
         drawElements();
-        std::cout<<activeElements.size()<<std::endl;
+//        std::cout<<activeElements.size()<<std::endl;
         if (activeElements.size() > 0) {
             ImVec2 posssition =  activeElements[0]->getPosition();
             moduleManager.renderModules(io,posssition);
