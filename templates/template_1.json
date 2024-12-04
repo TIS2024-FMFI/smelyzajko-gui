@@ -1,17 +1,17 @@
 [
   {
     "name": "Sinusoida",
-    "pos": [90, 536],
-    "size": [1639, 178]
+    "pos": [3, 476],
+    "size": [1368, 178]
   },
   {
     "name": "Counter Module",
-    "pos": [517, 64],
-    "size": [281, 67]
+    "pos": [509, 347],
+    "size": [281, 126]
   },
   {
     "name": "Map Module",
-    "pos": [93, 62],
-    "size": [418, 462]
+    "pos": [94, 18],
+    "size": [414, 454]
   }
 ]

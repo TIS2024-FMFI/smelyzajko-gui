@@ -1,21 +1,19 @@
-// File: ModuleManager.h
-
-#ifndef SMELYZAJKO_GUI_MODULEMANAGER_H
-#define SMELYZAJKO_GUI_MODULEMANAGER_H
-
+#ifndef MODULEMANAGER_H
+#define MODULEMANAGER_H
 #include <vector>
 #include "Module.h"
 
-class ModuleManager {
+class ModuleManager  {
 public:
     void addModule(Module* module);
-    const std::vector<Module*>& getModules() const;
     void createModules();
-    void renderModules();
+    void renderModules(ImGuiIO io, ImVec2 possition);
     void readTemplateandCreateModules(const std::string& filename);
+
+    const std::vector<Module *> &getModules() const;
 
 private:
     std::vector<Module*> modules;
 };
 
-#endif //SMELYZAJKO_GUI_MODULEMANAGER_H
+#endif //MODULEMANAGER_H

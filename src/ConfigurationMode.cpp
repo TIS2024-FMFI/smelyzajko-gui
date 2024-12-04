@@ -1,19 +1,18 @@
 #include <iostream>
 #include "ConfigurationMode.h"
-#include "src/widgets/Rectangle.h"
-#include "src/widgets/Checkbox.h"
-#include "src/widgets/Button.h"
-#include "src/widgets/Slider.h"
-#include "src/widgets/SingleLineLabel.h"
-#include "src/widgets/MultiLineLabel.h"
+#include "widgets/Rectangle.h"
+#include "widgets/Checkbox.h"
+#include "widgets/Button.h"
+#include "widgets/Slider.h"
+#include "widgets/SingleLineLabel.h"
+#include "widgets/MultiLineLabel.h"
+#include "OperatingMode.h"
+#include "ModuleManager.h"
 
 
 //// Example modules for demonstration
-std::vector<Module> modules = {
-        Module(1, "Map"),
-        Module(2, "Lidar"),
-        Module(3, "Sinusoid"),
-};
+ModuleManager moduleManager;
+
 
 int ConfigurationMode::run() {
 
@@ -193,26 +192,28 @@ void ConfigurationMode::setupMenuBar() {
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Configuration")) {
-            for (Module& module : modules) {
-                if (ImGui::BeginMenu(module.moduleName.c_str())) {
+            moduleManager.createModules();
+            std::vector<Module*> modules = moduleManager.getModules();
+            for (Module* module : modules) {
+                if (ImGui::BeginMenu(module->moduleName.c_str())) {
                     // Show Graphics and Text parts as separate items
                     if (ImGui::BeginMenu("Graphics")) {
                         // Open Settings Popup for Graphics part
-                        std::string popupName = std::string(module.moduleName) + " Graphics Settings";
+                        std::string popupName = std::string(module->moduleName) + " Graphics Settings";
                         if (ImGui::Button("Settings")) {
                             ImGui::OpenPopup(popupName.c_str());
                         }
-                        renderSettingsPopup(module, "Graphics");
+                        renderSettingsPopup(*module, "Graphics");
                         ImGui::EndMenu();
                     }
 
                     if (ImGui::BeginMenu("Text")) {
                         // Open Settings Popup for Text part
-                        std::string popupName = std::string(module.moduleName) + " Text Settings";
+                        std::string popupName = std::string(module->moduleName) + " Text Settings";
                         if (ImGui::Button("Settings")) {
                             ImGui::OpenPopup(popupName.c_str());
                         }
-                        renderSettingsPopup(module, "Text");
+                        renderSettingsPopup(*module, "Text");
                         ImGui::EndMenu();
                     }
 
