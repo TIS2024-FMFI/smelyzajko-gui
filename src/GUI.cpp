@@ -43,6 +43,8 @@ void GUI::setupImGui() {
 
     ImGuiIO& io = ImGui::GetIO();
     io.Fonts->AddFontDefault(&fontConfig);
+
+//    io.Fonts->AddFontFromFileTTF("../Turbo-Pascal-Font.ttf", 18.0f);
 }
 
 void GUI::cleanupImGui() {

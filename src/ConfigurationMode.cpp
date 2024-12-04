@@ -1,11 +1,11 @@
 #include <iostream>
 #include "ConfigurationMode.h"
-#include "Rectangle.h"
-#include "Checkbox.h"
-#include "Button.h"
-#include "Slider.h"
-#include "SingleLineLabel.h"
-#include "MultiLineLabel.h"
+#include "src/widgets/Rectangle.h"
+#include "src/widgets/Checkbox.h"
+#include "src/widgets/Button.h"
+#include "src/widgets/Slider.h"
+#include "src/widgets/SingleLineLabel.h"
+#include "src/widgets/MultiLineLabel.h"
 
 
 //// Example modules for demonstration
