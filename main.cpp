@@ -1,8 +1,3 @@
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-#include <GLFW/glfw3.h>
-
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -10,8 +5,9 @@
 #include <filesystem>
 #include <sstream>
 
+#include "src/ConfigurationMode.h"
 
-//#include "src/ConfigurationMode.h"
+
 
 //enum ModuleElementType {
 //    TEXT, GRAPHIC, OTHER
@@ -94,206 +90,18 @@
 //    }
 //}
 
-//    void placeElementInTemplate() {
-//        ImGui::Begin(this->name.c_str());
-//        if (this->type == TEXT) {
-//            char inputText[256] = "";  // buffer
-//            ImVec2 availableRegion = ImGui::GetContentRegionAvail();
-//            ImGui::InputTextMultiline("##label", inputText, IM_ARRAYSIZE(inputText), availableRegion);
-//        } else if (this->type == GRAPHIC) {
-//            ImDrawList* draw_list = ImGui::GetWindowDrawList();
-//            ImVec2 p = ImGui::GetCursorScreenPos();
-//            ImVec2 size = ImVec2(defaultWidth, defaultHeight);
-//            ImU32 color = IM_COL32(255, 0, 0, 255);
-//            draw_list->AddRect(p, ImVec2(p.x + size.x, p.y + size.y), color);
-//            static bool boolean = false;
-//            ImGui::Checkbox("checkbox", &boolean);
-//            static int input = 0;
-//            ImGui::InputInt("input int", &input);
-//        } else {
-//
-//        }
-//        ImGui::End();
-//    }
-//};
-//
-//class Module {
-//public:
-//    std::string name;
-//    std::vector<ModuleElement> moduleElements;
-//
-//    Module(std::string name, std::vector<ModuleElement> moduleElements) {
-//        this->name = name;
-//        this->moduleElements = moduleElements;
-//    }
-//};
-//
-//std::vector<ModuleElement> moduleElements1 = { ModuleElement("1. textovy prvok", TEXT),  ModuleElement("2. graficky prvok", GRAPHIC)};
-//std::vector<ModuleElement> moduleElements2 = { ModuleElement("3. graficky prvok", GRAPHIC), ModuleElement("4. graficky prvok", GRAPHIC)};
-//std::vector<ModuleElement> moduleElements3 = { ModuleElement("5. textovy prvok", TEXT),  ModuleElement("6. graficky prvok", GRAPHIC)};
-//
-//std::vector<Module> modules = { Module("1. modul", moduleElements1),
-//                                Module("2. modul", moduleElements2),
-//                                Module("3. modul", moduleElements3) };
-//
-//std::vector<ModuleElement> selectedElements;
-//
-//void createModuleMenuitem() {
-//    if (ImGui::BeginMenu("Modules")) {
-//        for (const Module& module : modules ) {
-//            if (ImGui::BeginMenu(module.name.c_str())) {
-//                for (ModuleElement moduleElement : module.moduleElements) {
-//                    if (ImGui::MenuItem(moduleElement.name.c_str())) {
-//                        selectedElements.push_back(moduleElement);
-//                    }
-//                }
-//                ImGui::EndMenu();
-//            }
-//        }
-//        ImGui::EndMenu();
-//    }
-//}
-
-void setupImGui(GLFWwindow* window) {
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGui::StyleColorsDark();
-
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
-}
-//
-//void cleanupImGui() {
-//    ImGui_ImplOpenGL3_Shutdown();
-//    ImGui_ImplGlfw_Shutdown();
-//    ImGui::DestroyContext();
-//}
-
-ModuleManager moduleManager;
 
 
-
-void onButtonPressed() {
-    // Check if the template directory exists, if not, create it
-    std::filesystem::path templateDir("../templates");
-    if (!std::filesystem::exists(templateDir)) {
-        std::filesystem::create_directory(templateDir);
-    }
-
-    // Get the current highest template number
-    int maxNumber = 0;
-    bool foundTemplate = false;
-    for (const auto& entry : std::filesystem::directory_iterator(templateDir)) {
-        std::string filename = entry.path().filename().string();
-        if (filename.find("../template_") == 0 && filename.find(".json") != std::string::npos) {
-            int number = std::stoi(filename.substr(9, filename.size() - 14));
-            if (number > maxNumber) {
-                maxNumber = number;
-            }
-            foundTemplate = true;
-        }
-    }
-
-    // If no template files were found, start from 1
-    int newNumber = foundTemplate ? maxNumber + 1 : 1;
-    std::string newFilename = "../templates/template_" + std::to_string(newNumber) + ".json";
-
-    std::ostringstream jsonStream;
-    jsonStream << "[\n";
-
-    const auto& modules = moduleManager.getModules();
-    for (size_t i = 0; i < modules.size(); ++i) {
-        Module* module = modules[i];
-        ImVec2 pos = module->getPos();
-        ImVec2 size = module->getSize();
-        std::string name = module->getName();
-        std::cout << name << " " << pos.x << " " << pos.y << " " << size.x << " " << size.y << std::endl;
-
-        jsonStream << "  {\n";
-        jsonStream << R"(    "name": ")" << name << "\",\n";
-        jsonStream << "    \"pos\": [" << pos.x << ", " << pos.y << "],\n";
-        jsonStream << "    \"size\": [" << size.x << ", " << size.y << "]\n";
-        jsonStream << "  }";
-        if (i < modules.size() - 1) {
-            jsonStream << ",";
-        }
-        jsonStream << "\n";
-    }
-
-    jsonStream << "]";
-
-    std::ofstream file(newFilename);
-    file << jsonStream.str();
-    file.close();
-    std::cout << "Template saved to " << newFilename << std::endl;
-}
-
-// Function to create a button
-void createButton(const char* label) {
-    if (ImGui::Button(label)) {
-        onButtonPressed();
-    }
-}
 
 
 
 
 
 int main() {
-    // Create modules
 
-    moduleManager.createModules();
+    ConfigurationMode gui;
 
-    if (!glfwInit()) return -1;
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-
-    GLFWmonitor *primaryMonitor = glfwGetPrimaryMonitor();
-    const GLFWvidmode *videoMode = glfwGetVideoMode(primaryMonitor);
-
-    int monitorWidth = videoMode->width;
-    int monitorHeight = videoMode->height;
-
-    GLFWwindow *window = glfwCreateWindow(monitorWidth, monitorHeight, "ImGui Moduly", nullptr, nullptr);
-    if (!window) {
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-
-    setupImGui(window);
-    moduleManager.readTemplateandCreateModules("../templates/template_1.json");
-
-    while (!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
-
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-
-        // Create button
-        createButton("My Button");
-
-//        moduleManager.renderModules();
-        moduleManager.renderModules();
-//        // Vykresľovanie modulov
-//        testGraphicModule.renderStandalone();
-//        counterModule.renderStandalone();
-//        mapModule.renderStandalone();
-
-
-
-        ImGui::Render();
-        int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-        glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        glfwSwapBuffers(window);
-    }
+    gui.run();
 }
 
 

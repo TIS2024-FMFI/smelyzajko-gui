@@ -36,6 +36,17 @@ void GUI::setupImGui() {
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+
+
+    ImFontConfig fontConfig;
+    // higher resolution when rendering text
+    fontConfig.RasterizerDensity = 3.0f;
+
+    ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->AddFontDefault(&fontConfig);
+
+//    io.Fonts->AddFontFromFileTTF("../Turbo-Pascal-Font.ttf", 18.0f);
+
 }
 
 void GUI::cleanupImGui() {
