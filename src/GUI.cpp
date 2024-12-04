@@ -1,7 +1,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 #include <stdexcept>
 
 #include "GUI.h"
@@ -10,6 +10,10 @@ GUI::GUI() {
     if (!glfwInit()) {
         throw std::runtime_error("GLFW initialization error");
     }
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
     primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* videoMode = glfwGetVideoMode(primaryMonitor);
 
@@ -31,7 +35,16 @@ void GUI::setupImGui() {
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 130");
+    ImGui_ImplOpenGL3_Init("#version 330");
+
+    ImFontConfig fontConfig;
+    // higher resolution when rendering text
+    fontConfig.RasterizerDensity = 3.0f;
+
+    ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->AddFontDefault(&fontConfig);
+
+//    io.Fonts->AddFontFromFileTTF("../Turbo-Pascal-Font.ttf", 18.0f);
 }
 
 void GUI::cleanupImGui() {
