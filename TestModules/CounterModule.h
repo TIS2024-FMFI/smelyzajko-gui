@@ -7,7 +7,8 @@
 
 class CounterModule : public Module {
 public:
-    void renderStandalone() override;
+    void renderStandalone(ImGuiIO io, ImVec2 possition) override;
+    void draw(ImGuiIO &io) override;
 
     void saveLogToJson(const std::vector<int> &values);
     std::string getName() const override;
@@ -23,7 +24,7 @@ public:
 private:
     std::string name = "Counter Module";
     ImVec2 size;
-    ImVec2 pos;
+    ImVec2 possition;
 };
 
 
