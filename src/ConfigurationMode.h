@@ -1,18 +1,18 @@
 #include "GUI.h"
-#include "TemplateHandler.h"
+#include "TemplateManager.h"
 #include <algorithm>
 #include "Module.h"
 
 class ConfigurationMode : GUI {
 public:
-
     ConfigurationMode() : io(ImGui::GetIO()) {}
 
-    std::vector<Element *> activeElements;
-    TemplateHandler templateHandler;
+    TemplateManager templateManager;
     ImGuiIO& io;
 
     int run() override;
+
+    void addElementToActiveTemplate(Element* element);
 
     void drawElements();
     void setupMenuBar();

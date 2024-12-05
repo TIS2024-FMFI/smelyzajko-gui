@@ -20,4 +20,6 @@ public:
     void draw(ImGuiIO& io) override = 0;
     void handleClicks(ImGuiIO &io) override;
     virtual ImRect getBoundingBox() const override;
+
+    void from_json(const nlohmann::json &j) override;
 };

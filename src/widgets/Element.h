@@ -1,7 +1,7 @@
 #pragma once
 
 #include <utility>
-
+#include <json.hpp>
 #include "imgui.h"
 #include "string"
 #include "imgui_internal.h"
@@ -42,5 +42,8 @@ public:
     virtual ImRect getBoundingBox() const = 0;
 
     virtual void handleClicks(ImGuiIO& io) = 0;
+
+    virtual void to_json(nlohmann::json& j) const;
+    virtual void from_json(const nlohmann::json& j);
 };
 
