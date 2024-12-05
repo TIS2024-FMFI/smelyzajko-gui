@@ -1,7 +1,13 @@
 #include <string>
-#include <vector>
+#include <iostream>
+#include <fstream>
+#include "src/ModuleManager.h"
+#include <filesystem>
+#include <sstream>
 
 #include "src/ConfigurationMode.h"
+
+
 
 //enum ModuleElementType {
 //    TEXT, GRAPHIC, OTHER
@@ -85,7 +91,14 @@
 //}
 
 
+
+
+
+
+
+
 int main() {
+
     ConfigurationMode gui;
 
     gui.run();
