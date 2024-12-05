@@ -53,14 +53,34 @@ void Button::handleClicks(ImGuiIO &io) {
 
     if (!resizing) {
         ImGui::SetCursorScreenPos(position);
-        if (ImGui::InvisibleButton(("Button" + label).c_str(), size)) {
-            std::cout << "Button clicked: " << label << std::endl;
-        }
+        ImGui::InvisibleButton(("Button" + label).c_str(), size);
         if (ImGui::IsItemActive() && ImGui::IsMouseDragging(0)) {
             ImVec2 delta = io.MouseDelta;
             position.x += delta.x;
             position.y += delta.y;
         }
+    }
+}
+
+void Button::to_json(nlohmann::json &j) const {
+    j = nlohmann::json{
+            {"type", "button"},
+            {"label", label},
+            {"position", {position.x, position.y}},
+            {"size", {size.x, size.y}}
+    };
+}
+
+void Button::from_json(const nlohmann::json &j) {
+    if (j.contains("type") && j["type"] != "button") {
+        throw std::invalid_argument("Invalid type for Checkbox: expected 'button'");
+    }
+
+    Element::from_json(j);
+
+    if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
+        size.x = j["size"][0];
+        size.y = j["size"][1];
     }
 }
 
