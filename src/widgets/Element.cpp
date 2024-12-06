@@ -50,6 +50,25 @@ void Element::setZIndex(int z) {
     zIndex = z;
 }
 
+void Element::to_json(nlohmann::json &j) const {
+    j["label"] = label;
+    j["position"] = {position.x, position.y};
+}
+
+void Element::from_json(const nlohmann::json &j) {
+    if (j.contains("label") && j["label"].is_string()) {
+        label = j["label"];
+    }
+
+    if (j.contains("position") && j["position"].is_array() && j["position"].size() == 2) {
+        position.x = j["position"][0];
+        position.y = j["position"][1];
+    } else {
+        position = ImVec2(0.0f, 0.0f);
+    }
+}
+
+
 
 
 

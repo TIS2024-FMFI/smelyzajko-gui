@@ -1,7 +1,3 @@
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-#include "GLFW/glfw3.h"
 #include <stdexcept>
 
 #include "GUI.h"
@@ -40,13 +36,12 @@ void GUI::setupImGui() {
 
     ImFontConfig fontConfig;
     // higher resolution when rendering text
-    fontConfig.RasterizerDensity = 3.0f;
+    fontConfig.RasterizerDensity = 5.0f;
 
     ImGuiIO& io = ImGui::GetIO();
     io.Fonts->AddFontDefault(&fontConfig);
 
-//    io.Fonts->AddFontFromFileTTF("../Turbo-Pascal-Font.ttf", 18.0f);
-
+     // io.Fonts->AddFontFromFileTTF("../Turbo-Pascal-Font.ttf", 18.0f);
 }
 
 void GUI::cleanupImGui() {
