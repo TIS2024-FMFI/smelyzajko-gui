@@ -1,0 +1,69 @@
+{
+    "elements": [
+        {
+            "label": "test rectangle",
+            "position": [
+                100.0,
+                100.0
+            ],
+            "size": [
+                200.0,
+                100.0
+            ],
+            "type": "rectangle"
+        },
+        {
+            "label": "Rectangle1",
+            "position": [
+                1100.0,
+                516.0
+            ],
+            "size": [
+                200.0,
+                100.0
+            ],
+            "type": "rectangle"
+        },
+        {
+            "font_size": 13.0,
+            "label": "Hello\n, W\nor \nld!",
+            "position": [
+                179.0,
+                589.0
+            ],
+            "size": [
+                84.5,
+                13.0
+            ],
+            "type": "multi-line-label"
+        },
+        {
+            "label": "Slider (int)",
+            "maxValue": 10.0,
+            "minValue": 0.0,
+            "position": [
+                885.0,
+                290.0
+            ],
+            "size": [
+                200.0,
+                20.0
+            ],
+            "type": "slider-float",
+            "value": 5.0
+        },
+        {
+            "label": "fhn asofnmsa",
+            "position": [
+                922.0,
+                345.0
+            ],
+            "size": [
+                285.0,
+                553.0
+            ],
+            "type": "rectangle"
+        }
+    ],
+    "name": "template1"
+}

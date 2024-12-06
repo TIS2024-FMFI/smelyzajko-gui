@@ -84,3 +84,26 @@ void Rectangle::handleClicks(ImGuiIO &io) {
     }
 }
 
+void Rectangle::to_json(nlohmann::json& j) const {
+    j = nlohmann::json{
+            {"type", "rectangle"},
+            {"label", label},
+            {"position", {position.x, position.y}},
+            {"size", {size.x, size.y}}
+    };
+}
+
+void Rectangle::from_json(const nlohmann::json& j) {
+    if (j.contains("type") && j["type"] != "rectangle") {
+        throw std::invalid_argument("Invalid type for Rectangle: expected 'rectangle'");
+    }
+
+    Element::from_json(j);
+
+    if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
+        size.x = j["size"][0];
+        size.y = j["size"][1];
+    } else {
+        size = ImVec2(100.0f, 50.0f);
+    }
+}

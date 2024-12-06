@@ -1,0 +1,57 @@
+{
+  "elements": [
+    {
+      "label": "User Avatar",
+      "position": [
+        20.0,
+        20.0
+      ],
+      "size": [
+        100.0,
+        100.0
+      ],
+      "type": "rectangle"
+    },
+    {
+      "label": "Username",
+      "font_size": 14.0,
+      "position": [
+        140.0,
+        50.0
+      ],
+      "size": [
+        200.0,
+        20.0
+      ],
+      "type": "single-line-label"
+    },
+    {
+      "label": "Brightness Control",
+      "maxValue": 1.0,
+      "minValue": 0.0,
+      "position": [
+        300.0,
+        300.0
+      ],
+      "size": [
+        300.0,
+        30.0
+      ],
+      "type": "slider-float",
+      "value": 0.75
+    },
+    {
+      "label": "Footer Panel",
+      "position": [
+        0.0,
+        800.0
+      ],
+      "size": [
+        1024.0,
+        50.0
+      ],
+      "type": "rectangle"
+    }
+  ],
+  "name": "template3"
+}

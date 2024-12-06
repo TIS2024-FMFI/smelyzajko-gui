@@ -12,3 +12,21 @@ void SingleLineLabel::draw(ImGuiIO &io) {
 
     createTextSizeButton();
 }
+
+void SingleLineLabel::to_json(nlohmann::json& j) const {
+    j = nlohmann::json{
+            {"type", "single-line-label"},
+            {"label", label},
+            {"position", {position.x, position.y}},
+            {"size", {size.x, size.y}},
+            {"font_size", font_size}
+    };
+}
+
+void SingleLineLabel::from_json(const nlohmann::json& j) {
+    if (j.contains("type") && j["type"] != "single-line-label") {
+        throw std::invalid_argument("Invalid type for Label: expected 'single-line-label'");
+    }
+
+    Label::from_json(j);
+}

@@ -75,3 +75,47 @@ ImRect Slider<E>::getBoundingBox() const {
     ImVec2 maxPos = ImVec2(position.x + totalWidth + size.x, position.y + totalHeight); // Add text width to total width
     return ImRect(minPos, maxPos);
 }
+
+template<typename E>
+void Slider<E>::to_json(nlohmann::json& j) const {
+    std::string type;
+    if constexpr (std::is_same_v<E, int>) {
+        type = "slider-int";
+    } else {
+        type = "slider-float";
+    }
+    j = nlohmann::json{
+            {"type", type},
+            {"label", label},
+            {"position", {position.x, position.y}},
+            {"size", {size.x, size.y}},
+            {"minValue", minValue},
+            {"maxValue", maxValue},
+            {"value", value},
+    };
+}
+
+template<typename E>
+void Slider<E>::from_json(const nlohmann::json& j) {
+    std::string type;
+    if constexpr (std::is_same_v<E, int>) {
+        type = "slider-int";
+    } else {
+        type = "slider-float";
+    }
+    if (j.contains("type") && j["type"] != type) {
+        throw std::invalid_argument("Invalid type for Slider: expected either slider-int or slider-float");
+    }
+
+    Element::from_json(j);
+
+    if (j.contains("minValue")) {
+        minValue = j["minValue"].get<E>();
+    }
+    if (j.contains("maxValue")) {
+        maxValue = j["maxValue"].get<E>();
+    }
+    if (j.contains("value")) {
+        value = std::clamp(j["value"].get<E>(), minValue, maxValue);
+    }
+}
