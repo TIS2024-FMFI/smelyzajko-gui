@@ -2,18 +2,25 @@
 #define MODULEMANAGER_H
 #include <vector>
 #include "Module.h"
+#include "../TestModules/TestGraphicModule.h"
+#include "../TestModules/CounterModule.h"
+#include "../TestModules/MapModule.h"
 
 class ModuleManager  {
 public:
     void addModule(Module* module);
     void createModules();
-    void renderModules(ImGuiIO io, ImVec2 possition);
+    void renderModules(ImGuiIO io, ImVec2 possition, ImVec2 size);
     void readTemplateandCreateModules(const std::string& filename);
 
     const std::vector<Module *> &getModules() const;
 
 private:
-    std::vector<Module*> modules;
+    TestGraphicModule testGraphicModule;
+    CounterModule counterModule;
+    MapModule mapModule = MapModule();
+    std::vector<Module*> modules ;
+
 };
 
 #endif //MODULEMANAGER_H

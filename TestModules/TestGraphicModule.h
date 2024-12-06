@@ -6,7 +6,7 @@
 #include "../src/Module.h"
 class TestGraphicModule : public Module {
 public:
-    void renderStandalone() override;
+    void renderStandalone(ImGuiIO io, ImVec2 possition) override;
 
     ImVec2 getSize() override;
 
@@ -17,12 +17,13 @@ public:
     void setSize(ImVec2 size) override;
 
     std::string getName() const override;
+    void draw(ImGuiIO &io) override;
 
 private:
     std::string name = "Sinusoida";
     ImVec2 size ;
-    ImVec2 pos;
+    ImVec2 possition;
+
 };
 
 #endif // TESTGRAPHICMODULE_H
-

@@ -25,14 +25,18 @@ void ModuleManager::createModules(){
 
     addModule(&testGraphicModule);
     addModule(&counterModule);
-
     addModule(&mapModule);
 }
 void ModuleManager::renderModules(ImGuiIO io, ImVec2 possition) {
 
-    mapModule.setPos(possition);
-    mapModule.draw(io);
-
+    for (Module* module : modules) {
+        if (!module->active) {
+            module->active = true;
+            module->setPos(possition);
+            module->draw(io);
+        }
+//        module->renderStandalone(ImGuiIO io, ImVec2 possition);
+    }
 }
 
 

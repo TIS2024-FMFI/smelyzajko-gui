@@ -4,11 +4,16 @@
 #include <fstream> // Add this line to include the fstream header
 
 
-void CounterModule::renderStandalone() {
+void CounterModule::renderStandalone(ImGuiIO io, ImVec2 possition) {
     if (counter == 1){
         ImGui::SetNextWindowPos(getPos()); // Set the position of the window
         ImGui::SetNextWindowSize(getSize())  ; // Set the size of the window
-        ImGui::Begin(name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse); // Disable resizing
+        ImGui::Begin(name.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar |    // Remove title bar
+                                            ImGuiWindowFlags_NoCollapse |   // Prevent collapsing
+                                            ImGuiWindowFlags_NoResize |     // Disable resizing
+                                            ImGuiWindowFlags_NoBringToFrontOnFocus | // Prevent window focus changes
+                                            ImGuiWindowFlags_NoScrollbar |   // Disable scrollbar (optional)
+                                            ImGuiWindowFlags_NoBackground); // Disable resizing
 
     }
     else {
@@ -91,13 +96,17 @@ ImVec2 CounterModule::getSize() {
 }
 
 ImVec2 CounterModule::getPos() {
-    return pos;
+    return possition;
 }
 
 void CounterModule::setPos(ImVec2 pos) {
-    CounterModule::pos = pos;
+    CounterModule::possition = pos;
 }
 
 void CounterModule::setSize(ImVec2 size) {
     CounterModule::size = size;
+}
+
+void CounterModule::draw(ImGuiIO &io) {
+
 }
