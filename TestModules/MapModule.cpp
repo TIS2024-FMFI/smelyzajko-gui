@@ -4,69 +4,27 @@
 #include <fstream>
 #include <random>
 #include <sstream>
+#include <iostream>
 #include <cmath> // Pre výpočet vzdialenosti
 
-void MapModule::renderStandalone() {
-    if (MapModule::counter == 1){
-        ImGui::SetNextWindowPos(getPos()); // Set the position of the window
-        ImGui::SetNextWindowSize(getSize()); // Set the size of the window
-        ImGui::Begin(name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse); // Disable resizing
-
-    }
-    else {
-        ImGui::Begin(name.c_str());
-        setPos(ImGui::GetWindowPos());
-        setSize(ImGui::GetWindowSize());
-    }
-
-
-
-
-    // Rozmery mapy a buniek
-    const int rows = 10;
-    const int cols = 10;
-    const float cellSize = 40.0f;
-
-    // Náhodná mapa (0 = cesta, 1 = múr)
-    static int map[rows][cols];
-    static bool mapInitialized = false;
-    static std::pair<int, int> startPosition; // Náhodná počiatočná pozícia
-
+MapModule::MapModule() {
     if (!mapInitialized) {
-        generatePassableMap(map, rows, cols, startPosition);
+        generatePassableMap();
         mapInitialized = true;
     }
-
-    // Trasa pre guličku (sekvencia [riadok, stĺpec])
-    static std::vector<std::pair<int, int>> path;
-    static bool isStopped = true;
-    static int currentStep = 0;
-
-    // Ak sa mapa zmení, aktualizuj cestu
     if (path.empty()) {
-        generatePath(map, rows, cols, path, startPosition);
+        generatePath();
     }
+}
 
-    // Tlačidlá Start, Stop a Replay
-    if (ImGui::Button("Start")) {
-        isStopped = false;
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Stop")) {
-        isStopped = true;
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Replay")) {
-        if (currentStep > 0) {
-            currentStep--; // Vrátenie o jeden krok dozadu
-            isStopped = true;
-        }
-    }
+
+void MapModule::draw(ImGuiIO &io) {
+
 
     // Pohyb guličky každých 0.5 sekundy
     if (!path.empty() && !isStopped) {
         static float timeAccumulator = 0.0f;
-        timeAccumulator += ImGui::GetIO().DeltaTime;
+        timeAccumulator += io.DeltaTime;
 
         if (timeAccumulator > 0.5f) {
             timeAccumulator = 0.0f;
@@ -76,11 +34,7 @@ void MapModule::renderStandalone() {
             }
         }
     }
-
-    // Základné vykreslenie mapy
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    ImVec2 p = ImGui::GetCursorScreenPos();
-
     for (int row = 0; row < rows; ++row) {
         for (int col = 0; col < cols; ++col) {
             ImU32 color;
@@ -95,8 +49,8 @@ void MapModule::renderStandalone() {
             }
 
             draw_list->AddRectFilled(
-                    ImVec2(p.x + col * cellSize, p.y + row * cellSize),
-                    ImVec2(p.x + (col + 1) * cellSize, p.y + (row + 1) * cellSize),
+                    ImVec2(possition.x + col * cellSize, possition.y + row * cellSize),
+                    ImVec2(possition.x + (col + 1) * cellSize, possition.y + (row + 1) * cellSize),
                     color
             );
         }
@@ -107,15 +61,20 @@ void MapModule::renderStandalone() {
         int ballRow = path[currentStep].first;
         int ballCol = path[currentStep].second;
         draw_list->AddCircleFilled(
-                ImVec2(p.x + ballCol * cellSize + cellSize / 2, p.y + ballRow * cellSize + cellSize / 2),
+                ImVec2(possition.x + ballCol * cellSize + cellSize / 2, possition.y + ballRow * cellSize + cellSize / 2),
                 cellSize / 4, IM_COL32(255, 0, 0, 255)
         );
     }
-
-    ImGui::End();
 }
 
-void MapModule::generatePassableMap(int map[10][10], int rows, int cols, std::pair<int, int>& startPosition) {
+void MapModule::renderStandalone(ImGuiIO io, ImVec2 possition) {
+
+
+
+}
+
+
+void MapModule::generatePassableMap() {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 1);
@@ -156,16 +115,16 @@ void MapModule::generatePassableMap(int map[10][10], int rows, int cols, std::pa
             startPosition = farthestPosition;
 
             // Overíme, že existuje cesta z počiatočnej pozície do cieľa
-            std::vector<std::pair<int, int>> testPath;
-            generatePath(map, rows, cols, testPath, startPosition);
-            if (!testPath.empty()) {
+            generatePath();
+
+            if (!path.empty()) {
                 break;
             }
         }
     }
 }
 
-void MapModule::generatePath(const int map[10][10], int rows, int cols, std::vector<std::pair<int, int>>& path, const std::pair<int, int>& startPosition) {
+void MapModule::generatePath() {
     path.clear();
     int row = startPosition.first;
     int col = startPosition.second;
@@ -181,7 +140,6 @@ void MapModule::generatePath(const int map[10][10], int rows, int cols, std::vec
             break; // Ak sa nedá pohnúť, ukončí trasu
         }
     }
-
     if (row == rows - 2 && col == cols - 2) {
         path.emplace_back(row, col); // Pridaj cieľ
     } else {
@@ -205,14 +163,38 @@ ImVec2 MapModule::getSize() {
 }
 
 ImVec2 MapModule::getPos() {
-    return pos;
+    return possition;
 }
 
 void MapModule::setPos(ImVec2 pos) {
-    MapModule::pos = pos;
+    MapModule::possition = pos;
 }
 
 void MapModule::setSize(ImVec2 size) {
     MapModule::size = size;
+    cellSize = std::min(size.x/ cols, size.y / rows);
+
 
 }
+
+void MapModule::drawButtons() {
+    // Tlačidlá Start, Stop a Replay
+    if (ImGui::Button("Start")) {
+        isStopped = false;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Stop")) {
+        isStopped = true;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Replay")) {
+        if (currentStep > 0) {
+            currentStep--; // Vrátenie o jeden krok dozadu
+            isStopped = true;
+        }
+    }
+}
+
+
+
+

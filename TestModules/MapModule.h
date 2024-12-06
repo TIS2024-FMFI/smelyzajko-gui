@@ -10,17 +10,18 @@
 
 class MapModule : public Module {
 public:
+    MapModule();
     // Funkcia na vykreslenie mapy
-    void renderStandalone() override;
-
+    void renderStandalone(ImGuiIO io, ImVec2 possition) override;
+    void draw(ImGuiIO &io) override;
     // Funkcia na logovanie pozície guličky do JSON súboru
     void logToJson(const std::pair<int, int>& position);
 
     // Funkcia na generovanie priechodnej mapy, nájde aj počiatočnú pozíciu čo najďalej od cieľa
-    void generatePassableMap(int map[10][10], int rows, int cols, std::pair<int, int>& startPosition);
+    void generatePassableMap();
 
     // Funkcia na generovanie cesty cez mapu z náhodnej štartovacej pozície
-    void generatePath(const int map[10][10], int rows, int cols, std::vector<std::pair<int, int>>& path, const std::pair<int, int>& startPosition);
+    void generatePath();
 
     std::string getName() const override;
 
@@ -32,11 +33,32 @@ public:
 
     void setSize(ImVec2 size) override;
 
+    void drawButtons();
+    static const int rows = 20;
+    static const int cols = 20;
+    int map[rows][cols];
+
+    float cellSize = 30.0f;
+    // Náhodná mapa (0 = cesta, 1 = múr)
+
+    bool mapInitialized = false;
+    std::pair<int, int> startPosition; // Náhodná počiatočná pozícia
+
+    // Trasa pre guličku (sekvencia [riadok, stĺpec])
+    std::vector<std::pair<int, int>> path;
+
+    bool isStopped = false;
+    int currentStep = 0;
 
 private:
     std::string name = "Map Module";
     ImVec2 size;
-    ImVec2 pos;
+    ImVec2 possition ;
+    // Rozmery mapy a buniek
+
+
+
+
 };
 
 
