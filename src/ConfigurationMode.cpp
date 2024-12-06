@@ -11,11 +11,9 @@
 
 
 //// Example modules for demonstration
-ModuleManager moduleManager;
 
 
 int ConfigurationMode::run() {
-
     io = ImGui::GetIO();
     (void)io;
 

@@ -1,8 +1,8 @@
+#pragma once
 #include "GUI.h"
 #include "TemplateHandler.h"
 #include <algorithm>
 #include "Module.h"
-
 class OperatingMode :  GUI {
 public:
     OperatingMode() : io(ImGui::GetIO()) {}
