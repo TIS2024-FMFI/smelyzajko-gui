@@ -10,6 +10,7 @@ public:
     void setActiveTemplate(Template aTemplate);
     void saveCurrentTemplate(const std::string& fileName);
     void addElementToActiveTemplate(Element* element);
+    void removeElementFromActiveTemplate(int index);
     void clearActiveTemplateElements();
     std::string getActiveTemplateName() const;
     std::vector<Element *> getActiveTemplateElements();

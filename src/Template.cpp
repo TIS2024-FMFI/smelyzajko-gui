@@ -104,3 +104,7 @@ std::string Template::getName() const {
     return name;
 }
 
+void Template::removeElement(int index) {
+    elements.erase(elements.begin() + index);
+}
+
