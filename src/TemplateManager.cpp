@@ -64,3 +64,7 @@ std::string TemplateManager::getActiveTemplateName() const {
 void TemplateManager::clearActiveTemplateElements() {
     activeTemplate.clear();
 }
+
+void TemplateManager::removeElementFromActiveTemplate(int index) {
+    activeTemplate.removeElement(index);
+}
