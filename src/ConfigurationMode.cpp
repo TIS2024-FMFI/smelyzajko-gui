@@ -7,13 +7,12 @@
 #include "src/widgets/SingleLineLabel.h"
 #include "src/widgets/MultiLineLabel.h"
 
-
 //// Example modules for demonstration
-std::vector<Module> modules = {
-        Module(1, "Map"),
-        Module(2, "Lidar"),
-        Module(3, "Sinusoid"),
-};
+//std::vector<Module> modules = {
+//        Module(1, "Map"),
+//        Module(2, "Lidar"),
+//        Module(3, "Sinusoid"),
+//};
 
 int ConfigurationMode::run() {
 
@@ -199,32 +198,32 @@ void ConfigurationMode::setupMenuBar() {
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Configuration")) {
-            for (Module& module : modules) {
-                if (ImGui::BeginMenu(module.moduleName.c_str())) {
-                    // Show Graphics and Text parts as separate items
-                    if (ImGui::BeginMenu("Graphics")) {
-                        // Open Settings Popup for Graphics part
-                        std::string popupName = std::string(module.moduleName) + " Graphics Settings";
-                        if (ImGui::Button("Settings")) {
-                            ImGui::OpenPopup(popupName.c_str());
-                        }
-                        renderSettingsPopup(module, "Graphics");
-                        ImGui::EndMenu();
-                    }
-
-                    if (ImGui::BeginMenu("Text")) {
-                        // Open Settings Popup for Text part
-                        std::string popupName = std::string(module.moduleName) + " Text Settings";
-                        if (ImGui::Button("Settings")) {
-                            ImGui::OpenPopup(popupName.c_str());
-                        }
-                        renderSettingsPopup(module, "Text");
-                        ImGui::EndMenu();
-                    }
-
-                    ImGui::EndMenu();
-                }
-            }
+//            for (Module& module : modules) {
+//                if (ImGui::BeginMenu(module.moduleName.c_str())) {
+//                    // Show Graphics and Text parts as separate items
+//                    if (ImGui::BeginMenu("Graphics")) {
+//                        // Open Settings Popup for Graphics part
+//                        std::string popupName = std::string(module.moduleName) + " Graphics Settings";
+//                        if (ImGui::Button("Settings")) {
+//                            ImGui::OpenPopup(popupName.c_str());
+//                        }
+//                        renderSettingsPopup(module, "Graphics");
+//                        ImGui::EndMenu();
+//                    }
+//
+//                    if (ImGui::BeginMenu("Text")) {
+//                        // Open Settings Popup for Text part
+//                        std::string popupName = std::string(module.moduleName) + " Text Settings";
+//                        if (ImGui::Button("Settings")) {
+//                            ImGui::OpenPopup(popupName.c_str());
+//                        }
+//                        renderSettingsPopup(module, "Text");
+//                        ImGui::EndMenu();
+//                    }
+//
+//                    ImGui::EndMenu();
+//                }
+//            }
             ImGui::EndMenu();
         }
     }
