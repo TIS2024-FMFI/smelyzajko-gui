@@ -28,8 +28,9 @@ void ModuleManager::createModules(){
 
     addModule(&mapModule);
 }
-void ModuleManager::renderModules(ImGuiIO io, ImVec2 possition) {
+void ModuleManager::renderModules(ImGuiIO io, ImVec2 possition,ImVec2 size) {
     counterModule.setPos(possition);
+    counterModule.setSize(size);
     counterModule.draw(io);
 }
 

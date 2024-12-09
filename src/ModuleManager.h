@@ -8,7 +8,7 @@ class ModuleManager  {
 public:
     void addModule(Module* module);
     void createModules();
-    void renderModules(ImGuiIO io, ImVec2 possition);
+    void renderModules(ImGuiIO io, ImVec2 possition,ImVec2 size);
     void readTemplateandCreateModules(const std::string& filename);
 
     const std::vector<Module *> &getModules() const;

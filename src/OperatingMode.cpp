@@ -50,7 +50,8 @@ int OperatingMode::run() {
 //        std::cout<<activeElements.size()<<std::endl;
         if (activeElements.size() > 0) {
             ImVec2 posssition =  activeElements[0]->getPosition();
-            moduleManager.renderModules(io,posssition);
+            ImVec2 size = activeElements[0]->getsize();
+            moduleManager.renderModules(io,posssition,size);
 
         }
 

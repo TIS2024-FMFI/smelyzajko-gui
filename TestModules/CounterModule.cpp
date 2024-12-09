@@ -27,6 +27,7 @@ void CounterModule::renderStandalone(ImGuiIO io, ImVec2 possition) {
 
 
 void CounterModule::draw(ImGuiIO &io) {
+
     ImDrawList* draw_list = ImGui::GetForegroundDrawList();
 
     // Text content
@@ -36,30 +37,21 @@ void CounterModule::draw(ImGuiIO &io) {
     ImU32 text_color = IM_COL32(255, 255, 255, 255);
     ImU32 border_color = IM_COL32(255, 255, 255, 255); // White border
 
-    // Calculate text size
     const char* text_cstr = text.c_str();
     ImVec2 text_size = ImGui::CalcTextSize(text_cstr);
+    std::cout<<possition.x << "  " <<possition.y<<std::endl;
+    ImVec2 rect_size = ImVec2(200, 100);
 
-    // Assume possition is the top-left corner of the rectangle
-    ImVec2 rect_size = ImVec2(100, 60); // Replace with your rectangle's size
-    ImVec2 rect_min = possition; // Top-left corner
-    ImVec2 rect_max = ImVec2(possition.x + rect_size.x, possition.y + rect_size.y); // Bottom-right corner
-
-    // Calculate the center of the rectangle
+    ImVec2 rect_min = possition;
+    ImVec2 rect_max = ImVec2(possition.x + size.x, possition.y + size.y);
     ImVec2 rect_center = ImVec2((rect_min.x + rect_max.x) / 2.0f, (rect_min.y + rect_max.y) / 2.0f);
-
-    // Add a rectangle border
-    const float border_thickness = 2.0f; // Thickness of the border
-    draw_list->AddRect(rect_min, rect_max, border_color, 0.0f, 0, border_thickness);
+    const float border_thickness = 2.0f;
+    draw_list->AddRect(possition, size, border_color, 0.0f, 0, border_thickness);
 
     ImVec2 text_pos = ImVec2(rect_center.x - text_size.x / 2.0f, rect_center.y - text_size.y / 2.0f );
 
-    // Render the text at the adjusted position
     draw_list->AddText(text_pos, text_color, text_cstr);
 }
-
-
-
 
 
 
