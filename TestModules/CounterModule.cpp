@@ -40,15 +40,16 @@ void CounterModule::draw(ImGuiIO &io) {
     const char* text_cstr = text.c_str();
     ImVec2 text_size = ImGui::CalcTextSize(text_cstr);
     std::cout<<possition.x << "  " <<possition.y<<std::endl;
-    ImVec2 rect_size = ImVec2(200, 100);
 
     ImVec2 rect_min = possition;
     ImVec2 rect_max = ImVec2(possition.x + size.x, possition.y + size.y);
     ImVec2 rect_center = ImVec2((rect_min.x + rect_max.x) / 2.0f, (rect_min.y + rect_max.y) / 2.0f);
     const float border_thickness = 2.0f;
-    draw_list->AddRect(possition, size, border_color, 0.0f, 0, border_thickness);
 
-    ImVec2 text_pos = ImVec2(rect_center.x - text_size.x / 2.0f, rect_center.y - text_size.y / 2.0f );
+    draw_list->AddRect(possition, size, border_color, 0.0f, 0, border_thickness);
+    int text2 = (possition.x + size.x)/ 2.0f;
+    int text1 = (possition.y + size.y)/ 2.0f;
+    ImVec2 text_pos = ImVec2(text2 - text_size.x/2.0f, text1);
 
     draw_list->AddText(text_pos, text_color, text_cstr);
 }
