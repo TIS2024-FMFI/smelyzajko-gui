@@ -27,16 +27,11 @@ void ModuleManager::createModules(){
     addModule(&counterModule);
     addModule(&mapModule);
 }
-void ModuleManager::renderModules(ImGuiIO io, ImVec2 possition) {
+void ModuleManager::renderModules(ImGuiIO io, ImVec2 possition,ImVec2 size) {
+    counterModule.setPos(possition);
+    counterModule.setSize(size);
+    counterModule.draw(io);
 
-    for (Module* module : modules) {
-        if (!module->active) {
-            module->active = true;
-            module->setPos(possition);
-            module->draw(io);
-        }
-//        module->renderStandalone(ImGuiIO io, ImVec2 possition);
-    }
 }
 
 

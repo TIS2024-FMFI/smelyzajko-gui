@@ -34,11 +34,11 @@ public:
     void setSize(ImVec2 size) override;
 
     void drawButtons();
-    static const int rows = 20;
-    static const int cols = 20;
+    static const int rows = 10;
+    static const int cols = 10;
     int map[rows][cols];
+    const float cellSize = 40.0f;
 
-    float cellSize = 30.0f;
     // Náhodná mapa (0 = cesta, 1 = múr)
 
     bool mapInitialized = false;

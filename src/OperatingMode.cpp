@@ -51,7 +51,9 @@ int OperatingMode::run() {
         if (activeElements.size() > 0) {
 
             ImVec2 posssition =  activeElements[0]->getPosition();
-            ImVec2 size = activeElements[0]->getSize();
+            ImVec2 size = activeElements[0]->getsize();
+
+
             moduleManager.renderModules(io,posssition,size);
 
         }

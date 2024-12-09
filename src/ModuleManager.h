@@ -1,3 +1,4 @@
+#pragma once
 #ifndef MODULEMANAGER_H
 #define MODULEMANAGER_H
 #include <vector>
@@ -10,6 +11,7 @@ class ModuleManager  {
 public:
     void addModule(Module* module);
     void createModules();
+
     void renderModules(ImGuiIO io, ImVec2 possition, ImVec2 size);
     void readTemplateandCreateModules(const std::string& filename);
 

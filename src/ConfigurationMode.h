@@ -1,10 +1,15 @@
+#pragma once
 #include "GUI.h"
 #include "TemplateManager.h"
 #include <algorithm>
 #include "Module.h"
+#include "ModuleManager.h"
 
 class ConfigurationMode : GUI {
 public:
+    ModuleManager moduleManager;
+
+
     ConfigurationMode() : io(ImGui::GetIO()) {}
 
     TemplateManager templateManager;
