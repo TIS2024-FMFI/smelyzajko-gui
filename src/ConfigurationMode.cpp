@@ -30,23 +30,22 @@ int ConfigurationMode::run() {
         ImGui::SetNextWindowSize(io.DisplaySize); // Fullscreen size
 
         ImGui::Begin("Main Window", nullptr,
-                     ImGuiWindowFlags_NoTitleBar |    // Remove title bar
-                     ImGuiWindowFlags_NoCollapse |   // Prevent collapsing
-                     ImGuiWindowFlags_NoResize |     // Disable resizing
-                     ImGuiWindowFlags_NoMove |       // Prevent moving the window
-                     ImGuiWindowFlags_NoBringToFrontOnFocus | // Prevent window focus changes
-                     ImGuiWindowFlags_NoScrollbar    // Disable scrollbar (optional)
+                     ImGuiWindowFlags_NoTitleBar |
+                     ImGuiWindowFlags_NoCollapse |
+                     ImGuiWindowFlags_NoResize |
+                     ImGuiWindowFlags_NoMove |
+                     ImGuiWindowFlags_NoBringToFrontOnFocus |
+                     ImGuiWindowFlags_NoScrollbar
         );
 
             ImGui::Begin("Controls");
                 if (ImGui::Button("Add Rectangle")) {
-                    activeElements.emplace_back(new Rectangle("Rectangle" + std::to_string(activeElements.size()), ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
+                    addElementToActiveTemplate(new Rectangle("Rectangle", ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
                 }
                 if (ImGui::Button("Add Checkbox")) {
-                    activeElements.emplace_back(new Checkbox("Checkbox " + std::to_string(activeElements.size()), ImVec2(100.0f, 100.0f), false)); // Initial state is unchecked
                 }
                 if (ImGui::Button("Add Button")) {
-                    activeElements.emplace_back(new Button("Button " + std::to_string(activeElements.size()), ImVec2(100.0f, 100.0f), ImVec2(100.0f, 25.0f)));
+                    addElementToActiveTemplate(new Button("Button", ImVec2(100.0f, 100.0f), ImVec2(100.0f, 25.0f)));
                 }
                 createIntSliderSettings();
                 createFloatSliderSettings();
@@ -72,10 +71,10 @@ int ConfigurationMode::run() {
 
     }
 
-    for (Element* element : activeElements) {
+    for (Element* element : templateManager.getActiveTemplateElements()) {
         delete element;
     }
-    activeElements.clear();
+    templateManager.clearActiveTemplateElements();
 
     cleanupImGui();
     glfwDestroyWindow(window);
@@ -85,6 +84,7 @@ int ConfigurationMode::run() {
 
 void ConfigurationMode::drawElements() {
     // First, draw the rectangles
+    auto activeElements = templateManager.getActiveTemplateElements();
     for (int i = 0; i < activeElements.size(); i++) {
         Element *element = activeElements[i];
         ImGui::PushID(i);
@@ -172,14 +172,20 @@ void ConfigurationMode::setupMenuBar() {
             }
             ImGui::EndMenu();
         }
-//        if (ImGui::BeginMenu("Templates")) {
-//            for (const Template& aTemplate : templateHandler.allTemplates) {
-//                if (ImGui::MenuItem(aTemplate.name.c_str())) {
-//                    templateHandler.setActiveTemplate(aTemplate);
-//                }
-//            }
-//            ImGui::EndMenu();
-//        }
+        if (ImGui::BeginMenu("Templates")) {
+            for (const Template& aTemplate : templateManager.getAllTemplates()) {
+                if (ImGui::MenuItem(aTemplate.getName().c_str())) {
+                    templateManager.setActiveTemplate(aTemplate);
+                    std::string activeTemplateName = templateManager.getActiveTemplateName();
+                    std::string windowTitle = std::string("GUI") + " - " + activeTemplateName;
+                    glfwSetWindowTitle(window, windowTitle.c_str());
+                }
+            }
+            if (ImGui::MenuItem("Save template")) {
+                templateManager.saveCurrentTemplate("template.json");
+            }
+            ImGui::EndMenu();
+        }
         if (ImGui::BeginMenu("Options")) {
 
             ImGui::Checkbox("Enable Snapping", &isSnapping);
@@ -223,8 +229,6 @@ void ConfigurationMode::setupMenuBar() {
     }
     ImGui::EndMainMenuBar();
 }
-
-
 
 void ConfigurationMode::renderSettingsPopup(Module& module, const std::string& part) {
     std::string popupName = std::string(module.moduleName) + " " + part + " Settings";
@@ -299,6 +303,7 @@ void ConfigurationMode::drawGrid() const {
 
 void ConfigurationMode::bringElementToTop(Element* element) {
     // Remove the clicked element and add it to the end of the list
+    auto activeElements = templateManager.getActiveTemplateElements();
     auto it = std::find(activeElements.begin(), activeElements.end(), element);
     if (it != activeElements.end()) {
         activeElements.erase(it);
@@ -326,7 +331,7 @@ void ConfigurationMode::createLabelSettings() {
         if (ImGui::Button("Add")) {
             ImVec2 textSize = ImGui::CalcTextSize(text);
             if (isMultiLine) {
-                activeElements.emplace_back(new MultiLineLabel(
+                addElementToActiveTemplate(new MultiLineLabel(
                         text,
                         ImVec2(position[0], position[1]),
                         textSize
@@ -338,7 +343,7 @@ void ConfigurationMode::createLabelSettings() {
                         text[i] = ' '; // Replace newline with space
                     }
                 }
-                activeElements.emplace_back(new SingleLineLabel(
+                addElementToActiveTemplate(new SingleLineLabel(
                         text,
                         ImVec2(position[0], position[1]),
                         textSize
@@ -378,7 +383,7 @@ void ConfigurationMode::createIntSliderSettings() {
         if (initialValue > maxValue) initialValue = maxValue;
 
         if (ImGui::Button("Add")) {
-            activeElements.emplace_back(new Slider<int>(
+            addElementToActiveTemplate(new Slider<int>(
                     label,
                     ImVec2(position[0], position[1]),
                     ImVec2(size[0], size[1]),
@@ -420,7 +425,7 @@ void ConfigurationMode::createFloatSliderSettings() {
         if (initialValue > maxValue) initialValue = maxValue;
 
         if (ImGui::Button("Add")) {
-            activeElements.emplace_back(new Slider<float>(
+            addElementToActiveTemplate(new Slider<float>(
                     label,
                     ImVec2(position[0], position[1]),
                     ImVec2(size[0], size[1]),
@@ -438,4 +443,8 @@ void ConfigurationMode::createFloatSliderSettings() {
 
         ImGui::EndPopup();
     }
+}
+
+void ConfigurationMode::addElementToActiveTemplate(Element* element) {
+    templateManager.addElementToActiveTemplate(element);
 }

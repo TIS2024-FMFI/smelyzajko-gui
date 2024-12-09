@@ -38,6 +38,7 @@ public:
     static const int cols = 10;
     int map[rows][cols];
     const float cellSize = 40.0f;
+
     // Náhodná mapa (0 = cesta, 1 = múr)
 
     bool mapInitialized = false;

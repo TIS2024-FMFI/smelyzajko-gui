@@ -15,6 +15,7 @@ public:
     CounterModule();
     ~CounterModule();
 
+
     void renderStandalone(ImGuiIO io, ImVec2 possition) override;
     void draw(ImGuiIO &io) override;
     void saveLogToJson(const std::vector<int> &values);
@@ -36,6 +37,7 @@ private:
     std::vector<int> logValues;
     std::mutex logMutex;
     std::thread generatorThread;
+
 
     void generateNumbers();
 };

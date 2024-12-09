@@ -172,6 +172,8 @@ void MapModule::setPos(ImVec2 pos) {
 
 void MapModule::setSize(ImVec2 size) {
     MapModule::size = size;
+    cellSize = std::min(size.x/ cols, size.y / rows);
+
 
 }
 

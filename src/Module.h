@@ -42,7 +42,7 @@ public:
 
 private:
     std::string name;
-    ImVec2 possition;
+    ImVec2 position;
     ImVec2 size;
     // Graphics settings
     float graphicsFrequency;

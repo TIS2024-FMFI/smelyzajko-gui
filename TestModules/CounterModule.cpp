@@ -14,6 +14,7 @@ CounterModule::~CounterModule() {
     stopGeneration.store(true);
     if (generatorThread.joinable()) {
         generatorThread.join();
+
     }
 }
 
@@ -82,3 +83,4 @@ ImVec2 CounterModule::getSize() { return size; }
 ImVec2 CounterModule::getPos() { return possition; }
 void CounterModule::setPos(ImVec2 pos) { possition = pos; }
 void CounterModule::setSize(ImVec2 size) { this->size = size; }
+
