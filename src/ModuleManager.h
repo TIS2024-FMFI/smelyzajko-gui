@@ -6,6 +6,7 @@
 #include "../TestModules/TestGraphicModule.h"
 #include "../TestModules/CounterModule.h"
 #include "../TestModules/MapModule.h"
+#include "../TestModules/UltrasonicModule.h"
 
 class ModuleManager  {
 public:
@@ -21,6 +22,7 @@ private:
     TestGraphicModule testGraphicModule;
     CounterModule counterModule;
     MapModule mapModule = MapModule();
+    UltrasonicModule ultrasonicModule;
     std::vector<Module*> modules ;
 
 };

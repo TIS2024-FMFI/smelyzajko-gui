@@ -4,6 +4,7 @@
 #include "../TestModules/TestGraphicModule.h"
 #include "../TestModules/CounterModule.h"
 #include "../TestModules/MapModule.h"
+#include "../TestModules/UltrasonicModule.h"
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -12,6 +13,7 @@
 TestGraphicModule testGraphicModule;
 CounterModule counterModule;
 MapModule mapModule = MapModule();
+UltrasonicModule ultrasonicModule;
 
 void ModuleManager::addModule(Module* module) {
     modules.push_back(module);
@@ -21,16 +23,17 @@ const std::vector<Module *> &ModuleManager::getModules() const {
     return modules;
 }
 
-void ModuleManager::createModules(){
-
+void ModuleManager::createModules() {
     addModule(&testGraphicModule);
     addModule(&counterModule);
     addModule(&mapModule);
+    addModule(&ultrasonicModule);
+
 }
 void ModuleManager::renderModules(ImGuiIO io, ImVec2 possition,ImVec2 size) {
-    counterModule.setPos(possition);
-    counterModule.setSize(size);
-    counterModule.draw(io);
+    ultrasonicModule.setPos(possition);
+    ultrasonicModule.setSize(size);
+    ultrasonicModule.draw(io);
 
 }
 
