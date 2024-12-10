@@ -1,12 +1,6 @@
 #include "UltrasonicModule.h"
 #include "imgui.h"
-#include <iostream>
-#include <fstream>
-#include <thread>
-#include <chrono>
 #include <cstdlib>
-#include <ctime>
-
 #include "UltrasonicModule.h"
 #include <cmath>
 
@@ -29,25 +23,18 @@ void UltrasonicModule::updateRandomSensorData() {
     }
 }
 
-void UltrasonicModule::setPos(ImVec2 pos) {
-    position = pos;
-}
-
-void UltrasonicModule::setSize(ImVec2 sz) {
-    size = sz;
-}
-
 void UltrasonicModule::draw(ImGuiIO& io) {
     updateRandomSensorData();
-
-    ImGui::SetNextWindowPos(position);
-    ImGui::SetNextWindowSize(size);
-    ImGui::Begin("Ultrasonic Sensor Visualization", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 
     ImVec2 center = ImVec2(position.x + size.x / 2, position.y + size.y / 2);
     float radius = std::min(size.x, size.y) / 3.0f;
 
-    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+    ImDrawList* draw_list = ImGui::GetForegroundDrawList();
+
+    ImVec2 topLeft = ImVec2(center.x - radius, center.y - radius);
+    ImVec2 bottomRight = ImVec2(center.x + radius, center.y + radius);
+
+    draw_list->AddRect(topLeft, bottomRight, IM_COL32(255, 255, 255, 255), 0.0f, 0, 2.0f);
 
     draw_list->AddCircle(center, radius, IM_COL32(255, 255, 255, 255), 64);
 
@@ -60,8 +47,6 @@ void UltrasonicModule::draw(ImGuiIO& io) {
         draw_list->AddLine(center, ImVec2(x, y), IM_COL32(0, 255, 0, 255), 2.0f);
         draw_list->AddCircleFilled(ImVec2(x, y), 4.0f, IM_COL32(0, 255, 0, 255));
     }
-
-    ImGui::End();
 }
 
 
@@ -70,14 +55,8 @@ void UltrasonicModule::renderStandalone(ImGuiIO io, ImVec2 position) {
     draw(io);
 }
 
-ImVec2 UltrasonicModule::getSize() {
-    return size;
-}
-
-ImVec2 UltrasonicModule::getPos() {
-    return position;
-}
-
-std::string UltrasonicModule::getName() const {
-    return "UltrasonicModule";
-}
+std::string UltrasonicModule::getName() const { return name; }
+ImVec2 UltrasonicModule::getSize() { return size; }
+ImVec2 UltrasonicModule::getPos() { return possition; }
+void UltrasonicModule::setPos(ImVec2 pos) { possition = pos; }
+void UltrasonicModule::setSize(ImVec2 size) { this->size = size; }
