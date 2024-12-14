@@ -1,13 +1,13 @@
 #include "Template.h"
 #include <fstream>
 #include <stdexcept>
-#include <json.hpp>
-#include "src/widgets/Button.h"
-#include "src/widgets/Slider.h"
-#include "src/widgets/Checkbox.h"
-#include "src/widgets/Rectangle.h"
-#include "src/widgets/SingleLineLabel.h"
-#include "src/widgets/MultiLineLabel.h"
+#include <../json.hpp>
+#include "widgets/Button.h"
+#include "widgets/Slider.h"
+#include "widgets/Checkbox.h"
+#include "widgets/Rectangle.h"
+#include "widgets/SingleLineLabel.h"
+#include "widgets/MultiLineLabel.h"
 #include "iostream"
 
 using json = nlohmann::json;

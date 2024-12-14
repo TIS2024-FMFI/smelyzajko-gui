@@ -16,3 +16,5 @@ void Module::SetTextFrequency(float freq) { textFrequency = freq; }
 
 bool Module::IsTextLoggingEnabled() const { return textLogEnabled; }
 void Module::SetTextLoggingEnabled(bool enabled) { textLogEnabled = enabled; }
+
+Module::Module() {}

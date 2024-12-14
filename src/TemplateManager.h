@@ -1,4 +1,6 @@
 #include "Template.h"
+#include "widgets/Element.h"
+
 
 class TemplateManager {
 private:

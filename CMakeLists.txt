@@ -47,7 +47,9 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/libs/glfw/include
 )
 
-add_executable(smelyzajko-gui main.cpp src/ConfigurationMode.cpp)
+add_executable(smelyzajko-gui main.cpp src/ConfigurationMode.cpp src/widgets/Element.cpp
+src/widgets/Slider.cpp src/widgets/Button.cpp src/widgets/Checkbox.cpp src/widgets/Label.cpp
+src/widgets/MultiLineLabel.cpp src/widgets/Rectangle.cpp src/widgets/SingleLineLabel.cpp)
 
 
 target_link_libraries(smelyzajko-gui PRIVATE imgui glfw opengl32)

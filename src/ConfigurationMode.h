@@ -15,6 +15,7 @@ public:
     void addElementToActiveTemplate(Element* element);
 
     void drawElements();
+    void drawElementsWithSnappingOn();
     void setupMenuBar();
     void drawGrid() const;
     void bringElementToTop(Element* element);
@@ -27,6 +28,9 @@ private:
     float gridSize = 60.0f;
     bool isSnapping = false;
     bool showGrid = false;
-};
+    float menuBarHeight;
 
+    const float minGridValue = 10.0f;
+    const float maxGridValue = 1000.0f;
+};
 

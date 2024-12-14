@@ -1,11 +1,14 @@
 #include <iostream>
 #include "ConfigurationMode.h"
-#include "src/widgets/Rectangle.h"
-#include "src/widgets/Checkbox.h"
-#include "src/widgets/Button.h"
-#include "src/widgets/Slider.h"
-#include "src/widgets/SingleLineLabel.h"
-#include "src/widgets/MultiLineLabel.h"
+//#include "TemplateManager.h"
+#include "ModuleManager.h"
+#include "widgets/Element.h"
+#include "widgets/Rectangle.h"
+#include "widgets/Checkbox.h"
+#include "widgets/Button.h"
+#include "widgets/Slider.h"
+#include "widgets/SingleLineLabel.h"
+#include "widgets/MultiLineLabel.h"
 
 //// Example modules for demonstration
 //std::vector<Module> modules = {
@@ -13,6 +16,9 @@
 //        Module(2, "Lidar"),
 //        Module(3, "Sinusoid"),
 //};
+
+
+
 
 int ConfigurationMode::run() {
 
@@ -40,6 +46,7 @@ int ConfigurationMode::run() {
                      ImGuiWindowFlags_NoScrollbar
         );
 
+
             ImGui::Begin("Controls");
                 if (ImGui::Button("Add Rectangle")) {
                     addElementToActiveTemplate(new Rectangle("Rectangle", ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
@@ -56,7 +63,14 @@ int ConfigurationMode::run() {
 
             ImGui::End();
 
-            drawElements();
+            if (isSnapping){
+                drawElementsWithSnappingOn();
+            }else{
+                drawElements();
+            }
+
+
+
 
         ImGui::End();
 
@@ -66,7 +80,7 @@ int ConfigurationMode::run() {
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
-        glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -163,8 +177,119 @@ void ConfigurationMode::drawElements() {
 }
 
 
+void ConfigurationMode::drawElementsWithSnappingOn() {
+    auto activeElements = templateManager.getActiveTemplateElements();
+    static Element* draggedElement = nullptr; // Track the currently dragged element
+
+    for (int i = 0; i < activeElements.size(); i++) {
+        Element* element = activeElements[i];
+        ImGui::PushID(i);
+
+        // Get the element's current position
+        ImVec2 elementPos = element->getPosition();
+
+        // Handle mouse down to start dragging
+        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+            ImRect bbox = element->getBoundingBox();
+            if (bbox.Contains(ImGui::GetMousePos())) {
+                draggedElement = element; // Set this element as the one being dragged
+            }
+        }
+
+        // Handle dragging for the dragged element only
+        if (draggedElement == element && ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
+            ImVec2 dragDelta = ImGui::GetMouseDragDelta();
+            elementPos.x += dragDelta.x;
+            elementPos.y += dragDelta.y;
+
+            //element->setPosition(elementPos); // Update position
+            ImGui::ResetMouseDragDelta();     // Reset drag delta
+        }
+
+        // Snap only the dragged element when releasing the mouse button
+        if (draggedElement == element && ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+            elementPos.x = round(elementPos.x / gridSize) * gridSize;
+            elementPos.y = round((elementPos.y - menuBarHeight) / gridSize) * gridSize + menuBarHeight;
+
+            element->setPosition(elementPos); // Apply snapped position
+            draggedElement = nullptr;         // Clear dragged element
+        }
+
+        // Draw the element
+        element->draw(io);
+        ImGui::PopID();
+    }
+
+
+    // Check for clicks and move the element to top
+    Element *clickedElement = nullptr;
+    for (int i = activeElements.size() - 1; i >= 0; i--) {
+        Element *element = activeElements[i];
+        ImRect bbox = element->getBoundingBox();
+
+        if (bbox.Contains(ImGui::GetMousePos())) {
+            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                clickedElement = element;
+                break;
+            }
+        }
+    }
+    // If an element is clicked, bring it to the top
+    if (clickedElement) {
+        bringElementToTop(clickedElement);
+    }
+
+
+    bool clickHandled = false;
+    for (int i = activeElements.size() - 1; i >= 0; i--) {
+        Element *element = activeElements[i];
+        ImGui::PushID(i);
+
+        element->handleClicks(io);
+
+        ImRect bbox = element->getBoundingBox();
+        if (bbox.Contains(ImGui::GetMousePos())) {
+            if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
+                element->detectRightClickDelete();
+                clickHandled = true;
+            }
+        }
+
+        if (element->getPendingDelete()) {
+            ImGui::SetNextWindowPos(element->getDeletePopupPosition(), ImGuiCond_Always);
+            ImGui::OpenPopup("Delete Confirmation");
+
+            if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+                ImGui::Text("Delete this element?");
+                if (ImGui::Button("Yes")) {
+                    activeElements.erase(activeElements.begin() + i);
+                    ImGui::CloseCurrentPopup();
+                    ImGui::EndPopup();
+                    ImGui::PopID();
+                    break;
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("No")) {
+                    element->setPendingDelete(false);
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
+            }
+        }
+
+        ImGui::PopID();
+
+        if (clickHandled) {
+            break;
+        }
+    }
+}
+
+
+
 void ConfigurationMode::setupMenuBar() {
     if (ImGui::BeginMainMenuBar()) {
+        menuBarHeight = ImGui::GetWindowHeight();
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("Open")) {
             }
@@ -197,10 +322,18 @@ void ConfigurationMode::setupMenuBar() {
             ImGui::Checkbox("Enable Snapping", &isSnapping);
             ImGui::Checkbox("Show Grid", &showGrid);
 
-            ImGui::InputFloat("Grid Size", &gridSize, 0.1f, 1.0f);
+            ImGui::InputFloat("Grid Size", &gridSize, 5.0f, 1.0f);
+
+            // Minimum value to avoid dividing by 0
+            if (gridSize < minGridValue) {
+                gridSize = minGridValue;
+            }else if (gridSize > maxGridValue){
+                gridSize = maxGridValue;
+            }
 
             ImGui::EndMenu();
         }
+
         if (ImGui::BeginMenu("Configuration")) {
 //            for (Module& module : modules) {
 //                if (ImGui::BeginMenu(module.moduleName.c_str())) {
@@ -230,9 +363,11 @@ void ConfigurationMode::setupMenuBar() {
 //            }
             ImGui::EndMenu();
         }
+
     }
     ImGui::EndMainMenuBar();
 }
+
 
 void ConfigurationMode::renderSettingsPopup(Module& module, const std::string& part) {
     std::string popupName = std::string(module.moduleName) + " " + part + " Settings";
@@ -291,17 +426,20 @@ void ConfigurationMode::renderSettingsPopup(Module& module, const std::string& p
 }
 
 
+
 void ConfigurationMode::drawGrid() const {
     ImVec2 displaySize = io.DisplaySize;
     float menuBarHeight = ImGui::GetFrameHeight();
     ImDrawList *drawList = ImGui::GetBackgroundDrawList();
 
+    ImU32 whiteColor = IM_COL32_WHITE;
+
     for (float x = 0; x < displaySize.x; x += gridSize) {
-        drawList->AddLine(ImVec2(x, menuBarHeight), ImVec2(x, displaySize.y), IM_COL32(255, 255, 255, 255));
+        drawList->AddLine(ImVec2(x, menuBarHeight), ImVec2(x, displaySize.y), whiteColor);
     }
 
     for (float y = menuBarHeight; y < displaySize.y; y += gridSize) {
-        drawList->AddLine(ImVec2(0, y), ImVec2(displaySize.x, y), IM_COL32(255, 255, 255, 255));
+        drawList->AddLine(ImVec2(0, y), ImVec2(displaySize.x, y), whiteColor);
     }
 }
 
