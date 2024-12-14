@@ -1,18 +1,17 @@
 #include <iostream>
 #include "ConfigurationMode.h"
-#include "src/widgets/Rectangle.h"
-#include "src/widgets/Checkbox.h"
-#include "src/widgets/Button.h"
-#include "src/widgets/Slider.h"
-#include "src/widgets/SingleLineLabel.h"
-#include "src/widgets/MultiLineLabel.h"
+#include "widgets/Rectangle.h"
+#include "widgets/Checkbox.h"
+#include "widgets/Button.h"
+#include "widgets/Slider.h"
+#include "widgets/SingleLineLabel.h"
+#include "widgets/MultiLineLabel.h"
+#include "OperatingMode.h"
+#include "ModuleManager.h"
+
 
 //// Example modules for demonstration
-//std::vector<Module> modules = {
-//        Module(1, "Map"),
-//        Module(2, "Lidar"),
-//        Module(3, "Sinusoid"),
-//};
+
 
 int ConfigurationMode::run() {
 
@@ -32,17 +31,18 @@ int ConfigurationMode::run() {
         ImGui::SetNextWindowSize(io.DisplaySize); // Fullscreen size
 
         ImGui::Begin("Main Window", nullptr,
-                     ImGuiWindowFlags_NoTitleBar |
-                     ImGuiWindowFlags_NoCollapse |
-                     ImGuiWindowFlags_NoResize |
-                     ImGuiWindowFlags_NoMove |
-                     ImGuiWindowFlags_NoBringToFrontOnFocus |
-                     ImGuiWindowFlags_NoScrollbar
+                     ImGuiWindowFlags_NoTitleBar |    // Remove title bar
+                     ImGuiWindowFlags_NoCollapse |   // Prevent collapsing
+                     ImGuiWindowFlags_NoResize |     // Disable resizing
+                     ImGuiWindowFlags_NoMove |       // Prevent moving the window
+                     ImGuiWindowFlags_NoBringToFrontOnFocus | // Prevent window focus changes
+                     ImGuiWindowFlags_NoScrollbar    // Disable scrollbar (optional)
         );
 
             ImGui::Begin("Controls");
                 if (ImGui::Button("Add Rectangle")) {
-                    addElementToActiveTemplate(new Rectangle("Rectangle", ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
+                    addElementToActiveTemplate(new Rectangle("Rectangle", ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f),
+                                                              true));
                 }
                 if (ImGui::Button("Add Checkbox")) {
                     addElementToActiveTemplate(new Checkbox("Checkbox", ImVec2(100.0f, 100.0f), false));
@@ -139,7 +139,7 @@ void ConfigurationMode::drawElements() {
             if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
                 ImGui::Text("Delete this element?");
                 if (ImGui::Button("Yes")) {
-                    templateManager.removeElementFromActiveTemplate(i);
+                    activeElements.erase(activeElements.begin() + i);
                     ImGui::CloseCurrentPopup();
                     ImGui::EndPopup();
                     ImGui::PopID();

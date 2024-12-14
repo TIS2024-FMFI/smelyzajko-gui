@@ -19,15 +19,20 @@ std::vector<Element *> Template::getElements() {
 void Template::addElement(Element* element) {
     elements.push_back(element);
 }
+void Template::addModule(GraphicModule* module) {
+    graphicModules.push_back(module);
+}
 
 void Template::clear() {
     elements.clear();
+    graphicModules.clear();
 }
 
 nlohmann::json Template::to_json() const {
     json j;
     j["name"] = name;
     j["elements"] = json::array();
+    j["graphicModules"] = json::array();
 
     for (const auto& element : elements) {
         json elementJson;
@@ -35,19 +40,24 @@ nlohmann::json Template::to_json() const {
         j["elements"].push_back(elementJson);
     }
 
+    for (const auto& module : graphicModules) {
+        json moduleJson;
+        module->to_json(moduleJson);
+        j["graphicModules"].push_back(moduleJson);
+    }
     return j;
 }
 
 void Template::from_json(const nlohmann::json& j) {
     clear();
-
+    int rightFlag = 0;
     if (j.contains("name") && j["name"].is_string()) {
         name = j["name"];
     } else {
         throw std::invalid_argument("Template JSON is missing a valid 'name' field.");
     }
-
     if (j.contains("elements") && j["elements"].is_array()) {
+        rightFlag ++;
         for (const auto& elementJson : j["elements"]) {
             if (elementJson.contains("type") && elementJson["type"].is_string()) {
                 std::string type = elementJson["type"];
@@ -72,7 +82,26 @@ void Template::from_json(const nlohmann::json& j) {
                 }
             }
         }
-    } else {
+    }
+    if (j.contains("graphicModules") && j["graphicModules"].is_array()) {
+        rightFlag ++;
+        for (const auto& moduleJson : j["graphicModules"]) {
+            if (moduleJson.contains("name") && moduleJson["name"].is_string()) {
+                std::string name = moduleJson["name"];
+                ModuleManager moduleManager;
+                std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = moduleManager.getModuleConstructors();
+                auto it = moduleConstructors.find(name);
+                if (it != moduleConstructors.end()) {
+                    GraphicModule* module = it->second();
+                    module->from_json(moduleJson);
+                    graphicModules.push_back(module);
+                } else {
+                    throw std::invalid_argument("Unknown module type in JSON: " + name);
+                }
+            }
+        }
+    }
+    if (rightFlag < 1){
         throw std::invalid_argument("Template JSON is missing a valid 'elements' array.");
     }
 }
@@ -102,6 +131,10 @@ void Template::loadTemplate(const std::filesystem::path& filePath) {
 
 std::string Template::getName() const {
     return name;
+}
+
+std::vector<GraphicModule *> Template::getModules() {
+    return graphicModules;
 }
 
 void Template::removeElement(int index) {
