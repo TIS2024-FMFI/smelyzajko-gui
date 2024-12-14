@@ -14,6 +14,7 @@
 
 
 int ConfigurationMode::run() {
+
     io = ImGui::GetIO();
     (void)io;
 
@@ -44,6 +45,7 @@ int ConfigurationMode::run() {
                                                               true));
                 }
                 if (ImGui::Button("Add Checkbox")) {
+                    addElementToActiveTemplate(new Checkbox("Checkbox", ImVec2(100.0f, 100.0f), false));
                 }
                 if (ImGui::Button("Add Button")) {
                     addElementToActiveTemplate(new Button("Button", ImVec2(100.0f, 100.0f), ImVec2(100.0f, 25.0f)));
@@ -174,16 +176,19 @@ void ConfigurationMode::setupMenuBar() {
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Templates")) {
-            for (const Template& aTemplate : templateManager.getAllTemplates()) {
-                if (ImGui::MenuItem(aTemplate.getName().c_str())) {
-                    templateManager.setActiveTemplate(aTemplate);
-                    std::string activeTemplateName = templateManager.getActiveTemplateName();
-                    std::string windowTitle = std::string("GUI") + " - " + activeTemplateName;
-                    glfwSetWindowTitle(window, windowTitle.c_str());
+            if (ImGui::BeginMenu("Templates")) {
+                for (const Template &aTemplate: templateManager.getAllTemplates()) {
+                    if (ImGui::MenuItem(aTemplate.getName().c_str())) {
+                        templateManager.setActiveTemplate(aTemplate);
+                        std::string activeTemplateName = templateManager.getActiveTemplateName();
+                        std::string windowTitle = std::string("GUI") + " - " + activeTemplateName;
+                        glfwSetWindowTitle(window, windowTitle.c_str());
+                    }
                 }
+                ImGui::EndMenu();
             }
-            if (ImGui::MenuItem("Save template")) {
-                templateManager.saveCurrentTemplate("template.json");
+            if (ImGui::MenuItem("Save current template")) {
+                templateManager.saveCurrentTemplate(templateManager.getActiveTemplateName());
             }
             ImGui::EndMenu();
         }
@@ -197,34 +202,32 @@ void ConfigurationMode::setupMenuBar() {
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Configuration")) {
-//            moduleManager.createModules();
-            std::vector<Module*> modules ;//= moduleManager.getModules();
-            for (Module* module : modules) {
-                if (ImGui::BeginMenu(module->moduleName.c_str())) {
-                    // Show Graphics and Text parts as separate items
-                    if (ImGui::BeginMenu("Graphics")) {
-                        // Open Settings Popup for Graphics part
-                        std::string popupName = std::string(module->moduleName) + " Graphics Settings";
-                        if (ImGui::Button("Settings")) {
-                            ImGui::OpenPopup(popupName.c_str());
-                        }
-                        renderSettingsPopup(*module, "Graphics");
-                        ImGui::EndMenu();
-                    }
-
-                    if (ImGui::BeginMenu("Text")) {
-                        // Open Settings Popup for Text part
-                        std::string popupName = std::string(module->moduleName) + " Text Settings";
-                        if (ImGui::Button("Settings")) {
-                            ImGui::OpenPopup(popupName.c_str());
-                        }
-                        renderSettingsPopup(*module, "Text");
-                        ImGui::EndMenu();
-                    }
-
-                    ImGui::EndMenu();
-                }
-            }
+//            for (Module& module : modules) {
+//                if (ImGui::BeginMenu(module.moduleName.c_str())) {
+//                    // Show Graphics and Text parts as separate items
+//                    if (ImGui::BeginMenu("Graphics")) {
+//                        // Open Settings Popup for Graphics part
+//                        std::string popupName = std::string(module.moduleName) + " Graphics Settings";
+//                        if (ImGui::Button("Settings")) {
+//                            ImGui::OpenPopup(popupName.c_str());
+//                        }
+//                        renderSettingsPopup(module, "Graphics");
+//                        ImGui::EndMenu();
+//                    }
+//
+//                    if (ImGui::BeginMenu("Text")) {
+//                        // Open Settings Popup for Text part
+//                        std::string popupName = std::string(module.moduleName) + " Text Settings";
+//                        if (ImGui::Button("Settings")) {
+//                            ImGui::OpenPopup(popupName.c_str());
+//                        }
+//                        renderSettingsPopup(module, "Text");
+//                        ImGui::EndMenu();
+//                    }
+//
+//                    ImGui::EndMenu();
+//                }
+//            }
             ImGui::EndMenu();
         }
     }

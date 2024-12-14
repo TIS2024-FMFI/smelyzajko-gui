@@ -18,6 +18,7 @@ public:
     }
 
     void addElement(Element* element);
+    void removeElement(int index);
     void clear();
 
     std::string getName() const;

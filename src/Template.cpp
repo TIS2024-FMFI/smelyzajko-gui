@@ -9,7 +9,6 @@
 #include "src/widgets/SingleLineLabel.h"
 #include "src/widgets/MultiLineLabel.h"
 #include "iostream"
-#include "ModuleManager.h"
 
 using json = nlohmann::json;
 
@@ -62,6 +61,7 @@ void Template::from_json(const nlohmann::json& j) {
         for (const auto& elementJson : j["elements"]) {
             if (elementJson.contains("type") && elementJson["type"].is_string()) {
                 std::string type = elementJson["type"];
+
                 static const std::unordered_map<std::string, std::function<Element*()>> elementCreators = {
                         {"button", []() { return new Button(); }},
                         {"checkbox", []() { return new Checkbox(); }},
@@ -135,5 +135,9 @@ std::string Template::getName() const {
 
 std::vector<GraphicModule *> Template::getModules() {
     return graphicModules;
+}
+
+void Template::removeElement(int index) {
+    elements.erase(elements.begin() + index);
 }
 

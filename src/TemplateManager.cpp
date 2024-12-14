@@ -17,9 +17,7 @@ void TemplateManager::loadAllTemplates() {
         if (fs::exists(templatesDir) && fs::is_directory(templatesDir)) {
             for (const auto& file : fs::directory_iterator(templatesDir)) {
                 if (file.is_regular_file() && file.path().extension() == ".json") {
-                    std::cout << "Found JSON file: " << file.path() << std::endl;
                     jsonFiles.push_back(file.path());
-
                 }
             }
         } else {
@@ -66,6 +64,10 @@ std::string TemplateManager::getActiveTemplateName() const {
 
 void TemplateManager::clearActiveTemplateElements() {
     activeTemplate.clear();
+}
+
+void TemplateManager::removeElementFromActiveTemplate(int index) {
+    activeTemplate.removeElement(index);
 }
 
 void TemplateManager::addModuleToActiveTemplate(GraphicModule *module) {
