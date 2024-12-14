@@ -17,14 +17,14 @@ void Button::draw(ImGuiIO& io) {
     ImVec2 resize_handle_pos = ImVec2(position.x + size.x, position.y + size.y);
     ImVec2 handle_size = ImVec2(10.0f, 10.0f);
 
-    setStyles();
+    // setStyles();
 
     // Draw the button outline
     ImGui::SetCursorScreenPos(position);
     ImGui::SetNextItemAllowOverlap();
     ImGui::Button(label.c_str(), size);
 
-    removeStyles();
+    // removeStyles();
 
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
     // Draw the resize handle
@@ -53,14 +53,34 @@ void Button::handleClicks(ImGuiIO &io) {
 
     if (!resizing) {
         ImGui::SetCursorScreenPos(position);
-        if (ImGui::InvisibleButton(("Button" + label).c_str(), size)) {
-            std::cout << "Button clicked: " << label << std::endl;
-        }
+        ImGui::InvisibleButton(("Button" + label).c_str(), size);
         if (ImGui::IsItemActive() && ImGui::IsMouseDragging(0)) {
             ImVec2 delta = io.MouseDelta;
             position.x += delta.x;
             position.y += delta.y;
         }
+    }
+}
+
+void Button::to_json(nlohmann::json &j) const {
+    j = nlohmann::json{
+            {"type", "button"},
+            {"label", label},
+            {"position", {position.x, position.y}},
+            {"size", {size.x, size.y}}
+    };
+}
+
+void Button::from_json(const nlohmann::json &j) {
+    if (j.contains("type") && j["type"] != "button") {
+        throw std::invalid_argument("Invalid type for Checkbox: expected 'button'");
+    }
+
+    Element::from_json(j);
+
+    if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
+        size.x = j["size"][0];
+        size.y = j["size"][1];
     }
 }
 
@@ -70,10 +90,9 @@ void Button::setStyles() {
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, IM_COL32(30, 100, 180, 255));
     ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
     ImGui::PushStyleColor(ImGuiCol_Border, IM_COL32(255, 255, 255, 255));
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.0f);
 }
 
 void Button::removeStyles() {
-    ImGui::PopStyleVar(2); // Restore the default border size
+    ImGui::PopStyleVar(1); // Restore the default border size
     ImGui::PopStyleColor(4); // Restore the previous colors (Button, Hovered, Active, Border)
 }

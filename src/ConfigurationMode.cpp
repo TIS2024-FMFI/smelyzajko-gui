@@ -1,9 +1,21 @@
 #include <iostream>
 #include "ConfigurationMode.h"
-#include "Rectangle.h"
-#include "Checkbox.h"
-#include "Button.h"
-#include "Slider.h"
+//#include "TemplateManager.h"
+#include "ModuleManager.h"
+#include "widgets/Element.h"
+#include "widgets/Rectangle.h"
+#include "widgets/Checkbox.h"
+#include "widgets/Button.h"
+#include "widgets/Slider.h"
+#include "widgets/SingleLineLabel.h"
+#include "widgets/MultiLineLabel.h"
+
+//// Example modules for demonstration
+//std::vector<Module> modules = {
+//        Module(1, "Map"),
+//        Module(2, "Lidar"),
+//        Module(3, "Sinusoid"),
+//};
 
 
 
@@ -26,32 +38,37 @@ int ConfigurationMode::run() {
         ImGui::SetNextWindowSize(io.DisplaySize); // Fullscreen size
 
         ImGui::Begin("Main Window", nullptr,
-                     ImGuiWindowFlags_NoTitleBar |    // Remove title bar
-                     ImGuiWindowFlags_NoCollapse |   // Prevent collapsing
-                     ImGuiWindowFlags_NoResize |     // Disable resizing
-                     ImGuiWindowFlags_NoMove |       // Prevent moving the window
-                     ImGuiWindowFlags_NoBringToFrontOnFocus | // Prevent window focus changes
-                     ImGuiWindowFlags_NoScrollbar    // Disable scrollbar (optional)
+                     ImGuiWindowFlags_NoTitleBar |
+                     ImGuiWindowFlags_NoCollapse |
+                     ImGuiWindowFlags_NoResize |
+                     ImGuiWindowFlags_NoMove |
+                     ImGuiWindowFlags_NoBringToFrontOnFocus |
+                     ImGuiWindowFlags_NoScrollbar
         );
 
-        ImGui::Begin("Controls");
-        if (ImGui::Button("Add Rectangle")) {
-            activeElements.emplace_back(new Rectangle("Rectangle" + std::to_string(activeElements.size()), ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
-        }
-        if (ImGui::Button("Add Checkbox")) {
-            activeElements.emplace_back(new Checkbox("Checkbox " + std::to_string(activeElements.size()), ImVec2(100.0f, 100.0f), false)); // Initial state is unchecked
-        }
-        if (ImGui::Button("Add Button")) {
-            activeElements.emplace_back(new Button("Button " + std::to_string(activeElements.size()), ImVec2(100.0f, 100.0f), ImVec2(100.0f, 25.0f)));
-        }
-        setupIntSlider();
-        setupFloatSlider();
-        ImGui::End();
-        if (isSnapping){
-            drawElementsWithSnappingOn();
-        }else{
-            drawElements();
-        }
+
+            ImGui::Begin("Controls");
+                if (ImGui::Button("Add Rectangle")) {
+                    addElementToActiveTemplate(new Rectangle("Rectangle", ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
+                }
+                if (ImGui::Button("Add Checkbox")) {
+                    addElementToActiveTemplate(new Checkbox("Checkbox", ImVec2(100.0f, 100.0f), false));
+                }
+                if (ImGui::Button("Add Button")) {
+                    addElementToActiveTemplate(new Button("Button", ImVec2(100.0f, 100.0f), ImVec2(100.0f, 25.0f)));
+                }
+                createIntSliderSettings();
+                createFloatSliderSettings();
+                createLabelSettings();
+
+            ImGui::End();
+
+            if (isSnapping){
+                drawElementsWithSnappingOn();
+            }else{
+                drawElements();
+            }
+
 
 
 
@@ -71,10 +88,10 @@ int ConfigurationMode::run() {
 
     }
 
-    for (Element* element : activeElements) {
+    for (Element* element : templateManager.getActiveTemplateElements()) {
         delete element;
     }
-    activeElements.clear();
+    templateManager.clearActiveTemplateElements();
 
     cleanupImGui();
     glfwDestroyWindow(window);
@@ -84,6 +101,7 @@ int ConfigurationMode::run() {
 
 void ConfigurationMode::drawElements() {
     // First, draw the rectangles
+    auto activeElements = templateManager.getActiveTemplateElements();
     for (int i = 0; i < activeElements.size(); i++) {
         Element *element = activeElements[i];
         ImGui::PushID(i);
@@ -135,7 +153,7 @@ void ConfigurationMode::drawElements() {
             if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
                 ImGui::Text("Delete this element?");
                 if (ImGui::Button("Yes")) {
-                    activeElements.erase(activeElements.begin() + i);
+                    templateManager.removeElementFromActiveTemplate(i);
                     ImGui::CloseCurrentPopup();
                     ImGui::EndPopup();
                     ImGui::PopID();
@@ -160,38 +178,48 @@ void ConfigurationMode::drawElements() {
 
 
 void ConfigurationMode::drawElementsWithSnappingOn() {
+    auto activeElements = templateManager.getActiveTemplateElements();
+    static Element* draggedElement = nullptr; // Track the currently dragged element
+
     for (int i = 0; i < activeElements.size(); i++) {
         Element* element = activeElements[i];
         ImGui::PushID(i);
 
-        // Get the element's position
+        // Get the element's current position
         ImVec2 elementPos = element->getPosition();
 
-        // Handle dragging
-        if (ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
+        // Handle mouse down to start dragging
+        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+            ImRect bbox = element->getBoundingBox();
+            if (bbox.Contains(ImGui::GetMousePos())) {
+                draggedElement = element; // Set this element as the one being dragged
+            }
+        }
+
+        // Handle dragging for the dragged element only
+        if (draggedElement == element && ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
             ImVec2 dragDelta = ImGui::GetMouseDragDelta();
             elementPos.x += dragDelta.x;
             elementPos.y += dragDelta.y;
 
-            ImGui::ResetMouseDragDelta(); // Reset delta after applying movement
+            //element->setPosition(elementPos); // Update position
+            ImGui::ResetMouseDragDelta();     // Reset drag delta
+        }
+
+        // Snap only the dragged element when releasing the mouse button
+        if (draggedElement == element && ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+            elementPos.x = round(elementPos.x / gridSize) * gridSize;
+            elementPos.y = round((elementPos.y - menuBarHeight) / gridSize) * gridSize + menuBarHeight;
+
+            element->setPosition(elementPos); // Apply snapped position
+            draggedElement = nullptr;         // Clear dragged element
         }
 
         // Draw the element
         element->draw(io);
-
-        // On mouse release, snap to nearest grid point
-        if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
-
-            elementPos.x = round(elementPos.x / gridSize) * gridSize ;
-            elementPos.y = round((elementPos.y  -  menuBarHeight )/ gridSize) * gridSize  +  menuBarHeight;
-            element->setPosition(elementPos);
-        }
-
-        // Draw the element after any movement/snapping updates
-        element->draw(io);
-
         ImGui::PopID();
     }
+
 
     // Check for clicks and move the element to top
     Element *clickedElement = nullptr;
@@ -272,14 +300,23 @@ void ConfigurationMode::setupMenuBar() {
             }
             ImGui::EndMenu();
         }
-//        if (ImGui::BeginMenu("Templates")) {
-//            for (const Template& aTemplate : templateHandler.allTemplates) {
-//                if (ImGui::MenuItem(aTemplate.name.c_str())) {
-//                    templateHandler.setActiveTemplate(aTemplate);
-//                }
-//            }
-//            ImGui::EndMenu();
-//        }
+        if (ImGui::BeginMenu("Templates")) {
+            if (ImGui::BeginMenu("Templates")) {
+                for (const Template &aTemplate: templateManager.getAllTemplates()) {
+                    if (ImGui::MenuItem(aTemplate.getName().c_str())) {
+                        templateManager.setActiveTemplate(aTemplate);
+                        std::string activeTemplateName = templateManager.getActiveTemplateName();
+                        std::string windowTitle = std::string("GUI") + " - " + activeTemplateName;
+                        glfwSetWindowTitle(window, windowTitle.c_str());
+                    }
+                }
+                ImGui::EndMenu();
+            }
+            if (ImGui::MenuItem("Save current template")) {
+                templateManager.saveCurrentTemplate(templateManager.getActiveTemplateName());
+            }
+            ImGui::EndMenu();
+        }
         if (ImGui::BeginMenu("Options")) {
 
             ImGui::Checkbox("Enable Snapping", &isSnapping);
@@ -297,9 +334,97 @@ void ConfigurationMode::setupMenuBar() {
             ImGui::EndMenu();
         }
 
+        if (ImGui::BeginMenu("Configuration")) {
+//            for (Module& module : modules) {
+//                if (ImGui::BeginMenu(module.moduleName.c_str())) {
+//                    // Show Graphics and Text parts as separate items
+//                    if (ImGui::BeginMenu("Graphics")) {
+//                        // Open Settings Popup for Graphics part
+//                        std::string popupName = std::string(module.moduleName) + " Graphics Settings";
+//                        if (ImGui::Button("Settings")) {
+//                            ImGui::OpenPopup(popupName.c_str());
+//                        }
+//                        renderSettingsPopup(module, "Graphics");
+//                        ImGui::EndMenu();
+//                    }
+//
+//                    if (ImGui::BeginMenu("Text")) {
+//                        // Open Settings Popup for Text part
+//                        std::string popupName = std::string(module.moduleName) + " Text Settings";
+//                        if (ImGui::Button("Settings")) {
+//                            ImGui::OpenPopup(popupName.c_str());
+//                        }
+//                        renderSettingsPopup(module, "Text");
+//                        ImGui::EndMenu();
+//                    }
+//
+//                    ImGui::EndMenu();
+//                }
+//            }
+            ImGui::EndMenu();
+        }
+
     }
     ImGui::EndMainMenuBar();
 }
+
+
+void ConfigurationMode::renderSettingsPopup(Module& module, const std::string& part) {
+    std::string popupName = std::string(module.moduleName) + " " + part + " Settings";
+
+    // Set the size and position of the popup to be centered on the screen
+    ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_Always);  // Set size of the popup
+    ImVec2 windowSize = ImGui::GetIO().DisplaySize; // Get screen dimensions
+    ImVec2 popupPos = ImVec2(windowSize.x / 2 - 200, windowSize.y / 2 - 150);  // Centering position
+    ImGui::SetNextWindowPos(popupPos, ImGuiCond_Always);  // Set the position of the popup
+
+    // Begin the modal popup
+    if (ImGui::BeginPopupModal(popupName.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+        // Center the content inside the popup
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(20, 20));  // Add padding for a better layout
+        ImGui::Text("Settings for %s", popupName.c_str());
+
+        // Frequency Slider and Logging Checkbox
+        if (part == "Graphics") {
+            float frequency = module.GetGraphicsFrequency();
+            int frequencyInt = static_cast<int>(frequency);  // Convert to integer for the slider
+            if (ImGui::SliderInt("Frequency", &frequencyInt, 0, 100)) {
+                module.SetGraphicsFrequency(static_cast<float>(frequencyInt)); // Set integer as frequency
+            }
+
+            bool logEnabled = module.IsGraphicsLoggingEnabled();
+            if (ImGui::Checkbox("Enable Logging", &logEnabled)) {
+                module.SetGraphicsLoggingEnabled(logEnabled);
+            }
+        } else if (part == "Text") {
+            float frequency = module.GetTextFrequency();
+            int frequencyInt = static_cast<int>(frequency);  // Convert to integer for the slider
+            if (ImGui::SliderInt("Frequency", &frequencyInt, 0, 100)) {
+                module.SetTextFrequency(static_cast<float>(frequencyInt)); // Set integer as frequency
+            }
+
+            bool logEnabled = module.IsTextLoggingEnabled();
+            if (ImGui::Checkbox("Enable Logging", &logEnabled)) {
+                module.SetTextLoggingEnabled(logEnabled);
+            }
+        }
+
+        // Apply and Cancel buttons
+        ImGui::NewLine();
+        if (ImGui::Button("Apply")) {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel")) {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::PopStyleVar();  // Restore the style to default
+        ImGui::EndPopup();
+    }
+}
+
 
 
 void ConfigurationMode::drawGrid() const {
@@ -307,17 +432,20 @@ void ConfigurationMode::drawGrid() const {
     float menuBarHeight = ImGui::GetFrameHeight();
     ImDrawList *drawList = ImGui::GetBackgroundDrawList();
 
+    ImU32 whiteColor = IM_COL32_WHITE;
+
     for (float x = 0; x < displaySize.x; x += gridSize) {
-        drawList->AddLine(ImVec2(x, menuBarHeight), ImVec2(x, displaySize.y), IM_COL32(255, 255, 255, 255));
+        drawList->AddLine(ImVec2(x, menuBarHeight), ImVec2(x, displaySize.y), whiteColor);
     }
 
     for (float y = menuBarHeight; y < displaySize.y; y += gridSize) {
-        drawList->AddLine(ImVec2(0, y), ImVec2(displaySize.x, y), IM_COL32(255, 255, 255, 255));
+        drawList->AddLine(ImVec2(0, y), ImVec2(displaySize.x, y), whiteColor);
     }
 }
 
 void ConfigurationMode::bringElementToTop(Element* element) {
     // Remove the clicked element and add it to the end of the list
+    auto activeElements = templateManager.getActiveTemplateElements();
     auto it = std::find(activeElements.begin(), activeElements.end(), element);
     if (it != activeElements.end()) {
         activeElements.erase(it);
@@ -329,7 +457,53 @@ void ConfigurationMode::bringElementToTop(Element* element) {
     }
 }
 
-void ConfigurationMode::setupIntSlider() {
+void ConfigurationMode::createLabelSettings() {
+    if (ImGui::Button("Add Label")) {
+        ImGui::OpenPopup("Add Label Popup");
+    }
+
+    if (ImGui::BeginPopup("Add Label Popup")) {
+        static bool isMultiLine = false;
+        static char text[256] = "Hello, World!";
+        static float position[2] = {100.0f, 100.0f};
+
+        ImGui::Checkbox("Multi-line", &isMultiLine);
+        ImGui::InputTextMultiline("Text", text, IM_ARRAYSIZE(text));
+
+        if (ImGui::Button("Add")) {
+            ImVec2 textSize = ImGui::CalcTextSize(text);
+            if (isMultiLine) {
+                addElementToActiveTemplate(new MultiLineLabel(
+                        text,
+                        ImVec2(position[0], position[1]),
+                        textSize
+                ));
+            } else {
+                // sanitize text
+                for (size_t i = 0; i < strlen(text); ++i) {
+                    if (text[i] == '\n') {
+                        text[i] = ' '; // Replace newline with space
+                    }
+                }
+                addElementToActiveTemplate(new SingleLineLabel(
+                        text,
+                        ImVec2(position[0], position[1]),
+                        textSize
+                ));
+            }
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel")) {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+void ConfigurationMode::createIntSliderSettings() {
     if (ImGui::Button("Add Slider (Int)")) {
         ImGui::OpenPopup("Add Int Slider Popup");
     }
@@ -351,7 +525,7 @@ void ConfigurationMode::setupIntSlider() {
         if (initialValue > maxValue) initialValue = maxValue;
 
         if (ImGui::Button("Add")) {
-            activeElements.emplace_back(new Slider<int>(
+            addElementToActiveTemplate(new Slider<int>(
                     label,
                     ImVec2(position[0], position[1]),
                     ImVec2(size[0], size[1]),
@@ -371,7 +545,7 @@ void ConfigurationMode::setupIntSlider() {
     }
 }
 
-void ConfigurationMode::setupFloatSlider() {
+void ConfigurationMode::createFloatSliderSettings() {
     if (ImGui::Button("Add Slider (Float)")) {
         ImGui::OpenPopup("Add Slider Popup");
     }
@@ -393,7 +567,7 @@ void ConfigurationMode::setupFloatSlider() {
         if (initialValue > maxValue) initialValue = maxValue;
 
         if (ImGui::Button("Add")) {
-            activeElements.emplace_back(new Slider<float>(
+            addElementToActiveTemplate(new Slider<float>(
                     label,
                     ImVec2(position[0], position[1]),
                     ImVec2(size[0], size[1]),
@@ -411,4 +585,8 @@ void ConfigurationMode::setupFloatSlider() {
 
         ImGui::EndPopup();
     }
+}
+
+void ConfigurationMode::addElementToActiveTemplate(Element* element) {
+    templateManager.addElementToActiveTemplate(element);
 }

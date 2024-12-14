@@ -39,3 +39,26 @@ void Checkbox::handleClicks(ImGuiIO &io) {
         toggle();
     }
 }
+
+void Checkbox::to_json(nlohmann::json &j) const {
+    j = nlohmann::json{
+            {"type", "checkbox"},
+            {"label", label},
+            {"position", {position.x, position.y}},
+            {"checked", checked}
+    };
+}
+
+void Checkbox::from_json(const nlohmann::json &j) {
+    if (j.contains("type") && j["type"] != "checkbox") {
+        throw std::invalid_argument("Invalid type for Checkbox: expected 'checkbox'");
+    }
+
+    Element::from_json(j);
+
+    if (j.contains("checked") && j["checked"].is_boolean()) {
+        checked = j["checked"];
+    } else {
+        checked = false;
+    }
+}
