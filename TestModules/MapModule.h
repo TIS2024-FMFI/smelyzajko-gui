@@ -6,57 +6,69 @@
 #include <string>
 #include "imgui.h"
 #include "../src/Module.h"
+#include <thread>
+#include <atomic>
+#include <chrono>
+#include "../src/ModuleManager.h"
 
 
 class MapModule : public Module {
-public:
-    MapModule();
-    // Funkcia na vykreslenie mapy
-    void renderStandalone(ImGuiIO io, ImVec2 possition) override;
-    void draw(ImGuiIO &io) override;
-    // Funkcia na logovanie pozície guličky do JSON súboru
-    void logToJson(const std::pair<int, int>& position);
 
+
+public:
+    MapModule(ModuleManager* moduleManager);
+//    MapModule(int id, const char* name) : Module(id, name) {}
+    ~MapModule() ;
+    void run() override;
+    std::string getName() const override;
+    void logToJson(const std::pair<int, int>& position);
     // Funkcia na generovanie priechodnej mapy, nájde aj počiatočnú pozíciu čo najďalej od cieľa
     void generatePassableMap();
-
+    void saveMapToJson();
     // Funkcia na generovanie cesty cez mapu z náhodnej štartovacej pozície
     void generatePath();
 
-    std::string getName() const override;
+    ModuleManager& moduleManager;
 
-    ImVec2 getSize() override;
+//    void drawButtons();
 
-    ImVec2 getPos() override;
-
-    void setPos(ImVec2 pos) override;
-
-    void setSize(ImVec2 size) override;
-
-    void drawButtons();
-    static const int rows = 10;
-    static const int cols = 10;
-    int map[rows][cols];
     const float cellSize = 40.0f;
 
     // Náhodná mapa (0 = cesta, 1 = múr)
 
     bool mapInitialized = false;
     std::pair<int, int> startPosition; // Náhodná počiatočná pozícia
-
+    int rows = 20;
+    int cols = 20;
     // Trasa pre guličku (sekvencia [riadok, stĺpec])
     std::vector<std::pair<int, int>> path;
+    std::vector<std::vector<int>> map;
 
-    bool isStopped = false;
-    int currentStep = 0;
+
+
+    std::string moduleName = "Map Module" ;  // Module name
+    int graphicModuleId;
+
 
 private:
-    std::string name = "Map Module";
     ImVec2 size;
-    ImVec2 possition ;
-    // Rozmery mapy a buniek
+    ImVec2 position ;
 
 
+    // Graphics settings
+    float graphicsFrequency{};
+    bool graphicsLogEnabled{};
+
+    // Text settings
+    float textFrequency{};
+    bool textLogEnabled{};
+
+
+    std::thread mapThread;
+    std::atomic<bool> running;
+    float deltaTime;
+    bool isStopped = false;
+    int currentStep = 0;
 
 
 };

@@ -2,6 +2,7 @@
 #include <utility>
 #include <filesystem>
 #include <iostream>
+#include "vector"
 namespace fs = std::filesystem;
 
 TemplateManager::TemplateManager() {
@@ -16,7 +17,9 @@ void TemplateManager::loadAllTemplates() {
         if (fs::exists(templatesDir) && fs::is_directory(templatesDir)) {
             for (const auto& file : fs::directory_iterator(templatesDir)) {
                 if (file.is_regular_file() && file.path().extension() == ".json") {
+                    std::cout << "Found JSON file: " << file.path() << std::endl;
                     jsonFiles.push_back(file.path());
+
                 }
             }
         } else {
@@ -63,4 +66,12 @@ std::string TemplateManager::getActiveTemplateName() const {
 
 void TemplateManager::clearActiveTemplateElements() {
     activeTemplate.clear();
+}
+
+void TemplateManager::addModuleToActiveTemplate(GraphicModule *module) {
+    activeTemplate.addModule(module);
+}
+
+std::vector<GraphicModule *> TemplateManager::getActiveTemplateModules() {
+    return activeTemplate.getModules();
 }

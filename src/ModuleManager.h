@@ -3,25 +3,37 @@
 #define MODULEMANAGER_H
 #include <vector>
 #include "Module.h"
-#include "../TestModules/TestGraphicModule.h"
-#include "../TestModules/CounterModule.h"
-#include "../TestModules/MapModule.h"
+#include "../TestModules/MapModuleGraphics.h"
+#include "../TestModules/CounterModuleGraphics.h"
+
 
 class ModuleManager  {
 public:
-    void addModule(Module* module);
-    void createModules();
+    static ModuleManager& getInstance() {
+        static ModuleManager instance;
+        return instance;
+    }
 
-    void renderModules(ImGuiIO io, ImVec2 possition, ImVec2 size);
-    void readTemplateandCreateModules(const std::string& filename);
+    int gegisterModule(const std::string& name, Module *module);
+    int registerGraphicModule(const std::string& name,int moduleID);
 
-    const std::vector<Module *> &getModules() const;
+    void updateValueOfModule(int moduleID, std::string value);
+    void updateValueOfModule(int moduleID, int value);
+    void updateValueOfModule(int moduleID, std::vector<int> value);
+    void setActiveModuleAndDraw(std::vector<GraphicModule *> graphicModules_, ImGuiIO &io);
+
+
+
+    const std::unordered_map<std::string, std::function<GraphicModule*()>> &getModuleConstructors() const;
+    void clearModules();
+    std::vector<GraphicModule*> graphicModules;
 
 private:
-    TestGraphicModule testGraphicModule;
-    CounterModule counterModule;
-    MapModule mapModule = MapModule();
     std::vector<Module*> modules ;
+    std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
+            {"Map Module", []() { return new MapModuleGraphics(); }},
+             {"Counter Module", []() { return new CounterModuleGraphics(); }}
+    };
 
 };
 

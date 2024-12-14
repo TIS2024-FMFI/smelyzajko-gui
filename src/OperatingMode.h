@@ -1,19 +1,21 @@
 #pragma once
 #include "GUI.h"
-#include "TemplateHandler.h"
+#include "TemplateManager.h"
 #include <algorithm>
 #include "Module.h"
 class OperatingMode :  GUI {
 public:
     OperatingMode() : io(ImGui::GetIO()) {}
+    ModuleManager moduleManager;
 
-    std::vector<Element *> activeElements;
-    TemplateHandler templateHandler;
+    TemplateManager templateManager = TemplateManager();
     ImGuiIO& io;
     int run() override;
     void drawElements();
     void setupMenuBar();
     void renderSettingsPopup(Module& module, const std::string& part);
+    void addElementToActiveTemplate(Element *element);
+    void bringElementToTop(Element *element);
 
 
 private:
@@ -21,7 +23,7 @@ private:
     bool isSnapping = false;
     bool showGrid = false;
 
-    void bringElementToTop(Element *element);
+
 };
 
 

@@ -8,29 +8,26 @@
 #include <thread>
 #include "imgui.h"
 #include "../src/Module.h"
+#include "../src/ModuleManager.h"
+
 
 class CounterModule : public Module {
 public:
     ImFont* largeFont;
-    CounterModule();
-    ~CounterModule();
-
-
-    void renderStandalone(ImGuiIO io, ImVec2 possition) override;
-    void draw(ImGuiIO &io) override;
-    void saveLogToJson(const std::vector<int> &values);
-
+    CounterModule(ModuleManager* moduleManager);
+    ~CounterModule() ;
+    void run() override;
     std::string getName() const override;
-    ImVec2 getSize() override;
-    ImVec2 getPos() override;
 
-    void setPos(ImVec2 pos) override;
-    void setSize(ImVec2 size) override;
+    void saveLogToJson(const std::vector<int> &values);
+    ModuleManager& moduleManager;
+    int graphicModuleId;
+    int moduleId;
 
 private:
-    std::string name = "Counter Module";
+    std::string moduleName = "Counter Module";
     ImVec2 size;
-    ImVec2 possition;
+    ImVec2 position;
 
     std::atomic<int> counter;
     std::atomic<bool> stopGeneration;
@@ -38,8 +35,6 @@ private:
     std::mutex logMutex;
     std::thread generatorThread;
 
-
-    void generateNumbers();
 };
 
 #endif // COUNTERMODULE_H

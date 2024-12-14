@@ -30,17 +30,18 @@ int ConfigurationMode::run() {
         ImGui::SetNextWindowSize(io.DisplaySize); // Fullscreen size
 
         ImGui::Begin("Main Window", nullptr,
-                     ImGuiWindowFlags_NoTitleBar |
-                     ImGuiWindowFlags_NoCollapse |
-                     ImGuiWindowFlags_NoResize |
-                     ImGuiWindowFlags_NoMove |
-                     ImGuiWindowFlags_NoBringToFrontOnFocus |
-                     ImGuiWindowFlags_NoScrollbar
+                     ImGuiWindowFlags_NoTitleBar |    // Remove title bar
+                     ImGuiWindowFlags_NoCollapse |   // Prevent collapsing
+                     ImGuiWindowFlags_NoResize |     // Disable resizing
+                     ImGuiWindowFlags_NoMove |       // Prevent moving the window
+                     ImGuiWindowFlags_NoBringToFrontOnFocus | // Prevent window focus changes
+                     ImGuiWindowFlags_NoScrollbar    // Disable scrollbar (optional)
         );
 
             ImGui::Begin("Controls");
                 if (ImGui::Button("Add Rectangle")) {
-                    addElementToActiveTemplate(new Rectangle("Rectangle", ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
+                    addElementToActiveTemplate(new Rectangle("Rectangle", ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f),
+                                                              true));
                 }
                 if (ImGui::Button("Add Checkbox")) {
                 }
@@ -196,8 +197,8 @@ void ConfigurationMode::setupMenuBar() {
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Configuration")) {
-            moduleManager.createModules();
-            std::vector<Module*> modules = moduleManager.getModules();
+//            moduleManager.createModules();
+            std::vector<Module*> modules ;//= moduleManager.getModules();
             for (Module* module : modules) {
                 if (ImGui::BeginMenu(module->moduleName.c_str())) {
                     // Show Graphics and Text parts as separate items

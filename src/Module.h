@@ -1,27 +1,22 @@
-
 #ifndef MODULE_H
 #define MODULE_H
 
 #include "imgui.h"
-
 #include <string>
-
+#include "json.hpp"
 class Module {
 public:
-    virtual ~Module() = default;
+    ~Module() = default;
     Module() : graphicsFrequency(10.0f), graphicsLogEnabled(false),
                        textFrequency(10.0f), textLogEnabled(false) {}
-    virtual void renderStandalone(ImGuiIO io, ImVec2 possition) = 0;
-    virtual ImVec2 getSize() = 0;
-    virtual ImVec2 getPos() = 0;
-    virtual std::string getName() const = 0;
-    virtual void setPos(ImVec2 pos) = 0;
-    virtual void setSize(ImVec2 size)  = 0;
-    virtual void draw(ImGuiIO &io) = 0 ;
-    int counter = 0;
-    bool active = false;
+
     Module(int id, const char* name);
 
+    virtual void run() = 0;
+
+
+
+    virtual std::string getName() const = 0;
     // Graphics Settings
     float GetGraphicsFrequency() const;
     void SetGraphicsFrequency(float freq);
@@ -40,10 +35,9 @@ public:
     std::string moduleName;  // Module name
 
 
+
 private:
-    std::string name;
-    ImVec2 position;
-    ImVec2 size;
+
     // Graphics settings
     float graphicsFrequency;
     bool graphicsLogEnabled;
@@ -51,6 +45,6 @@ private:
     // Text settings
     float textFrequency;
     bool textLogEnabled;
-};
 
+};
 #endif // MODULE_H
