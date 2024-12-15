@@ -18,6 +18,8 @@ public:
     int counter = 1;
     Module(int id, const char* name);
 
+    Module();
+
     // Graphics Settings
     float GetGraphicsFrequency() const;
     void SetGraphicsFrequency(float freq);

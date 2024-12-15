@@ -1,11 +1,11 @@
 #include <iostream>
 #include "ConfigurationMode.h"
-#include "src/widgets/Rectangle.h"
-#include "src/widgets/Checkbox.h"
-#include "src/widgets/Button.h"
-#include "src/widgets/Slider.h"
-#include "src/widgets/SingleLineLabel.h"
-#include "src/widgets/MultiLineLabel.h"
+#include "widgets/Rectangle.h"
+#include "widgets/Checkbox.h"
+#include "widgets/Button.h"
+#include "widgets/Slider.h"
+#include "widgets/SingleLineLabel.h"
+#include "widgets/MultiLineLabel.h"
 
 //// Example modules for demonstration
 //std::vector<Module> modules = {
@@ -13,6 +13,51 @@
 //        Module(2, "Lidar"),
 //        Module(3, "Sinusoid"),
 //};
+
+inline bool isOverlapping(const ImRect& a, const ImRect& b) {
+    return !(a.Max.x <= b.Min.x ||  // No overlap on the left
+             a.Min.x >= b.Max.x ||  // No overlap on the right
+             a.Max.y <= b.Min.y ||  // No overlap above
+             a.Min.y >= b.Max.y);   // No overlap below
+}
+
+ImVec2 findFreePosition(const std::vector<Element*>& elements, const ImVec2& elementSize, const ImVec2& start = ImVec2(10.0f, 10.0f), float step = 10.0f, float padding = 15.0f, float menuHeight = 20.0f) {
+    ImVec2 position = start;
+    bool isPositionFree;
+
+    do {
+        isPositionFree = true;
+        ImRect newBoundingBox(
+                ImVec2(position.x - padding, position.y - padding),
+                ImVec2(position.x + elementSize.x + padding, position.y + elementSize.y + padding)
+        );
+
+        // Check overlap with existing elements
+        for (const auto& element : elements) {
+            if (isOverlapping(newBoundingBox, element->getBoundingBox())) {
+                isPositionFree = false;
+                position.x += step; // Move horizontally
+                if (position.x + elementSize.x + padding > ImGui::GetIO().DisplaySize.x) {
+                    position.x = start.x; // Reset X
+                    position.y += step;  // Move vertically
+                }
+                break;
+            }
+        }
+
+        // Check if position is above the reserved main menu height
+        if (isPositionFree && position.y < menuHeight + padding) {
+            isPositionFree = false;
+            position.y = menuHeight + padding; // Move below the menu area
+        }
+
+    } while (!isPositionFree && position.y + elementSize.y + padding <= ImGui::GetIO().DisplaySize.y);
+
+    return position ;
+}
+
+
+
 
 int ConfigurationMode::run() {
 
@@ -40,21 +85,6 @@ int ConfigurationMode::run() {
                      ImGuiWindowFlags_NoScrollbar
         );
 
-            ImGui::Begin("Controls");
-                if (ImGui::Button("Add Rectangle")) {
-                    addElementToActiveTemplate(new Rectangle("Rectangle", ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
-                }
-                if (ImGui::Button("Add Checkbox")) {
-                    addElementToActiveTemplate(new Checkbox("Checkbox", ImVec2(100.0f, 100.0f), false));
-                }
-                if (ImGui::Button("Add Button")) {
-                    addElementToActiveTemplate(new Button("Button", ImVec2(100.0f, 100.0f), ImVec2(100.0f, 25.0f)));
-                }
-                createIntSliderSettings();
-                createFloatSliderSettings();
-                createLabelSettings();
-
-            ImGui::End();
 
             drawElements();
 
@@ -230,6 +260,49 @@ void ConfigurationMode::setupMenuBar() {
 //            }
             ImGui::EndMenu();
         }
+
+        if (ImGui::BeginMenu("Controls")) {
+            auto elements = templateManager.getActiveTemplateElements();
+
+            if (ImGui::MenuItem("Add Rectangle")) {
+                ImVec2 elementSize(300.0f, 200.0f); // Fixed size for the rectangle (Width:Height = 2:3)
+                ImVec2 padding(30.0f, 30.0f); // Define padding to maintain space between elements
+                ImVec2 position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, 25.0f);
+                addElementToActiveTemplate(new Rectangle("Rectangle", position, elementSize));
+            }
+
+
+
+            if (ImGui::MenuItem("Add Checkbox")) {
+                ImVec2 elementSize(30.0f, 30.0f); // Define size for checkbox
+                ImVec2 position = findFreePosition(elements, elementSize);
+                addElementToActiveTemplate(new Checkbox("Checkbox", position, false));
+            }
+
+            if (ImGui::MenuItem("Add Button")) {
+                ImVec2 buttonSize(100.0f, 25.0f); // Fixed size for the button
+                ImVec2 padding(20.0f, 20.0f); // Define padding to maintain space between elements
+                ImVec2 position = findFreePosition(elements, buttonSize, padding, 20.0f, 20.0f, 25.0f);
+                addElementToActiveTemplate(new Button("Button", position, buttonSize));
+            }
+
+
+
+            // Submenus for slider and label settings
+            if (ImGui::BeginMenu("Create Slider")) {
+                createIntSliderSettings();
+                createFloatSliderSettings();
+                ImGui::EndMenu();
+            }
+
+            if (ImGui::BeginMenu("Create Label")) {
+                createLabelSettings();
+                ImGui::EndMenu();
+            }
+
+            ImGui::EndMenu();
+        }
+
     }
     ImGui::EndMainMenuBar();
 }
@@ -327,17 +400,23 @@ void ConfigurationMode::createLabelSettings() {
     if (ImGui::BeginPopup("Add Label Popup")) {
         static bool isMultiLine = false;
         static char text[256] = "Hello, World!";
-        static float position[2] = {100.0f, 100.0f};
+        static ImVec2 position = ImVec2(100.0f, 100.0f);
 
         ImGui::Checkbox("Multi-line", &isMultiLine);
         ImGui::InputTextMultiline("Text", text, IM_ARRAYSIZE(text));
 
+        // Calculate free position for the label
+        auto elements = templateManager.getActiveTemplateElements();
+        ImVec2 textSize = ImGui::CalcTextSize(text);
+        ImVec2 labelSize = isMultiLine ? ImVec2(textSize.x, textSize.y) : ImVec2(textSize.x, 25.0f); // Adjust the height for single-line labels
+        ImVec2 padding(10.0f, 10.0f); // Define padding to maintain space between elements
+        position = findFreePosition(elements, labelSize, padding, 10.0f, 10.0f, 25.0f);
+
         if (ImGui::Button("Add")) {
-            ImVec2 textSize = ImGui::CalcTextSize(text);
             if (isMultiLine) {
                 addElementToActiveTemplate(new MultiLineLabel(
                         text,
-                        ImVec2(position[0], position[1]),
+                        position,
                         textSize
                 ));
             } else {
@@ -349,7 +428,7 @@ void ConfigurationMode::createLabelSettings() {
                 }
                 addElementToActiveTemplate(new SingleLineLabel(
                         text,
-                        ImVec2(position[0], position[1]),
+                        position,
                         textSize
                 ));
             }
@@ -366,14 +445,14 @@ void ConfigurationMode::createLabelSettings() {
 }
 
 void ConfigurationMode::createIntSliderSettings() {
-    if (ImGui::Button("Add Slider (Int)")) {
+    if (ImGui::Button("Add Integer Slider")) {
         ImGui::OpenPopup("Add Int Slider Popup");
     }
 
     if (ImGui::BeginPopup("Add Int Slider Popup")) {
         static char label[128] = "Slider (int)";
-        static float position[2] = {100.0f, 100.0f};
-        static float size[2] = {200.0f, 20.0f};
+        static ImVec2 position = ImVec2(100.0f, 100.0f);
+        static ImVec2 size = ImVec2(200.0f, 20.0f);
         static int minValue = 0;
         static int maxValue = 10;
         static int initialValue = 5;
@@ -386,11 +465,17 @@ void ConfigurationMode::createIntSliderSettings() {
         if (initialValue < minValue) initialValue = minValue;
         if (initialValue > maxValue) initialValue = maxValue;
 
+        // Calculate free position for the slider
+        auto elements = templateManager.getActiveTemplateElements();
+        ImVec2 sliderSize(200.0f, 20.0f); // Fixed size for the slider
+        ImVec2 padding(10.0f, 10.0f); // Define padding to maintain space between elements
+        position = findFreePosition(elements, sliderSize, padding, 10.0f, 10.0f, 25.0f);
+
         if (ImGui::Button("Add")) {
             addElementToActiveTemplate(new Slider<int>(
                     label,
-                    ImVec2(position[0], position[1]),
-                    ImVec2(size[0], size[1]),
+                    position,
+                    sliderSize,
                     minValue,
                     maxValue,
                     initialValue
@@ -407,15 +492,16 @@ void ConfigurationMode::createIntSliderSettings() {
     }
 }
 
+
 void ConfigurationMode::createFloatSliderSettings() {
-    if (ImGui::Button("Add Slider (Float)")) {
+    if (ImGui::Button("Add Float Slider")) {
         ImGui::OpenPopup("Add Slider Popup");
     }
 
     if (ImGui::BeginPopup("Add Slider Popup")) {
         static char label[128] = "Slider (float)";
-        static float position[2] = {100.0f, 100.0f};
-        static float size[2] = {200.0f, 20.0f};
+        static ImVec2 position = ImVec2(100.0f, 100.0f);
+        static ImVec2 size = ImVec2(200.0f, 20.0f);
         static float minValue = 0.0f;
         static float maxValue = 1.0f;
         static float initialValue = 0.0f;
@@ -428,11 +514,17 @@ void ConfigurationMode::createFloatSliderSettings() {
         if (initialValue < minValue) initialValue = minValue;
         if (initialValue > maxValue) initialValue = maxValue;
 
+        // Calculate free position for the float slider
+        auto elements = templateManager.getActiveTemplateElements();
+        ImVec2 sliderSize(200.0f, 20.0f); // Fixed size for the float slider
+        ImVec2 padding(10.0f, 10.0f); // Define padding to maintain space between elements
+        position = findFreePosition(elements, sliderSize, padding, 10.0f, 10.0f, 25.0f);
+
         if (ImGui::Button("Add")) {
             addElementToActiveTemplate(new Slider<float>(
                     label,
-                    ImVec2(position[0], position[1]),
-                    ImVec2(size[0], size[1]),
+                    position,
+                    sliderSize,
                     minValue,
                     maxValue,
                     initialValue
@@ -448,6 +540,7 @@ void ConfigurationMode::createFloatSliderSettings() {
         ImGui::EndPopup();
     }
 }
+
 
 void ConfigurationMode::addElementToActiveTemplate(Element* element) {
     templateManager.addElementToActiveTemplate(element);
