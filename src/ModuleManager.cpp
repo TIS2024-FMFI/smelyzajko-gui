@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "ModuleManager.h"
 
 TestGraphicModule testGraphicModule;
 CounterModule counterModule;
