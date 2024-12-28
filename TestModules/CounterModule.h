@@ -2,29 +2,39 @@
 #define COUNTERMODULE_H
 
 #include <vector>
+#include <string>
+#include <atomic>
+#include <mutex>
+#include <thread>
 #include "imgui.h"
 #include "../src/Module.h"
+#include "../src/ModuleManager.h"
+
 
 class CounterModule : public Module {
 public:
-    void renderStandalone() override;
-
-    void saveLogToJson(const std::vector<int> &values);
+    ImFont* largeFont;
+    CounterModule(ModuleManager* moduleManager);
+    ~CounterModule() ;
+    void run() override;
     std::string getName() const override;
 
-    ImVec2 getSize() override;
-
-    ImVec2 getPos() override;
-
-    void setPos(ImVec2 pos) override;
-
-    void setSize(ImVec2 size) override;
+    void saveLogToJson(const std::vector<int> &values);
+    ModuleManager& moduleManager;
+    int graphicModuleId;
+    int moduleId;
 
 private:
-    std::string name = "Counter Module";
+    std::string moduleName = "Counter Module";
     ImVec2 size;
-    ImVec2 pos;
-};
+    ImVec2 position;
 
+    std::atomic<int> counter;
+    std::atomic<bool> stopGeneration;
+    std::vector<int> logValues;
+    std::mutex logMutex;
+    std::thread generatorThread;
+
+};
 
 #endif // COUNTERMODULE_H

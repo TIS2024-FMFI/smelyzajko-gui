@@ -3,35 +3,27 @@
 #include "TemplateManager.h"
 #include <algorithm>
 #include "Module.h"
-#include "ModuleManager.h"
-
-class ConfigurationMode : GUI {
+class OperatingMode :  GUI {
 public:
+    OperatingMode() : io(ImGui::GetIO()) {}
     ModuleManager moduleManager;
 
-
-    ConfigurationMode() : io(ImGui::GetIO()) {}
-
-    TemplateManager templateManager;
+    TemplateManager templateManager = TemplateManager();
     ImGuiIO& io;
-
     int run() override;
-
-    void addElementToActiveTemplate(Element* element);
-
     void drawElements();
     void setupMenuBar();
-    void drawGrid() const;
-    void bringElementToTop(Element* element);
     void renderSettingsPopup(Module& module, const std::string& part);
+    void addElementToActiveTemplate(Element *element);
+    void bringElementToTop(Element *element);
 
-    void createFloatSliderSettings();
-    void createIntSliderSettings();
-    void createLabelSettings();
+
 private:
     float gridSize = 60.0f;
     bool isSnapping = false;
     bool showGrid = false;
+
+
 };
 
 
