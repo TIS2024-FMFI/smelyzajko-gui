@@ -2,6 +2,7 @@
 #include <utility>
 #include <filesystem>
 #include <iostream>
+#include "vector"
 namespace fs = std::filesystem;
 
 TemplateManager::TemplateManager() {
@@ -63,4 +64,16 @@ std::string TemplateManager::getActiveTemplateName() const {
 
 void TemplateManager::clearActiveTemplateElements() {
     activeTemplate.clear();
+}
+
+void TemplateManager::removeElementFromActiveTemplate(int index) {
+    activeTemplate.removeElement(index);
+}
+
+void TemplateManager::addModuleToActiveTemplate(GraphicModule *module) {
+    activeTemplate.addModule(module);
+}
+
+std::vector<GraphicModule *> TemplateManager::getActiveTemplateModules() {
+    return activeTemplate.getModules();
 }

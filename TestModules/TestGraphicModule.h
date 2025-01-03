@@ -4,25 +4,40 @@
 #include "imgui.h"
 #include <string>
 #include "../src/Module.h"
+#include "../src/GraphicModule.h"
 class TestGraphicModule : public Module {
 public:
-    void renderStandalone(ImGuiIO io, ImVec2 possition) override;
+    void renderStandalone(ImGuiIO io, ImVec2 possition) ;
 
-    ImVec2 getSize() override;
+    void run() override;
+    ImVec2 getSize() ;
 
-    ImVec2 getPos() override;
+    ImVec2 getPos() ;
 
-    void setPos(ImVec2 pos) override;
+    void setPos(ImVec2 pos) ;
 
-    void setSize(ImVec2 size) override;
+    void setSize(ImVec2 size) ;
 
     std::string getName() const override;
-    void draw(ImGuiIO &io) override;
+    void draw(ImGuiIO &io) ;
+    bool isModuleActive = false;
+
+    int moduleId;            // Module ID for identification
+    std::string moduleName = "Sinusoida";  // Module name
+    void to_json(nlohmann::json& j) const ;
+    void from_json(const nlohmann::json& j) ;
 
 private:
-    std::string name = "Sinusoida";
     ImVec2 size ;
-    ImVec2 possition;
+    ImVec2 position;
+
+    // Graphics settings
+    float graphicsFrequency;
+    bool graphicsLogEnabled;
+
+    // Text settings
+    float textFrequency;
+    bool textLogEnabled;
 
 };
 
