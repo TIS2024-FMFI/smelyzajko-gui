@@ -9,7 +9,7 @@
             "name": "Counter Module",
             "position": [
                 100.0,
-                250.0
+                50.0
             ],
             "size": [
                 200.0,
@@ -26,7 +26,7 @@
             "name": "Counter Module",
             "position": [
                 100.0,
-                550.0
+                350.0
             ],
             "size": [
                 200.0,
@@ -42,12 +42,12 @@
             "moduleId": 1,
             "name": "Map Module",
             "position": [
-                650.0,
+                350.0,
                 250.0
             ],
             "size": [
-                550.0,
-                550.0
+                350.0,
+                350.0
             ],
             "textFrequency": 0.0,
             "textLogEnabled": true
@@ -59,16 +59,16 @@
             "moduleId": 1,
             "name": "Map Module",
             "position": [
-                1250.0,
+                850.0,
                 250.0
             ],
             "size": [
-                550.0,
-                550.0
+                350.0,
+                350.0
             ],
             "textFrequency": 0.0,
             "textLogEnabled": true
         }
     ],
-    "name": "template"
+    "name": "template5"
 }
