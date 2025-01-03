@@ -4,9 +4,10 @@
 #include <vector>
 #include "Module.h"
 #include "../TestModules/TestGraphicModule.h"
-#include "../TestModules/CounterModule.h"
-#include "../TestModules/MapModule.h"
-#include "../TestModules/UltrasonicModule.h"
+#include "../TestModules/MapModuleGraphics.h"
+#include "../TestModules/CounterModuleGraphics.h"
+#include "../TestModules/UltrasonicModuleGraphics.h"
+
 
 class ModuleManager  {
 public:

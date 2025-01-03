@@ -1,19 +1,8 @@
-// File: ModuleManager.cpp
-
 #include "ModuleManager.h"
-#include "../TestModules/TestGraphicModule.h"
-#include "../TestModules/CounterModule.h"
-#include "../TestModules/MapModule.h"
-#include "../TestModules/UltrasonicModule.h"
 #include <filesystem>
 #include <fstream>
 #include <sstream>
 #include <iostream>
-
-TestGraphicModule testGraphicModule;
-CounterModule counterModule;
-MapModule mapModule = MapModule();
-UltrasonicModule ultrasonicModule;
 
 
 int ModuleManager::gegisterModule(const std::string &name, Module *module) {
@@ -28,10 +17,6 @@ void ModuleManager::clearModules() {
 const std::unordered_map<std::string, std::function<GraphicModule *()>> &ModuleManager::getModuleConstructors() const {
     return moduleConstructors;
 }
-void ModuleManager::renderModules(ImGuiIO io, ImVec2 possition,ImVec2 size) {
-    counterModule.setPos(possition);
-    counterModule.setSize(size);
-    counterModule.draw(io);
 
 void ModuleManager::updateValueOfModule(int moduleID, std::string value) {
     graphicModules[moduleID]->updateValueOfModule(value);
