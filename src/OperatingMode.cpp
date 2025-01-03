@@ -42,14 +42,6 @@ int OperatingMode::run() {
                      ImGuiWindowFlags_NoScrollbar    // Disable scrollbar (optional)
         );
 
-        ImGui::Begin("Controls");
-        if (ImGui::Button("Add Rectangle")) {
-            addElementToActiveTemplate(new Rectangle("Rectangle" , ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f),
-                                                      false));
-        }
-
-
-        ImGui::End();
         if (!templateManager.getActiveTemplateModules().empty()){
             moduleManager.setActiveModuleAndDraw(templateManager.getActiveTemplateModules(),io);
         }
