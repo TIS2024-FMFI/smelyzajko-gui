@@ -3,13 +3,11 @@
 #define MODULEMANAGER_H
 #include <vector>
 #include "Module.h"
+#include "../TestModules/TestGraphicModule.h"
 #include "../TestModules/MapModuleGraphics.h"
 #include "../TestModules/CounterModuleGraphics.h"
+#include "../TestModules/UltrasonicModuleGraphics.h"
 
-#include "../TestModules/TestGraphicModule.h"
-#include "../TestModules/CounterModule.h"
-#include "../TestModules/MapModule.h"
-#include "../TestModules/UltrasonicModule.h"
 
 class ModuleManager  {
 public:
@@ -33,10 +31,6 @@ public:
     std::vector<GraphicModule*> graphicModules;
 
 private:
-    TestGraphicModule testGraphicModule;
-    CounterModule counterModule;
-    MapModule mapModule = MapModule();
-    UltrasonicModule ultrasonicModule;
     std::vector<Module*> modules ;
     std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
             {"Map Module", []() { return new MapModuleGraphics(); }},
