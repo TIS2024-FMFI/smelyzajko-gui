@@ -9,6 +9,7 @@
 #include "src/widgets/SingleLineLabel.h"
 #include "src/widgets/MultiLineLabel.h"
 #include "iostream"
+#include "src/ModuleManager.h"
 
 using json = nlohmann::json;
 
