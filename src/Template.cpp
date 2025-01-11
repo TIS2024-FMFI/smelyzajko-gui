@@ -8,7 +8,6 @@
 #include "widgets/Rectangle.h"
 #include "widgets/SingleLineLabel.h"
 #include "widgets/MultiLineLabel.h"
-#include "iostream"
 #include "TemplateManager.h"
 #include "ModuleManager.h"
 
@@ -80,10 +79,19 @@ void Template::from_json(const nlohmann::json& j) {
 }
 
 
-void Template::saveTemplate(const std::filesystem::path& filePath) const {
+void Template::saveTemplate(const std::filesystem::path& filePath) {
     std::ofstream outFile(filePath);
     if (!outFile) {
         throw std::runtime_error("Failed to open file for saving template: " + filePath.string());
+    }
+
+    if (name.empty()) {
+        std::string fileName = filePath.filename().string();
+        if (fileName.size() > 5 && fileName.substr(fileName.size() - 5) == ".json") {
+            fileName = fileName.substr(0, fileName.size() - 5);  // Remove the ".json" part
+        }
+
+        name = fileName;
     }
 
     json j = to_json();

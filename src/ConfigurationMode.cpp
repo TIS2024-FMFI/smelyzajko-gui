@@ -57,10 +57,7 @@ ImVec2 findFreePosition(const std::vector<Element*>& elements, const ImVec2& ele
 }
 
 
-
-
 int ConfigurationMode::run() {
-
     io = ImGui::GetIO();
     (void)io;
 
@@ -108,7 +105,6 @@ int ConfigurationMode::run() {
         delete element;
     }
     templateManager.clearActiveTemplateElements();
-
     cleanupImGui();
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -192,7 +188,6 @@ void ConfigurationMode::drawElements() {
     }
 }
 
-
 void ConfigurationMode::setupMenuBar() {
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
@@ -206,6 +201,11 @@ void ConfigurationMode::setupMenuBar() {
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Templates")) {
+            if (ImGui::MenuItem("New template")) {
+                templateManager.setActiveTemplate(Template());
+                std::string windowTitle = std::string("GUI");
+                glfwSetWindowTitle(window, windowTitle.c_str());
+            }
             if (ImGui::BeginMenu("Templates")) {
                 for (const Template &aTemplate: templateManager.getAllTemplates()) {
                     if (ImGui::MenuItem(aTemplate.getName().c_str())) {
@@ -217,8 +217,31 @@ void ConfigurationMode::setupMenuBar() {
                 }
                 ImGui::EndMenu();
             }
-            if (ImGui::MenuItem("Save current template")) {
-                templateManager.saveCurrentTemplate(templateManager.getActiveTemplateName());
+            if (ImGui::Button("Save current template")) {
+                IGFD::FileDialogConfig config;
+                config.path = "../templates"; // default path for the file dialog
+                ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".json", config);
+            }
+            // display the dialog and handle the file selection
+            if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
+                if (ImGuiFileDialog::Instance()->IsOk()) {
+                    std::filesystem::path filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+                    try {
+                        bool isNew = false;
+                        if (templateManager.getActiveTemplate().getName().empty()) {
+                            isNew = true;
+                        }
+                        templateManager.getActiveTemplate().saveTemplate(filePathName);
+                        if (isNew) {
+                            std::string fileName = filePathName.filename().string();
+                            templateManager.allTemplates.push_back(Template("../templates/" + fileName));
+                        }
+                    } catch (const std::exception& e) {
+                        std::cerr << "Error saving template: " << e.what() << std::endl;
+                    }
+                }
+
+                ImGuiFileDialog::Instance()->Close();
             }
             ImGui::EndMenu();
         }
@@ -271,8 +294,6 @@ void ConfigurationMode::setupMenuBar() {
                 addElementToActiveTemplate(new Rectangle("Rectangle", position, elementSize));
             }
 
-
-
             if (ImGui::MenuItem("Add Checkbox")) {
                 ImVec2 elementSize(30.0f, 30.0f); // Define size for checkbox
                 ImVec2 position = findFreePosition(elements, elementSize);
@@ -286,9 +307,6 @@ void ConfigurationMode::setupMenuBar() {
                 addElementToActiveTemplate(new Button("Button", position, buttonSize));
             }
 
-
-
-            // Submenus for slider and label settings
             if (ImGui::BeginMenu("Create Slider")) {
                 createIntSliderSettings();
                 createFloatSliderSettings();
@@ -362,7 +380,6 @@ void ConfigurationMode::renderSettingsPopup(Module& module, const std::string& p
         ImGui::EndPopup();
     }
 }
-
 
 void ConfigurationMode::drawGrid() const {
     ImVec2 displaySize = io.DisplaySize;
@@ -540,7 +557,6 @@ void ConfigurationMode::createFloatSliderSettings() {
         ImGui::EndPopup();
     }
 }
-
 
 void ConfigurationMode::addElementToActiveTemplate(Element* element) {
     templateManager.addElementToActiveTemplate(element);

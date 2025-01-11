@@ -10,9 +10,9 @@
 #include <iostream>
 #include "ModuleManager.h"
 
-TestGraphicModule testGraphicModule;
-CounterModule counterModule;
-MapModule mapModule;
+//TestGraphicModule testGraphicModule;
+//CounterModule counterModule;
+//MapModule mapModule;
 
 void ModuleManager::addModule(Module* module) {
     modules.push_back(module);
@@ -22,18 +22,17 @@ const std::vector<Module*>& ModuleManager::getModules() const {
     return modules;
 }
 
-void ModuleManager::createModules(){
-
-    addModule(&testGraphicModule);
-    addModule(&counterModule);
-    addModule(&mapModule);
-}
+//void ModuleManager::createModules(){
+//
+//    addModule(&testGraphicModule);
+//    addModule(&counterModule);
+//    addModule(&mapModule);
+//}
 void ModuleManager::renderModules() {
     for (Module* module : modules) {
         module->renderStandalone();
     }
 }
-
 
 void ModuleManager::readTemplateandCreateModules(const std::string& filename) {
     // Check if the file exists

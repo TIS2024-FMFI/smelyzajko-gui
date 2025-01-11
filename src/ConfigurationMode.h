@@ -2,6 +2,7 @@
 #include "TemplateManager.h"
 #include <algorithm>
 #include "Module.h"
+#include "libs/ImGuiFileDialog/ImGuiFileDialog.h"
 
 class ConfigurationMode : GUI {
 public:
