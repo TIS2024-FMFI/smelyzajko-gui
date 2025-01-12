@@ -46,15 +46,14 @@ include_directories(
         imgui
         imgui/backends
         ${PROJECT_SOURCE_DIR}/libs/glfw/include
-        ${PROJECT_SOURCE_DIR}/ImGuiFileDialog
 )
 
-add_executable(smelyzajko-gui main.cpp src/ConfigurationMode.cpp src/widgets/Element.cpp
+add_executable(smelyzajko-gui ImGuiFileDialog/ImGuiFileDialog.cpp  main.cpp src/ConfigurationMode.cpp src/widgets/Element.cpp
 src/widgets/Slider.cpp src/widgets/Button.cpp src/widgets/Checkbox.cpp src/widgets/Label.cpp
 src/widgets/MultiLineLabel.cpp src/widgets/Rectangle.cpp src/widgets/SingleLineLabel.cpp)
 
 
-target_link_libraries(smelyzajko-gui PRIVATE imgui glfw opengl32 ImGuiFileDialog )
+target_link_libraries(smelyzajko-gui PRIVATE imgui glfw opengl32  )
 #=======
 ## Link the ImGui, OpenGL, and GLFW libraries
 #target_link_libraries(smelyzajko-gui PRIVATE imgui glfw GL ImGuiFileDialog)
