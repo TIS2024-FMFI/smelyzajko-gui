@@ -1,12 +1,15 @@
 #include "GUI.h"
 #include "TemplateManager.h"
+#include "ToastNotificationManager.h"
 #include <algorithm>
 #include "Module.h"
+#include "../ImGuiFileDialog/ImGuiFileDialog.h"
 
 class ConfigurationMode : GUI {
 public:
     ConfigurationMode() : io(ImGui::GetIO()) {}
 
+    ToastNotificationManager toastManager;
     TemplateManager templateManager;
     ImGuiIO& io;
 

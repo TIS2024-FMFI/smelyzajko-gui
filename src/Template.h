@@ -23,7 +23,7 @@ public:
     std::vector<Element *> getElements();
 
     void loadTemplate(const std::filesystem::path& filePath);
-    void saveTemplate(const std::filesystem::path& filePath) const;
+    void saveTemplate(const std::filesystem::path& filePath, std::string newName = "");
 
 
     nlohmann::json to_json() const;

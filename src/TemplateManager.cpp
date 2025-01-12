@@ -11,8 +11,7 @@ TemplateManager::TemplateManager() {
 
 void TemplateManager::loadAllTemplates() {
     std::vector<fs::path> jsonFiles;
-    // this is development path TODO
-    fs::path templatesDir = fs::path("templates");
+    fs::path templatesDir = fs::path("../templates");
     try {
         if (fs::exists(templatesDir) && fs::is_directory(templatesDir)) {
             for (const auto& file : fs::directory_iterator(templatesDir)) {
@@ -50,10 +49,6 @@ std::vector<Template> TemplateManager::getAllTemplates() {
     return allTemplates;
 }
 
-void TemplateManager::saveCurrentTemplate(const std::string& fileName) {
-    activeTemplate.saveTemplate(fileName);
-}
-
 void TemplateManager::addElementToActiveTemplate(Element *element) {
     activeTemplate.addElement(element);
 }
@@ -68,4 +63,8 @@ void TemplateManager::clearActiveTemplateElements() {
 
 void TemplateManager::removeElementFromActiveTemplate(int index) {
     activeTemplate.removeElement(index);
+}
+
+Template TemplateManager::getActiveTemplate() {
+    return activeTemplate;
 }

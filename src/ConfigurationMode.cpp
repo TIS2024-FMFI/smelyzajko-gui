@@ -11,6 +11,8 @@
 #include "widgets/Slider.h"
 #include "widgets/SingleLineLabel.h"
 #include "widgets/MultiLineLabel.h"
+#include "../ImGuiFileDialog/ImGuiFileDialog.h"
+#include "../ImGuiFileDialog/ImGuiFileDialogConfig.h"
 #include <iostream> // For std::cerr (debugging)
 #ifdef _WIN32
 #include <windows.h> // For Beep on Windows
@@ -141,10 +143,7 @@ ImVec2 findNearestFreeGridCorner(const std::vector<Element*>& elements, const Im
 }
 
 
-
-
 int ConfigurationMode::run() {
-
     io = ImGui::GetIO();
     (void)io;
 
@@ -184,6 +183,9 @@ int ConfigurationMode::run() {
 
         if (showGrid) drawGrid();
 
+        // render all toast notifications
+        toastManager.renderNotifications();
+
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
@@ -199,8 +201,8 @@ int ConfigurationMode::run() {
     for (Element* element : templateManager.getActiveTemplateElements()) {
         delete element;
     }
-    templateManager.clearActiveTemplateElements();
 
+    templateManager.clearActiveTemplateElements();
     cleanupImGui();
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -392,6 +394,7 @@ void ConfigurationMode::drawElementsWithSnappingOn() {
 
 
 
+
 void ConfigurationMode::setupMenuBar() {
     if (ImGui::BeginMainMenuBar()) {
         menuBarHeight = ImGui::GetWindowHeight();
@@ -406,6 +409,11 @@ void ConfigurationMode::setupMenuBar() {
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Templates")) {
+            if (ImGui::MenuItem("New template")) {
+                templateManager.setActiveTemplate(Template());
+                std::string windowTitle = std::string("GUI");
+                glfwSetWindowTitle(window, windowTitle.c_str());
+            }
             if (ImGui::BeginMenu("Templates")) {
                 for (const Template &aTemplate: templateManager.getAllTemplates()) {
                     if (ImGui::MenuItem(aTemplate.getName().c_str())) {
@@ -417,8 +425,46 @@ void ConfigurationMode::setupMenuBar() {
                 }
                 ImGui::EndMenu();
             }
-            if (ImGui::MenuItem("Save current template")) {
-                templateManager.saveCurrentTemplate(templateManager.getActiveTemplateName());
+            if (ImGui::Button("Save current template")) {
+                IGFD::FileDialogConfig config;
+                config.path = "../templates"; // default path for the file dialog
+                if (!templateManager.getActiveTemplateName().empty()) {
+                    config.fileName = templateManager.getActiveTemplateName() + ".json";
+                }
+                ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".json", config);
+            }
+            // display the dialog and handle the file selection
+            if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
+                if (ImGuiFileDialog::Instance()->IsOk()) {
+                    std::filesystem::path filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+                    try {
+                        bool isNew = false;
+                        std::string templateName = templateManager.getActiveTemplate().getName();
+                        std::string fileName = filePathName.filename().string();
+                        if (fileName.size() > 5 && fileName.substr(fileName.size() - 5) == ".json") {
+                            fileName = fileName.substr(0, fileName.size() - 5);  // Remove the ".json" part
+                        }
+
+                        if (templateName.empty() || templateName != fileName ) {
+                            isNew = true;
+                        }
+
+                        if (isNew) {
+                            templateManager.getActiveTemplate().saveTemplate(filePathName, fileName);
+                            Template newTemplate = Template("../templates/" + filePathName.filename().string());
+                            templateManager.allTemplates.push_back(newTemplate);
+                            templateManager.setActiveTemplate(newTemplate);
+                            std::string windowTitle = std::string("GUI") + " - " + newTemplate.getName();
+                            glfwSetWindowTitle(window, windowTitle.c_str());
+                        } else {
+                            templateManager.getActiveTemplate().saveTemplate(filePathName);
+                        }
+                    } catch (const std::exception& e) {
+                        std::cerr << "Error saving template: " << e.what() << std::endl;
+                    }
+                }
+
+                ImGuiFileDialog::Instance()->Close();
             }
             ImGui::EndMenu();
         }
@@ -497,8 +543,6 @@ void ConfigurationMode::setupMenuBar() {
             }
 
 
-
-
             if (ImGui::MenuItem("Add Checkbox")) {
                 ImVec2 elementSize(30.0f, 30.0f);
                 ImVec2 padding(10.0f, 10.0f);
@@ -542,10 +586,6 @@ void ConfigurationMode::setupMenuBar() {
             }
 
 
-
-
-
-            // Submenus for slider and label settings
             if (ImGui::BeginMenu("Create Slider")) {
                 createIntSliderSettings();
                 createFloatSliderSettings();
@@ -561,6 +601,21 @@ void ConfigurationMode::setupMenuBar() {
         }
 
 
+    }
+
+    static char toastInputBuffer[256] = "";
+    if (ImGui::BeginMenu("Test Notifications")) {
+        ImGui::Text("Enter Notification:");
+        ImGui::InputText("##Input", toastInputBuffer, IM_ARRAYSIZE(toastInputBuffer));
+
+        if (ImGui::Button("Send Notification")) {
+            if (strlen(toastInputBuffer) > 0) {
+                toastManager.addNotification(toastInputBuffer);
+                toastInputBuffer[0] = '\0'; // Clear the input buffer
+            }
+        }
+
+        ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
 }
@@ -621,7 +676,6 @@ void ConfigurationMode::renderSettingsPopup(Module& module, const std::string& p
         ImGui::EndPopup();
     }
 }
-
 
 
 void ConfigurationMode::drawGrid() const {
@@ -849,7 +903,6 @@ void ConfigurationMode::createFloatSliderSettings() {
         ImGui::EndPopup();
     }
 }
-
 
 void ConfigurationMode::addElementToActiveTemplate(Element* element) {
     templateManager.addElementToActiveTemplate(element);
