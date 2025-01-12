@@ -1,14 +1,22 @@
 #include <iostream>
 #include "ConfigurationMode.h"
+
 //#include "TemplateManager.h"
 #include "ModuleManager.h"
 #include "widgets/Element.h"
+
 #include "widgets/Rectangle.h"
 #include "widgets/Checkbox.h"
 #include "widgets/Button.h"
 #include "widgets/Slider.h"
 #include "widgets/SingleLineLabel.h"
 #include "widgets/MultiLineLabel.h"
+#include <iostream> // For std::cerr (debugging)
+#ifdef _WIN32
+#include <windows.h> // For Beep on Windows
+#else
+#include <unistd.h> // For usleep on Unix-based systems
+#endif
 
 //// Example modules for demonstration
 //std::vector<Module> modules = {
@@ -16,6 +24,121 @@
 //        Module(2, "Lidar"),
 //        Module(3, "Sinusoid"),
 //};
+
+#if defined(_WIN32) || defined(_WIN64)
+#include <Windows.h>
+void playBeep() {
+    MessageBeep(MB_ICONEXCLAMATION); // Standard system beep
+}
+#elif defined(__linux__) || defined(__APPLE__)
+#include <iostream>
+void playBeep() {
+    std::cout << "\a"; // Linux/macOS beep
+}
+#endif
+
+
+#include <iostream>
+
+
+
+
+inline bool isOverlapping(const ImRect& a, const ImRect& b) {
+    return !(a.Max.x <= b.Min.x ||  // No overlap on the left
+             a.Min.x >= b.Max.x ||  // No overlap on the right
+             a.Max.y <= b.Min.y ||  // No overlap above
+             a.Min.y >= b.Max.y);   // No overlap below
+}
+
+ImVec2 findFreePosition(const std::vector<Element*>& elements, const ImVec2& elementSize, const ImVec2& start = ImVec2(10.0f, 10.0f), float step = 10.0f, float padding = 15.0f, float menuHeight = 20.0f) {
+    ImVec2 position = start;
+    bool isPositionFree;
+
+    // Get display dimensions
+    const ImVec2 displaySize = ImGui::GetIO().DisplaySize;
+
+    do {
+        isPositionFree = true;
+
+        // Calculate the bounding box for the new element
+        ImRect newBoundingBox(
+                ImVec2(position.x - padding, position.y - padding),
+                ImVec2(position.x + elementSize.x + padding, position.y + elementSize.y + padding)
+        );
+
+        // Check if the position is fully visible on the screen
+        if (newBoundingBox.Min.x < 0 || newBoundingBox.Min.y < menuHeight ||
+            newBoundingBox.Max.x > displaySize.x || newBoundingBox.Max.y > displaySize.y) {
+            isPositionFree = false;
+        }
+
+        // Check overlap with existing elements
+        if (isPositionFree) {
+            for (const auto& element : elements) {
+                if (isOverlapping(newBoundingBox, element->getBoundingBox())) {
+                    isPositionFree = false;
+                    break;
+                }
+            }
+        }
+
+        // Move to the next position if the current position is not free
+        if (!isPositionFree) {
+            position.x += step; // Move horizontally
+            if (position.x + elementSize.x + padding > displaySize.x) {
+                position.x = start.x; // Reset X to the start
+                position.y += step;  // Move vertically
+            }
+        }
+
+    } while (!isPositionFree && position.y + elementSize.y + padding <= displaySize.y);
+
+    // Return invalid position if no valid position is found
+    if (!isPositionFree) {
+        return ImVec2(-1.0f, -1.0f);
+    }
+
+    return position;
+}
+
+ImVec2 findNearestFreeGridCorner(const std::vector<Element*>& elements, const ImVec2& elementSize, float gridSize, const ImVec2& padding, float menuBarHeight) {
+    ImVec2 screenSize = ImGui::GetIO().DisplaySize; // Get screen dimensions
+
+    // Iterate over grid positions row by row
+    for (float y = menuBarHeight; y + elementSize.y <= screenSize.y; y += gridSize) { // Ensure it fits vertically
+        for (float x = 0.0f; x + elementSize.x <= screenSize.x; x += gridSize) {     // Ensure it fits horizontally
+            ImVec2 position = ImVec2(x, y);
+
+            // Create a bounding box for the new rectangle
+            ImRect newRect(position, ImVec2(position.x + elementSize.x, position.y + elementSize.y));
+            bool overlaps = false;
+
+            // Check for overlaps with existing elements
+            for (const auto& element : elements) {
+                ImRect existingRect = element->getBoundingBox();
+
+                // Add padding around existing elements for spacing
+                existingRect.Min.x -= padding.x;
+                existingRect.Min.y -= padding.y;
+                existingRect.Max.x += padding.x;
+                existingRect.Max.y += padding.y;
+
+                if (newRect.Overlaps(existingRect)) {
+                    overlaps = true;
+                    break;
+                }
+            }
+
+            // If no overlap is found and the rectangle fits on the screen, return this position
+            if (!overlaps) {
+                return position;
+            }
+        }
+    }
+
+    // Fallback if no position is found
+    return ImVec2(-1.0f, menuBarHeight);
+}
 
 
 
@@ -47,21 +170,6 @@ int ConfigurationMode::run() {
         );
 
 
-            ImGui::Begin("Controls");
-                if (ImGui::Button("Add Rectangle")) {
-                    addElementToActiveTemplate(new Rectangle("Rectangle", ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
-                }
-                if (ImGui::Button("Add Checkbox")) {
-                    addElementToActiveTemplate(new Checkbox("Checkbox", ImVec2(100.0f, 100.0f), false));
-                }
-                if (ImGui::Button("Add Button")) {
-                    addElementToActiveTemplate(new Button("Button", ImVec2(100.0f, 100.0f), ImVec2(100.0f, 25.0f)));
-                }
-                createIntSliderSettings();
-                createFloatSliderSettings();
-                createLabelSettings();
-
-            ImGui::End();
 
             if (isSnapping){
                 drawElementsWithSnappingOn();
@@ -202,7 +310,6 @@ void ConfigurationMode::drawElementsWithSnappingOn() {
             elementPos.x += dragDelta.x;
             elementPos.y += dragDelta.y;
 
-            //element->setPosition(elementPos); // Update position
             ImGui::ResetMouseDragDelta();     // Reset drag delta
         }
 
@@ -219,7 +326,6 @@ void ConfigurationMode::drawElementsWithSnappingOn() {
         element->draw(io);
         ImGui::PopID();
     }
-
 
     // Check for clicks and move the element to top
     Element *clickedElement = nullptr;
@@ -238,7 +344,6 @@ void ConfigurationMode::drawElementsWithSnappingOn() {
     if (clickedElement) {
         bringElementToTop(clickedElement);
     }
-
 
     bool clickHandled = false;
     for (int i = activeElements.size() - 1; i >= 0; i--) {
@@ -262,7 +367,7 @@ void ConfigurationMode::drawElementsWithSnappingOn() {
             if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
                 ImGui::Text("Delete this element?");
                 if (ImGui::Button("Yes")) {
-                    activeElements.erase(activeElements.begin() + i);
+                    templateManager.removeElementFromActiveTemplate(i);
                     ImGui::CloseCurrentPopup();
                     ImGui::EndPopup();
                     ImGui::PopID();
@@ -363,6 +468,98 @@ void ConfigurationMode::setupMenuBar() {
 //            }
             ImGui::EndMenu();
         }
+
+        if (ImGui::BeginMenu("Controls")) {
+            auto elements = templateManager.getActiveTemplateElements();
+
+            if (ImGui::MenuItem("Add Rectangle")) {
+                ImVec2 elementSize(300.0f, 200.0f);
+                ImVec2 padding(30.0f, 30.0f);
+                float menuBarHeight = 25.0f;
+                ImVec2 position;
+
+                if (isSnapping) {
+                    int widthInSquares = ceil(elementSize.x / gridSize);
+                    int heightInSquares = ceil(elementSize.y / gridSize);
+                    elementSize = ImVec2(widthInSquares * gridSize, heightInSquares * gridSize);
+
+                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
+                } else {
+                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
+                }
+
+                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+                    playBeep();
+                    position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+                }
+
+                addElementToActiveTemplate(new class Rectangle("Rectangle", position, elementSize));
+            }
+
+
+
+
+            if (ImGui::MenuItem("Add Checkbox")) {
+                ImVec2 elementSize(30.0f, 30.0f);
+                ImVec2 padding(10.0f, 10.0f);
+                float menuBarHeight = 25.0f;
+                ImVec2 position;
+
+                if (isSnapping) {
+                    elementSize = ImVec2(gridSize, gridSize);
+                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
+                } else {
+                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
+                }
+
+                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+                    playBeep();
+                    position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+                }
+
+                addElementToActiveTemplate(new Checkbox("Checkbox", position, false));
+            }
+
+            if (ImGui::MenuItem("Add Button")) {
+                ImVec2 elementSize(100.0f, 25.0f);
+                ImVec2 padding(20.0f, 20.0f);
+                float menuBarHeight = 25.0f;
+                ImVec2 position;
+
+                if (isSnapping) {
+                    elementSize = ImVec2(gridSize, gridSize);
+                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
+                } else {
+                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
+                }
+
+                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+                    playBeep();
+                    position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+                }
+
+                addElementToActiveTemplate(new Button("Button", position, elementSize));
+            }
+
+
+
+
+
+            // Submenus for slider and label settings
+            if (ImGui::BeginMenu("Create Slider")) {
+                createIntSliderSettings();
+                createFloatSliderSettings();
+                ImGui::EndMenu();
+            }
+
+            if (ImGui::BeginMenu("Create Label")) {
+                createLabelSettings();
+                ImGui::EndMenu();
+            }
+
+            ImGui::EndMenu();
+        }
+
 
     }
     ImGui::EndMainMenuBar();
@@ -465,21 +662,45 @@ void ConfigurationMode::createLabelSettings() {
     if (ImGui::BeginPopup("Add Label Popup")) {
         static bool isMultiLine = false;
         static char text[256] = "Hello, World!";
-        static float position[2] = {100.0f, 100.0f};
+        static ImVec2 position = ImVec2(100.0f, 100.0f);
 
         ImGui::Checkbox("Multi-line", &isMultiLine);
         ImGui::InputTextMultiline("Text", text, IM_ARRAYSIZE(text));
 
+        // Calculate free position for the label
+        auto elements = templateManager.getActiveTemplateElements();
+        ImVec2 textSize = ImGui::CalcTextSize(text);
+        ImVec2 labelSize = isMultiLine ? ImVec2(textSize.x, textSize.y) : ImVec2(textSize.x, 25.0f); // Adjust the height for single-line labels
+        ImVec2 padding(10.0f, 10.0f); // Define padding to maintain space between elements
+
+
+        if (isSnapping) {
+            int widthInSquares = ceil(labelSize.x / gridSize);
+            int heightInSquares = ceil(labelSize.y / gridSize);
+            labelSize = ImVec2(widthInSquares * gridSize, heightInSquares * gridSize);
+
+            position = findNearestFreeGridCorner(elements, labelSize, gridSize, padding, menuBarHeight);
+        } else {
+            position = findFreePosition(elements, labelSize, padding, 20.0f, 20.0f, menuBarHeight);
+        }
+
+        if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+            playBeep();
+            position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+        }
+
+        labelSize = isMultiLine ? ImVec2(textSize.x, textSize.y) : ImVec2(textSize.x, 25.0f); // Adjust the height for single-line labels
+
+
         if (ImGui::Button("Add")) {
-            ImVec2 textSize = ImGui::CalcTextSize(text);
             if (isMultiLine) {
                 addElementToActiveTemplate(new MultiLineLabel(
                         text,
-                        ImVec2(position[0], position[1]),
-                        textSize
+                        position,
+                        labelSize
                 ));
             } else {
-                // sanitize text
+                // Sanitize text (remove newlines, replace with space)
                 for (size_t i = 0; i < strlen(text); ++i) {
                     if (text[i] == '\n') {
                         text[i] = ' '; // Replace newline with space
@@ -487,8 +708,8 @@ void ConfigurationMode::createLabelSettings() {
                 }
                 addElementToActiveTemplate(new SingleLineLabel(
                         text,
-                        ImVec2(position[0], position[1]),
-                        textSize
+                        position,
+                        labelSize
                 ));
             }
             ImGui::CloseCurrentPopup();
@@ -503,15 +724,14 @@ void ConfigurationMode::createLabelSettings() {
     }
 }
 
+
 void ConfigurationMode::createIntSliderSettings() {
-    if (ImGui::Button("Add Slider (Int)")) {
+    if (ImGui::Button("Add Int Slider")) {
         ImGui::OpenPopup("Add Int Slider Popup");
     }
-
     if (ImGui::BeginPopup("Add Int Slider Popup")) {
         static char label[128] = "Slider (int)";
-        static float position[2] = {100.0f, 100.0f};
-        static float size[2] = {200.0f, 20.0f};
+        static ImVec2 position = ImVec2(100.0f, 100.0f);
         static int minValue = 0;
         static int maxValue = 10;
         static int initialValue = 5;
@@ -524,11 +744,33 @@ void ConfigurationMode::createIntSliderSettings() {
         if (initialValue < minValue) initialValue = minValue;
         if (initialValue > maxValue) initialValue = maxValue;
 
+        // Calculate free position for the int slider
+        auto elements = templateManager.getActiveTemplateElements();
+        ImVec2 sliderSize(200.0f, 20.0f); // Fixed size for the slider
+        ImVec2 padding(10.0f, 10.0f); // Define padding to maintain space between elements
+
+        if (isSnapping) {
+            int widthInSquares = ceil(sliderSize.x / gridSize);
+            int heightInSquares = ceil(sliderSize.y / gridSize);
+            sliderSize = ImVec2(widthInSquares * gridSize, heightInSquares * gridSize);
+
+            position = findNearestFreeGridCorner(elements, sliderSize, gridSize, padding, menuBarHeight);
+        } else {
+            position = findFreePosition(elements, sliderSize, padding, 10.0f, 10.0f, 25.0f);
+        }
+
+        if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+            playBeep();
+            position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+        }
+
+        sliderSize = ImVec2(200.0f, 20.0f); // Fixed size for the slider
+
         if (ImGui::Button("Add")) {
             addElementToActiveTemplate(new Slider<int>(
                     label,
-                    ImVec2(position[0], position[1]),
-                    ImVec2(size[0], size[1]),
+                    position,
+                    sliderSize,
                     minValue,
                     maxValue,
                     initialValue
@@ -546,14 +788,13 @@ void ConfigurationMode::createIntSliderSettings() {
 }
 
 void ConfigurationMode::createFloatSliderSettings() {
-    if (ImGui::Button("Add Slider (Float)")) {
+    if (ImGui::Button("Add Float Slider")) {
         ImGui::OpenPopup("Add Slider Popup");
     }
 
     if (ImGui::BeginPopup("Add Slider Popup")) {
         static char label[128] = "Slider (float)";
-        static float position[2] = {100.0f, 100.0f};
-        static float size[2] = {200.0f, 20.0f};
+        static ImVec2 position = ImVec2(100.0f, 100.0f);
         static float minValue = 0.0f;
         static float maxValue = 1.0f;
         static float initialValue = 0.0f;
@@ -566,11 +807,33 @@ void ConfigurationMode::createFloatSliderSettings() {
         if (initialValue < minValue) initialValue = minValue;
         if (initialValue > maxValue) initialValue = maxValue;
 
+        // Calculate free position for the float slider
+        auto elements = templateManager.getActiveTemplateElements();
+        ImVec2 sliderSize(200.0f, 20.0f); // Fixed size for the float slider
+        ImVec2 padding(10.0f, 10.0f); // Define padding to maintain space between elements
+
+        if (isSnapping) {
+            int widthInSquares = ceil(sliderSize.x / gridSize);
+            int heightInSquares = ceil(sliderSize.y / gridSize);
+            sliderSize = ImVec2(widthInSquares * gridSize, heightInSquares * gridSize);
+
+            position = findNearestFreeGridCorner(elements, sliderSize, gridSize, padding, menuBarHeight);
+        } else {
+            position = findFreePosition(elements, sliderSize, padding, 10.0f, 10.0f, 25.0f);
+        }
+
+        if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+            playBeep();
+            position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+        }
+
+        sliderSize = ImVec2(200.0f, 20.0f); // Fixed size for the slider
+
         if (ImGui::Button("Add")) {
             addElementToActiveTemplate(new Slider<float>(
                     label,
-                    ImVec2(position[0], position[1]),
-                    ImVec2(size[0], size[1]),
+                    position,
+                    sliderSize,
                     minValue,
                     maxValue,
                     initialValue
@@ -586,6 +849,7 @@ void ConfigurationMode::createFloatSliderSettings() {
         ImGui::EndPopup();
     }
 }
+
 
 void ConfigurationMode::addElementToActiveTemplate(Element* element) {
     templateManager.addElementToActiveTemplate(element);

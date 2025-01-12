@@ -2,6 +2,7 @@
 #include <utility>
 #include <filesystem>
 #include <iostream>
+#include "widgets/Element.h"
 namespace fs = std::filesystem;
 
 TemplateManager::TemplateManager() {
