@@ -89,6 +89,9 @@ int ConfigurationMode::run() {
 
         if (showGrid) drawGrid();
 
+        // render all toast notifications
+        toastManager.renderNotifications();
+
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
@@ -104,6 +107,7 @@ int ConfigurationMode::run() {
     for (Element* element : templateManager.getActiveTemplateElements()) {
         delete element;
     }
+
     templateManager.clearActiveTemplateElements();
     cleanupImGui();
     glfwDestroyWindow(window);
@@ -328,6 +332,21 @@ void ConfigurationMode::setupMenuBar() {
             ImGui::EndMenu();
         }
 
+    }
+
+    static char toastInputBuffer[256] = "";
+    if (ImGui::BeginMenu("Test Notifications")) {
+        ImGui::Text("Enter Notification:");
+        ImGui::InputText("##Input", toastInputBuffer, IM_ARRAYSIZE(toastInputBuffer));
+
+        if (ImGui::Button("Send Notification")) {
+            if (strlen(toastInputBuffer) > 0) {
+                toastManager.addNotification(toastInputBuffer);
+                toastInputBuffer[0] = '\0'; // Clear the input buffer
+            }
+        }
+
+        ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
 }
