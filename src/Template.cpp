@@ -79,13 +79,13 @@ void Template::from_json(const nlohmann::json& j) {
 }
 
 
-void Template::saveTemplate(const std::filesystem::path& filePath) {
+void Template::saveTemplate(const std::filesystem::path& filePath, std::string newName) {
     std::ofstream outFile(filePath);
     if (!outFile) {
         throw std::runtime_error("Failed to open file for saving template: " + filePath.string());
     }
 
-    if (name.empty()) {
+    if (!newName.empty()) {
         std::string fileName = filePath.filename().string();
         if (fileName.size() > 5 && fileName.substr(fileName.size() - 5) == ".json") {
             fileName = fileName.substr(0, fileName.size() - 5);  // Remove the ".json" part
@@ -95,6 +95,7 @@ void Template::saveTemplate(const std::filesystem::path& filePath) {
     }
 
     json j = to_json();
+    j["resolution"] = {ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y}; // Save current resolution
     outFile << j.dump(4);
 }
 
