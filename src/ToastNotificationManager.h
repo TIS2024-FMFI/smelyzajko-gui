@@ -16,5 +16,6 @@ public:
 
 private:
     std::vector<Notification> notifications;
+    const int timeout = 10;
 };
 

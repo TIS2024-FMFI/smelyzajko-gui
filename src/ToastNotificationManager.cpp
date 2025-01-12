@@ -17,8 +17,8 @@ void ToastNotificationManager::renderNotifications() {
                 std::chrono::steady_clock::now() - notification.start_time
         ).count();
 
-        // Remove the notification if it is manually closed or after 10 seconds
-        if (!notification.is_open || elapsed >= 10) {
+        // Remove the notification if it is manually closed or after 'timeout' seconds
+        if (!notification.is_open || elapsed >= timeout) {
             notifications.erase(notifications.begin() + i);
             continue;
         }
