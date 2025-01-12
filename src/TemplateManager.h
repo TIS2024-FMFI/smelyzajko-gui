@@ -1,6 +1,9 @@
+#pragma once
 #include "Template.h"
-#include "widgets/Element.h"
 
+#include "widgets/Element.h"
+#include "GraphicModule.h"
+#include "Module.h"
 
 class TemplateManager {
 private:
@@ -10,13 +13,16 @@ private:
 public:
     TemplateManager();
     void setActiveTemplate(Template aTemplate);
+    void addModuleToActiveTemplate(GraphicModule *module);
     void saveCurrentTemplate(const std::string& fileName);
     void addElementToActiveTemplate(Element* element);
     void removeElementFromActiveTemplate(int index);
     void clearActiveTemplateElements();
     std::string getActiveTemplateName() const;
     std::vector<Element *> getActiveTemplateElements();
+    std::vector<GraphicModule *> getActiveTemplateModules();
     std::vector<Template> getAllTemplates();
+
 };
 
 

@@ -1,218 +1,189 @@
 #include "MapModule.h"
-#include "imgui.h"
 #include <vector>
 #include <fstream>
 #include <random>
 #include <sstream>
+#include <iostream>
 #include <cmath> // Pre výpočet vzdialenosti
 
-void MapModule::renderStandalone() {
-    if (MapModule::counter == 1){
-        ImGui::SetNextWindowPos(getPos()); // Set the position of the window
-        ImGui::SetNextWindowSize(getSize()); // Set the size of the window
-        ImGui::Begin(name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse); // Disable resizing
-
-    }
-    else {
-        ImGui::Begin(name.c_str());
-        setPos(ImGui::GetWindowPos());
-        setSize(ImGui::GetWindowSize());
-    }
-
-
-
-
-    // Rozmery mapy a buniek
-    const int rows = 10;
-    const int cols = 10;
-    const float cellSize = 40.0f;
-
-    // Náhodná mapa (0 = cesta, 1 = múr)
-    static int map[rows][cols];
-    static bool mapInitialized = false;
-    static std::pair<int, int> startPosition; // Náhodná počiatočná pozícia
+MapModule::MapModule(ModuleManager* moduleManager) : moduleManager(*moduleManager), running(false), deltaTime(0.0f){ // Initialize rows and cols
+    moduleId = this->moduleManager.gegisterModule("Map Module",  this);
+    graphicModuleId = this->moduleManager.registerGraphicModule("Map Module", moduleId);
 
     if (!mapInitialized) {
-        generatePassableMap(map, rows, cols, startPosition);
+        generatePassableMap();
+
         mapInitialized = true;
     }
-
-    // Trasa pre guličku (sekvencia [riadok, stĺpec])
-    static std::vector<std::pair<int, int>> path;
-    static bool isStopped = true;
-    static int currentStep = 0;
-
-    // Ak sa mapa zmení, aktualizuj cestu
     if (path.empty()) {
-        generatePath(map, rows, cols, path, startPosition);
+        generatePath();
     }
-
-    // Tlačidlá Start, Stop a Replay
-    if (ImGui::Button("Start")) {
-        isStopped = false;
+    saveMapToJson();
+    running = true;
+    mapThread = std::thread(&MapModule::run, this);
+}
+MapModule:: ~MapModule() {
+    running = false;
+    if (mapThread.joinable()) {
+        mapThread.join();
     }
-    ImGui::SameLine();
-    if (ImGui::Button("Stop")) {
-        isStopped = true;
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Replay")) {
-        if (currentStep > 0) {
-            currentStep--; // Vrátenie o jeden krok dozadu
-            isStopped = true;
-        }
-    }
-
-    // Pohyb guličky každých 0.5 sekundy
-    if (!path.empty() && !isStopped) {
-        static float timeAccumulator = 0.0f;
-        timeAccumulator += ImGui::GetIO().DeltaTime;
-
-        if (timeAccumulator > 0.5f) {
-            timeAccumulator = 0.0f;
-            if (currentStep < path.size() - 1) {
-                currentStep++;
-                logToJson(path[currentStep]); // Logovanie aktuálnej pozície do JSON
-            }
-        }
-    }
-
-    // Základné vykreslenie mapy
-    ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    ImVec2 p = ImGui::GetCursorScreenPos();
-
-    for (int row = 0; row < rows; ++row) {
-        for (int col = 0; col < cols; ++col) {
-            ImU32 color;
-
-            // Zvýraznenie cieľového štvorčeka
-            if (row == rows - 2 && col == cols - 2) {
-                color = IM_COL32(0, 255, 0, 255); // Zelená farba pre cieľ
-            } else if (map[row][col] == 1) {
-                color = IM_COL32(50, 50, 50, 255); // Múry
-            } else {
-                color = IM_COL32(200, 200, 200, 255); // Cesty
-            }
-
-            draw_list->AddRectFilled(
-                    ImVec2(p.x + col * cellSize, p.y + row * cellSize),
-                    ImVec2(p.x + (col + 1) * cellSize, p.y + (row + 1) * cellSize),
-                    color
-            );
-        }
-    }
-
-    // Vykreslenie guličky
-    if (!path.empty()) {
-        int ballRow = path[currentStep].first;
-        int ballCol = path[currentStep].second;
-        draw_list->AddCircleFilled(
-                ImVec2(p.x + ballCol * cellSize + cellSize / 2, p.y + ballRow * cellSize + cellSize / 2),
-                cellSize / 4, IM_COL32(255, 0, 0, 255)
-        );
-    }
-
-    ImGui::End();
 }
 
-void MapModule::generatePassableMap(int map[10][10], int rows, int cols, std::pair<int, int>& startPosition) {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 1);
 
-    while (true) {
-        // Generovanie náhodnej mapy
-        for (int row = 0; row < rows; ++row) {
-            for (int col = 0; col < cols; ++col) {
-                if (row == 0 || row == rows - 1 || col == 0 || col == cols - 1) {
-                    map[row][col] = 1; // Hranice sú vždy múry
-                } else {
-                    map[row][col] = dis(gen);
+
+void MapModule::run() {
+    auto start = std::chrono::high_resolution_clock::now();
+    while (running) {
+        auto loopStart = std::chrono::high_resolution_clock::now();
+
+        // Your existing run logic here...
+        if (!path.empty() && !isStopped) {
+            static float timeAccumulator = 0.0f;
+            timeAccumulator += 0.009f; // Delta time
+
+            if (timeAccumulator > 0.5f) {
+
+                timeAccumulator = 0.0f;
+                if (currentStep < path.size() - 1) {
+                    currentStep++;
+                    logToJson(path[currentStep]); // Logovanie aktuálnej pozície do JSON
+                    int ballRow = path[currentStep].first;
+                    int ballCol = path[currentStep].second;
+                    moduleManager.updateValueOfModule(moduleId, std::vector<int>{ballRow, ballCol});
                 }
             }
         }
 
-        // Cieľová pozícia musí byť priechodná
-        map[rows - 2][cols - 2] = 0;
+        auto loopEnd = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> duration = loopEnd - loopStart;
+        deltaTime = duration.count();
+        std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to limit the loop to ~60 FPS
+    }
+}
 
-        // Nájdeme priechodné políčko čo najďalej od cieľa
-        int maxDistance = -1;
-        std::pair<int, int> farthestPosition;
+    void MapModule::generatePassableMap() {
 
-        for (int row = 1; row < rows - 1; ++row) {
-            for (int col = 1; col < cols - 1; ++col) {
-                if (map[row][col] == 0) { // Priechodné políčko
-                    int distance = std::abs(row - (rows - 2)) + std::abs(col - (cols - 2)); // Manhattanova vzdialenosť
-                    if (distance > maxDistance) {
-                        maxDistance = distance;
-                        farthestPosition = {row, col};
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, 1);
+        map.resize(rows, std::vector<int>(cols, 0));
+        while (true) {
+            // Generovanie náhodnej mapy
+            for (int row = 0; row < rows; ++row) {
+                for (int col = 0; col < cols; ++col) {
+                    if (row == 0 || row == rows - 1 || col == 0 || col == cols - 1) {
+                        map[row][col] = 1; // Hranice sú vždy múry
+                    } else {
+                        map[row][col] = dis(gen);
                     }
                 }
             }
-        }
+            // Cieľová pozícia musí byť priechodná
+            map[rows - 2][cols - 2] = 0;
 
-        // Ak existuje vzdialená pozícia, nastavíme ju ako počiatočnú
-        if (maxDistance != -1) {
-            startPosition = farthestPosition;
+            // Nájdeme priechodné políčko čo najďalej od cieľa
+            int maxDistance = -1;
+            std::pair<int, int> farthestPosition;
 
-            // Overíme, že existuje cesta z počiatočnej pozície do cieľa
-            std::vector<std::pair<int, int>> testPath;
-            generatePath(map, rows, cols, testPath, startPosition);
-            if (!testPath.empty()) {
-                break;
+            for (int row = 1; row < rows - 1; ++row) {
+                for (int col = 1; col < cols - 1; ++col) {
+                    if (map[row][col] == 0) { // Priechodné políčko
+                        int distance =
+                                std::abs(row - (rows - 2)) + std::abs(col - (cols - 2)); // Manhattanova vzdialenosť
+                        if (distance > maxDistance) {
+                            maxDistance = distance;
+                            farthestPosition = {row, col};
+                        }
+                    }
+                }
+            }
+
+            // Ak existuje vzdialená pozícia, nastavíme ju ako počiatočnú
+            if (maxDistance != -1) {
+                startPosition = farthestPosition;
+
+                // Overíme, že existuje cesta z počiatočnej pozície do cieľa
+                generatePath();
+
+                if (!path.empty()) {
+                    break;
+                }
             }
         }
     }
-}
 
-void MapModule::generatePath(const int map[10][10], int rows, int cols, std::vector<std::pair<int, int>>& path, const std::pair<int, int>& startPosition) {
-    path.clear();
-    int row = startPosition.first;
-    int col = startPosition.second;
+    void MapModule::generatePath() {
+        path.clear();
+        int row = startPosition.first;
+        int col = startPosition.second;
 
-    while (row < rows - 1 && col < cols - 1) {
-        path.emplace_back(row, col);
+        while (row < rows - 1 && col < cols - 1) {
+            path.emplace_back(row, col);
 
-        if (map[row + 1][col] == 0) {
-            row++;
-        } else if (map[row][col + 1] == 0) {
-            col++;
+            if (map[row + 1][col] == 0) {
+                row++;
+            } else if (map[row][col + 1] == 0) {
+                col++;
+            } else {
+                break; // Ak sa nedá pohnúť, ukončí trasu
+            }
+        }
+        if (row == rows - 2 && col == cols - 2) {
+            path.emplace_back(row, col); // Pridaj cieľ
         } else {
-            break; // Ak sa nedá pohnúť, ukončí trasu
+            path.clear(); // Vyprázdni trasu, ak nedosiahne cieľ
         }
     }
 
-    if (row == rows - 2 && col == cols - 2) {
-        path.emplace_back(row, col); // Pridaj cieľ
-    } else {
-        path.clear(); // Vyprázdni trasu, ak nedosiahne cieľ
+    void MapModule::logToJson(const std::pair<int, int> &position) {
+        std::ofstream outFile("map_log.json", std::ios::app);
+        if (outFile.is_open()) {
+            outFile << "{ \"row\": " << position.first << ", \"col\": " << position.second << " }\n";
+            outFile.close();
+        }
     }
-}
 
-void MapModule::logToJson(const std::pair<int, int>& position) {
-    std::ofstream outFile("map_log.json", std::ios::app);
+//
+//    void MapModule::drawButtons() {
+////    // Tlačidlá Start, Stop a Replay
+////    if (ImGui::Button("Start")) {
+////        isStopped = false;
+////    }
+////    ImGui::SameLine();
+////    if (ImGui::Button("Stop")) {
+////        isStopped = true;
+////    }
+////    ImGui::SameLine();
+////    if (ImGui::Button("Replay")) {
+////        if (currentStep > 0) {
+////            currentStep--; // Vrátenie o jeden krok dozadu
+////            isStopped = true;
+////        }
+////    }
+//    }
+
+
+void MapModule::saveMapToJson() {
+    std::ofstream outFile("map.json");
     if (outFile.is_open()) {
-        outFile << "{ \"row\": " << position.first << ", \"col\": " << position.second << " }\n";
+        nlohmann::json j;
+        j["rows"] = rows;
+        j["cols"] = cols;
+        j["map"] = nlohmann::json::array();
+        for (int row = 0; row < rows; ++row) {
+            j["map"][row] = nlohmann::json::array();
+            for (int col = 0; col < cols; ++col) {
+                j["map"][row][col] = map[row][col];
+            }
+        }
+        outFile << j.dump(4);
         outFile.close();
     }
 }
-std::string MapModule::getName() const {
-    return name;
-}
 
-ImVec2 MapModule::getSize() {
-    return size;
-}
 
-ImVec2 MapModule::getPos() {
-    return pos;
-}
+    std::string MapModule::getName() const {
+        return "Map Module";
+    }
 
-void MapModule::setPos(ImVec2 pos) {
-    MapModule::pos = pos;
-}
 
-void MapModule::setSize(ImVec2 size) {
-    MapModule::size = size;
-
-}

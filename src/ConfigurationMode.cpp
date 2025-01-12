@@ -1,16 +1,22 @@
 #include <iostream>
 #include "ConfigurationMode.h"
 
-//#include "TemplateManager.h"
+
 #include "ModuleManager.h"
 #include "widgets/Element.h"
-
 #include "widgets/Rectangle.h"
 #include "widgets/Checkbox.h"
 #include "widgets/Button.h"
 #include "widgets/Slider.h"
 #include "widgets/SingleLineLabel.h"
 #include "widgets/MultiLineLabel.h"
+#include "widgets/Label.h"
+#include "TemplateManager.h"
+
+
+
+
+
 #include <iostream> // For std::cerr (debugging)
 #ifdef _WIN32
 #include <windows.h> // For Beep on Windows
@@ -18,12 +24,12 @@
 #include <unistd.h> // For usleep on Unix-based systems
 #endif
 
+#include "OperatingMode.h"
+#include "ModuleManager.h"
+
+
 //// Example modules for demonstration
-//std::vector<Module> modules = {
-//        Module(1, "Map"),
-//        Module(2, "Lidar"),
-//        Module(3, "Sinusoid"),
-//};
+
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
@@ -161,13 +167,16 @@ int ConfigurationMode::run() {
         ImGui::SetNextWindowSize(io.DisplaySize); // Fullscreen size
 
         ImGui::Begin("Main Window", nullptr,
-                     ImGuiWindowFlags_NoTitleBar |
-                     ImGuiWindowFlags_NoCollapse |
-                     ImGuiWindowFlags_NoResize |
-                     ImGuiWindowFlags_NoMove |
-                     ImGuiWindowFlags_NoBringToFrontOnFocus |
-                     ImGuiWindowFlags_NoScrollbar
+                     ImGuiWindowFlags_NoTitleBar |    // Remove title bar
+                     ImGuiWindowFlags_NoCollapse |   // Prevent collapsing
+                     ImGuiWindowFlags_NoResize |     // Disable resizing
+                     ImGuiWindowFlags_NoMove |       // Prevent moving the window
+                     ImGuiWindowFlags_NoBringToFrontOnFocus | // Prevent window focus changes
+                     ImGuiWindowFlags_NoScrollbar    // Disable scrollbar (optional)
         );
+
+
+
 
 
 
@@ -261,7 +270,7 @@ void ConfigurationMode::drawElements() {
             if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
                 ImGui::Text("Delete this element?");
                 if (ImGui::Button("Yes")) {
-                    templateManager.removeElementFromActiveTemplate(i);
+                    activeElements.erase(activeElements.begin() + i);
                     ImGui::CloseCurrentPopup();
                     ImGui::EndPopup();
                     ImGui::PopID();
