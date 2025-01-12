@@ -237,7 +237,11 @@ void ConfigurationMode::setupMenuBar() {
                         templateManager.getActiveTemplate().saveTemplate(filePathName);
                         if (isNew) {
                             std::string fileName = filePathName.filename().string();
-                            templateManager.allTemplates.push_back(Template("../templates/" + fileName));
+                            Template newTemplate = Template("../templates/" + fileName);
+                            templateManager.allTemplates.push_back(newTemplate);
+                            templateManager.setActiveTemplate(newTemplate);
+                            std::string windowTitle = std::string("GUI") + " - " + newTemplate.getName();
+                            glfwSetWindowTitle(window, windowTitle.c_str());
                         }
                     } catch (const std::exception& e) {
                         std::cerr << "Error saving template: " << e.what() << std::endl;
