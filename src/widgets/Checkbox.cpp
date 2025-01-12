@@ -61,4 +61,8 @@ void Checkbox::from_json(const nlohmann::json &j) {
     } else {
         checked = false;
     }
+
+    ImVec2 scale = Element::getScalingFactorsFromTemplate(j);
+
+    position = ImVec2(position.x * scale.x, position.y * scale.y);
 }

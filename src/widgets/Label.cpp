@@ -56,5 +56,10 @@ void Label::from_json(const nlohmann::json &j) {
     } else {
         font_size = 13.0f;
     }
+
+    ImVec2 scale = Element::getScalingFactorsFromTemplate(j);
+
+    position = ImVec2(position.x * scale.x, position.y * scale.y);
+    size = ImVec2(size.x * scale.x, size.y * scale.y);
 }
 
