@@ -235,17 +235,25 @@ void ConfigurationMode::setupMenuBar() {
                     std::filesystem::path filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
                     try {
                         bool isNew = false;
-                        if (templateManager.getActiveTemplate().getName().empty()) {
+                        std::string templateName = templateManager.getActiveTemplate().getName();
+                        std::string fileName = filePathName.filename().string();
+                        if (fileName.size() > 5 && fileName.substr(fileName.size() - 5) == ".json") {
+                            fileName = fileName.substr(0, fileName.size() - 5);  // Remove the ".json" part
+                        }
+
+                        if (templateName.empty() || templateName != fileName ) {
                             isNew = true;
                         }
-                        templateManager.getActiveTemplate().saveTemplate(filePathName);
+
                         if (isNew) {
-                            std::string fileName = filePathName.filename().string();
-                            Template newTemplate = Template("../templates/" + fileName);
+                            templateManager.getActiveTemplate().saveTemplate(filePathName, fileName);
+                            Template newTemplate = Template("../templates/" + filePathName.filename().string());
                             templateManager.allTemplates.push_back(newTemplate);
                             templateManager.setActiveTemplate(newTemplate);
                             std::string windowTitle = std::string("GUI") + " - " + newTemplate.getName();
                             glfwSetWindowTitle(window, windowTitle.c_str());
+                        } else {
+                            templateManager.getActiveTemplate().saveTemplate(filePathName);
                         }
                     } catch (const std::exception& e) {
                         std::cerr << "Error saving template: " << e.what() << std::endl;
