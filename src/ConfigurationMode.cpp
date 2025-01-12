@@ -427,7 +427,7 @@ void ConfigurationMode::setupMenuBar() {
             }
             if (ImGui::Button("Save current template")) {
                 IGFD::FileDialogConfig config;
-                config.path = "../templates"; // default path for the file dialog
+                config.path = "../../templates"; // default path for the file dialog
                 if (!templateManager.getActiveTemplateName().empty()) {
                     config.fileName = templateManager.getActiveTemplateName() + ".json";
                 }

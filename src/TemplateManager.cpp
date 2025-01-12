@@ -11,7 +11,7 @@ TemplateManager::TemplateManager() {
 
 void TemplateManager::loadAllTemplates() {
     std::vector<fs::path> jsonFiles;
-    fs::path templatesDir = fs::path("../templates");
+    fs::path templatesDir = fs::path("../../templates");
     try {
         if (fs::exists(templatesDir) && fs::is_directory(templatesDir)) {
             for (const auto& file : fs::directory_iterator(templatesDir)) {
