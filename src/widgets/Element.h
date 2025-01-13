@@ -1,7 +1,7 @@
 #pragma once
 
 #include <utility>
-#include <json.hpp>
+#include <../json.hpp>
 #include "imgui.h"
 #include "string"
 #include "imgui_internal.h"
@@ -13,6 +13,7 @@ protected:
     bool pendingDelete;
     ImVec2 deletePopupPosition;
     int zIndex = 0;
+    bool wasDragged = false;
 
 public:
     Element(const ImVec2& pos = ImVec2(0.0f, 0.0f), std::string lbl = "")
@@ -26,6 +27,7 @@ public:
     bool getPendingDelete() const;
     ImVec2 getDeletePopupPosition();
     int getZIndex() const;
+    bool getWasDragged() const;
 
     // Setters
     void setPosition(const ImVec2& newPos);
@@ -33,6 +35,7 @@ public:
     void setPendingDelete(bool newBool);
     void setDeletePopupPosition(ImVec2 newPopupPosition);
     void setZIndex(int z);
+    void setWasDragged(bool value);
 
 
     // Utility
@@ -44,6 +47,8 @@ public:
     virtual void handleClicks(ImGuiIO& io) = 0;
 
     virtual void to_json(nlohmann::json& j) const;
-    virtual void from_json(const nlohmann::json& j);
+    virtual void from_json(const nlohmann::json& j, ImVec2 resolution);
+
+    static ImVec2 getScalingFactorsFromTemplate(ImVec2 templateResolution);
 };
 

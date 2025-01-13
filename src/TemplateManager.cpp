@@ -2,7 +2,9 @@
 #include <utility>
 #include <filesystem>
 #include <iostream>
+#include "widgets/Element.h"
 #include "vector"
+
 namespace fs = std::filesystem;
 
 TemplateManager::TemplateManager() {
@@ -11,7 +13,6 @@ TemplateManager::TemplateManager() {
 
 void TemplateManager::loadAllTemplates() {
     std::vector<fs::path> jsonFiles;
-    // this is development path TODO
     fs::path templatesDir = fs::path("../templates");
     try {
         if (fs::exists(templatesDir) && fs::is_directory(templatesDir)) {
@@ -50,10 +51,6 @@ std::vector<Template> TemplateManager::getAllTemplates() {
     return allTemplates;
 }
 
-void TemplateManager::saveCurrentTemplate(const std::string& fileName) {
-    activeTemplate.saveTemplate(fileName);
-}
-
 void TemplateManager::addElementToActiveTemplate(Element *element) {
     activeTemplate.addElement(element);
 }
@@ -70,6 +67,9 @@ void TemplateManager::removeElementFromActiveTemplate(int index) {
     activeTemplate.removeElement(index);
 }
 
+Template TemplateManager::getActiveTemplate() {
+    return activeTemplate;
+}
 void TemplateManager::addModuleToActiveTemplate(GraphicModule *module) {
     activeTemplate.addModule(module);
 }

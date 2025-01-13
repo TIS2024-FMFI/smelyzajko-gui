@@ -1,9 +1,13 @@
 #pragma once
 #include "GUI.h"
 #include "TemplateManager.h"
+#include "ToastNotificationManager.h"
 #include <algorithm>
 #include "Module.h"
 #include "ModuleManager.h"
+
+#include "../ImGuiFileDialog/ImGuiFileDialog.h"
+
 
 class ConfigurationMode : GUI {
 public:
@@ -12,6 +16,7 @@ public:
 
     ConfigurationMode() : io(ImGui::GetIO()) {}
 
+    ToastNotificationManager toastManager;
     TemplateManager templateManager;
     ImGuiIO& io;
 
@@ -20,6 +25,7 @@ public:
     void addElementToActiveTemplate(Element* element);
 
     void drawElements();
+    void drawElementsWithSnappingOn();
     void setupMenuBar();
     void drawGrid() const;
     void bringElementToTop(Element* element);
@@ -32,6 +38,9 @@ private:
     float gridSize = 60.0f;
     bool isSnapping = false;
     bool showGrid = false;
-};
+    float menuBarHeight;
 
+    const float minGridValue = 10.0f;
+    const float maxGridValue = 1000.0f;
+};
 

@@ -65,9 +65,9 @@ int OperatingMode::run() {
     }
     templateManager.clearActiveTemplateElements();
 
-//    for (GraphicModule* module : templateManager.getActiveTemplateModules()) {
-//        delete module;
-//    }
+    for (GraphicModule* module : templateManager.getActiveTemplateModules()) {
+        delete module;
+    }
     cleanupImGui();
     glfwDestroyWindow(window);
     glfwTerminate();

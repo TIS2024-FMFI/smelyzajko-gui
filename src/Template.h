@@ -1,4 +1,5 @@
 #pragma once
+
 #include <filesystem>
 #include "widgets/Element.h"
 #include "GraphicModule.h"
@@ -11,6 +12,7 @@ private:
     std::vector<Element *> elements;
     std::vector<GraphicModule*> graphicModules;
     std::string name;
+    ImVec2 resolution;
 public:
     Template() = default;
     Template(const std::filesystem::path& filePath) {
@@ -25,8 +27,7 @@ public:
     std::vector<Element *> getElements();
 
     void loadTemplate(const std::filesystem::path& filePath);
-    void saveTemplate(const std::filesystem::path& filePath) const;
-
+    void saveTemplate(const std::filesystem::path& filePath, std::string newName = "");
 
     nlohmann::json to_json() const;
     void from_json(const nlohmann::json& j);

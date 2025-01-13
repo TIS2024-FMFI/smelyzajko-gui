@@ -33,6 +33,10 @@ void GUI::setupImGui() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    ImGui::GetIO().DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
+
 
     ImFontConfig fontConfig;
     // higher resolution when rendering text

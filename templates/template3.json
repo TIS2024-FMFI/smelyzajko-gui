@@ -53,5 +53,9 @@
       "type": "rectangle"
     }
   ],
-  "name": "template3"
+  "name": "template3",
+  "resolution": [
+    1920.0,
+    1011.0
+  ]
 }
