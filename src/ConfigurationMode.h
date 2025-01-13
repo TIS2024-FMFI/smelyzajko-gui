@@ -11,11 +11,9 @@
 
 class ConfigurationMode : GUI {
 public:
-    ModuleManager moduleManager;
-
-
     ConfigurationMode() : io(ImGui::GetIO()) {}
 
+    ModuleManager moduleManager;
     ToastNotificationManager toastManager;
     TemplateManager templateManager;
     ImGuiIO& io;
