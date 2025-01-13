@@ -35,19 +35,17 @@ void Rectangle::draw(ImGuiIO& io) {
     draw_list->AddRectFilled(rect_min, rect_max, IM_COL32(20, 20, 255, 255));
     draw_list->AddRect(rect_min, rect_max, IM_COL32(255, 255, 255, 255)); // White outline
 
-    if (configurationMode) {
-        // Draw the resizing handle
-        ImVec2 handle_screen_pos_min = ImVec2(resize_handle_pos.x + ImGui::GetWindowPos().x - handle_size.x,
-                                              resize_handle_pos.y + ImGui::GetWindowPos().y - handle_size.y);
-        ImVec2 handle_screen_pos_max = ImVec2(resize_handle_pos.x + ImGui::GetWindowPos().x,
-                                              resize_handle_pos.y + ImGui::GetWindowPos().y);
-        draw_list->AddRectFilled(handle_screen_pos_min, handle_screen_pos_max, IM_COL32(255, 0, 0, 255)); // Red handle
+    // Draw the resizing handle
+    ImVec2 handle_screen_pos_min = ImVec2(resize_handle_pos.x + ImGui::GetWindowPos().x - handle_size.x,
+                                          resize_handle_pos.y + ImGui::GetWindowPos().y - handle_size.y);
+    ImVec2 handle_screen_pos_max = ImVec2(resize_handle_pos.x + ImGui::GetWindowPos().x,
+                                          resize_handle_pos.y + ImGui::GetWindowPos().y);
+    draw_list->AddRectFilled(handle_screen_pos_min, handle_screen_pos_max, IM_COL32(255, 0, 0, 255)); // Red handle
 
-        ImVec2 text_size = ImGui::CalcTextSize(label.c_str());
-        ImVec2 text_pos = ImVec2(position.x + (size.x - text_size.x) / 2,
-                                 position.y + (size.y - text_size.y) / 2); // Centering the text
-        draw_list->AddText(ImVec2(text_pos.x + ImGui::GetWindowPos().x, text_pos.y + ImGui::GetWindowPos().y), IM_COL32(255, 255, 255, 255), label.c_str());
-    }
+    ImVec2 text_size = ImGui::CalcTextSize(label.c_str());
+    ImVec2 text_pos = ImVec2(position.x + (size.x - text_size.x) / 2,
+                             position.y + (size.y - text_size.y) / 2); // Centering the text
+    draw_list->AddText(ImVec2(text_pos.x + ImGui::GetWindowPos().x, text_pos.y + ImGui::GetWindowPos().y), IM_COL32(255, 255, 255, 255), label.c_str());
 }
 ImRect Rectangle::getBoundingBox() const {
     return ImRect(position, ImVec2(position.x + size.x, position.y + size.y));
