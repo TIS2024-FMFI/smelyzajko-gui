@@ -9,6 +9,7 @@ class Template {
 private:
     std::vector<Element *> elements;
     std::string name;
+    ImVec2 resolution;
 public:
     Template() = default;
     Template(const std::filesystem::path& filePath) {

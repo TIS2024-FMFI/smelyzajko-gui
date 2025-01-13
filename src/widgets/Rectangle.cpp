@@ -93,13 +93,12 @@ void Rectangle::to_json(nlohmann::json& j) const {
     };
 }
 
-void Rectangle::from_json(const nlohmann::json& j) {
+void Rectangle::from_json(const nlohmann::json& j, ImVec2 resolution) {
     if (j.contains("type") && j["type"] != "rectangle") {
         throw std::invalid_argument("Invalid type for Rectangle: expected 'rectangle'");
     }
 
-    Element::from_json(j);
-
+    Element::from_json(j, resolution);
     if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
         size.x = j["size"][0];
         size.y = j["size"][1];
@@ -107,7 +106,7 @@ void Rectangle::from_json(const nlohmann::json& j) {
         size = ImVec2(100.0f, 50.0f); // default size
     }
 
-    ImVec2 scale = Element::getScalingFactorsFromTemplate(j);
+    ImVec2 scale = Element::getScalingFactorsFromTemplate(resolution);
 
     position = ImVec2(position.x * scale.x, position.y * scale.y);
     size = ImVec2(size.x * scale.x, size.y * scale.y);

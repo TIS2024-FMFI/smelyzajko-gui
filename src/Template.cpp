@@ -48,6 +48,16 @@ void Template::from_json(const nlohmann::json& j) {
         throw std::invalid_argument("Template JSON is missing a valid 'name' field.");
     }
 
+    if (j.contains("resolution") && j["resolution"].is_array() && j["resolution"].size() == 2) {
+        float width = j["resolution"][0];
+        float height = j["resolution"][1];
+
+        resolution.x = width;
+        resolution.y = height;
+    } else {
+        throw std::invalid_argument("Invalid or missing resolution in JSON!");
+    }
+
     if (j.contains("elements") && j["elements"].is_array()) {
         for (const auto& elementJson : j["elements"]) {
             if (elementJson.contains("type") && elementJson["type"].is_string()) {
@@ -66,7 +76,7 @@ void Template::from_json(const nlohmann::json& j) {
                 auto it = elementCreators.find(type);
                 if (it != elementCreators.end()) {
                     Element* element = it->second();
-                    element->from_json(elementJson);
+                    element->from_json(elementJson, resolution);
                     elements.push_back(element);
                 } else {
                     throw std::invalid_argument("Unknown element type in JSON: " + type);

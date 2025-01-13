@@ -44,8 +44,8 @@ public:
     virtual void handleClicks(ImGuiIO& io) = 0;
 
     virtual void to_json(nlohmann::json& j) const;
-    virtual void from_json(const nlohmann::json& j);
+    virtual void from_json(const nlohmann::json& j, ImVec2 resolution);
 
-    static ImVec2 getScalingFactorsFromTemplate(const nlohmann::json& j);
+    static ImVec2 getScalingFactorsFromTemplate(ImVec2 templateResolution);
 };
 

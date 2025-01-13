@@ -41,8 +41,8 @@ void Label::createTextSizeButton() {
     }
 }
 
-void Label::from_json(const nlohmann::json &j) {
-    Element::from_json(j);
+void Label::from_json(const nlohmann::json &j, ImVec2 resolution) {
+    Element::from_json(j, resolution);
 
     if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
         size.x = j["size"][0];
@@ -57,7 +57,7 @@ void Label::from_json(const nlohmann::json &j) {
         font_size = 13.0f;
     }
 
-    ImVec2 scale = Element::getScalingFactorsFromTemplate(j);
+    ImVec2 scale = Element::getScalingFactorsFromTemplate(resolution);
 
     position = ImVec2(position.x * scale.x, position.y * scale.y);
     size = ImVec2(size.x * scale.x, size.y * scale.y);
