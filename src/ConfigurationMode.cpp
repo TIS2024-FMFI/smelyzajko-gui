@@ -20,12 +20,6 @@
 #include <unistd.h> // For usleep on Unix-based systems
 #endif
 
-//// Example modules for demonstration
-//std::vector<Module> modules = {
-//        Module(1, "Map"),
-//        Module(2, "Lidar"),
-//        Module(3, "Sinusoid"),
-//};
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
@@ -38,12 +32,6 @@ void playBeep() {
     std::cout << "\a"; // Linux/macOS beep
 }
 #endif
-
-
-#include <iostream>
-
-
-
 
 inline bool isOverlapping(const ImRect& a, const ImRect& b) {
     return !(a.Max.x <= b.Min.x ||  // No overlap on the left
@@ -168,16 +156,11 @@ int ConfigurationMode::run() {
                      ImGuiWindowFlags_NoScrollbar
         );
 
-
-
             if (isSnapping){
                 drawElementsWithSnappingOn();
             }else{
                 drawElements();
             }
-
-
-
 
         ImGui::End();
 
@@ -195,7 +178,6 @@ int ConfigurationMode::run() {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
-
     }
 
     for (Element* element : templateManager.getActiveTemplateElements()) {
@@ -285,7 +267,6 @@ void ConfigurationMode::drawElements() {
         }
     }
 }
-
 
 void ConfigurationMode::drawElementsWithSnappingOn() {
     auto activeElements = templateManager.getActiveTemplateElements();
@@ -427,7 +408,7 @@ void ConfigurationMode::setupMenuBar() {
             }
             if (ImGui::Button("Save current template")) {
                 IGFD::FileDialogConfig config;
-                config.path = "../../templates"; // default path for the file dialog
+                config.path = "../templates"; // default path for the file dialog
                 if (!templateManager.getActiveTemplateName().empty()) {
                     config.fileName = templateManager.getActiveTemplateName() + ".json";
                 }
