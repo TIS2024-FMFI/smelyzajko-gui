@@ -64,7 +64,7 @@ void Element::to_json(nlohmann::json &j) const {
     j["position"] = {position.x, position.y};
 }
 
-void Element::from_json(const nlohmann::json &j) {
+void Element::from_json(const nlohmann::json &j, ImVec2 resolution) {
     if (j.contains("label") && j["label"].is_string()) {
         label = j["label"];
     }
@@ -77,17 +77,12 @@ void Element::from_json(const nlohmann::json &j) {
     }
 }
 
-ImVec2 Element::getScalingFactorsFromTemplate(const nlohmann::json &j) {
-    ImVec2 savedResolution(1920.0f, 1080.0f); // default
-    if (j.contains("resolution")) {
-        const auto& res = j["resolution"];
-        savedResolution = ImVec2(res[0].get<float>(), res[1].get<float>());
-    }
 
+ImVec2 Element::getScalingFactorsFromTemplate(ImVec2 templateResolution) {
     ImVec2 currentResolution = ImGui::GetIO().DisplaySize;
 
-    float scaleX = currentResolution.x / savedResolution.x;
-    float scaleY = currentResolution.y / savedResolution.y;
+    float scaleX = currentResolution.x / templateResolution.x;
+    float scaleY = currentResolution.y / templateResolution.y;
 
     return ImVec2(scaleX, scaleY);
 }
