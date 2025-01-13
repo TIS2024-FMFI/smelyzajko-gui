@@ -22,8 +22,6 @@ public:
     void updateValueOfModule(int moduleID, std::vector<int> value);
     void setActiveModuleAndDraw(std::vector<GraphicModule *> graphicModules_, ImGuiIO &io);
 
-
-
     const std::unordered_map<std::string, std::function<GraphicModule*()>> &getModuleConstructors() const;
     void clearModules();
     std::vector<GraphicModule*> graphicModules;
