@@ -4,6 +4,7 @@
 #include "ToastNotificationManager.h"
 #include <algorithm>
 #include "Module.h"
+#include "ModuleManager.h"
 
 #include "../ImGuiFileDialog/ImGuiFileDialog.h"
 

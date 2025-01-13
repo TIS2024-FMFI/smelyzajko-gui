@@ -6,7 +6,7 @@
 
 CounterModule::CounterModule(ModuleManager* moduleManager)
         : moduleManager(*moduleManager), counter(0), stopGeneration(false) {
-    moduleId = this->moduleManager.gegisterModule("Counter Module", this);
+    moduleId = this->moduleManager.registerModule("Counter Module", this);
     graphicModuleId = this->moduleManager.registerGraphicModule("Counter Module", moduleId);
     generatorThread = std::thread(&CounterModule::run, this);
 }

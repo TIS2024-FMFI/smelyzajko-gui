@@ -29,7 +29,6 @@ public:
     void loadTemplate(const std::filesystem::path& filePath);
     void saveTemplate(const std::filesystem::path& filePath, std::string newName = "");
 
-
     nlohmann::json to_json() const;
     void from_json(const nlohmann::json& j);
 

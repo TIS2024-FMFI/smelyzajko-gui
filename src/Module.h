@@ -8,12 +8,13 @@ class Module {
 public:
     ~Module() = default;
     Module() : graphicsFrequency(10.0f), graphicsLogEnabled(false),
-                       textFrequency(10.0f), textLogEnabled(false) {}
+               textFrequency(10.0f), textLogEnabled(false) {}
 
     Module(int id, const char* name);
 
-    Module();
+    virtual void run() = 0;
 
+    virtual std::string getName() const = 0;
     // Graphics Settings
     float GetGraphicsFrequency() const;
     void SetGraphicsFrequency(float freq);

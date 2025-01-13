@@ -7,7 +7,7 @@
 #include <cmath> // Pre výpočet vzdialenosti
 
 MapModule::MapModule(ModuleManager* moduleManager) : moduleManager(*moduleManager), running(false), deltaTime(0.0f){ // Initialize rows and cols
-    moduleId = this->moduleManager.gegisterModule("Map Module",  this);
+    moduleId = this->moduleManager.registerModule("Map Module",  this);
     graphicModuleId = this->moduleManager.registerGraphicModule("Map Module", moduleId);
 
     if (!mapInitialized) {

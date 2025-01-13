@@ -14,7 +14,7 @@ public:
         return instance;
     }
 
-    int gegisterModule(const std::string& name, Module *module);
+    int registerModule(const std::string& name, Module *module);
     int registerGraphicModule(const std::string& name,int moduleID);
 
     void updateValueOfModule(int moduleID, std::string value);
@@ -35,6 +35,9 @@ private:
              {"Counter Module", []() { return new CounterModuleGraphics(); }}
     };
 
+    void renderModules();
+
+    void readTemplateandCreateModules(const std::string &filename);
 };
 
 #endif //MODULEMANAGER_H
