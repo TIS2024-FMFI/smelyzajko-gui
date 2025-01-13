@@ -50,6 +50,15 @@ void Element::setZIndex(int z) {
     zIndex = z;
 }
 
+void Element::setWasDragged(bool value) {
+    wasDragged = value;
+}
+
+bool Element::getWasDragged() const {
+    return wasDragged;
+}
+
+
 void Element::to_json(nlohmann::json &j) const {
     j["label"] = label;
     j["position"] = {position.x, position.y};

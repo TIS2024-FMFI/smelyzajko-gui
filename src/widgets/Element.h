@@ -13,6 +13,7 @@ protected:
     bool pendingDelete;
     ImVec2 deletePopupPosition;
     int zIndex = 0;
+    bool wasDragged = false;
 
 public:
     Element(const ImVec2& pos = ImVec2(0.0f, 0.0f), std::string lbl = "")
@@ -26,6 +27,7 @@ public:
     bool getPendingDelete() const;
     ImVec2 getDeletePopupPosition();
     int getZIndex() const;
+    bool getWasDragged() const;
 
     // Setters
     void setPosition(const ImVec2& newPos);
@@ -33,6 +35,7 @@ public:
     void setPendingDelete(bool newBool);
     void setDeletePopupPosition(ImVec2 newPopupPosition);
     void setZIndex(int z);
+    void setWasDragged(bool value);
 
 
     // Utility
