@@ -16,10 +16,8 @@ add_library(imgui ${IMGUI_SRC} ${IMGUI_HEADERS} ${PROJECT_SOURCES})
 # Include directories
 include_directories(imgui imgui/backends ${CMAKE_SOURCE_DIR})
 
-add_subdirectory(ImGuiFileDialog)
-
 # Create the main executable
-add_executable(smelyzajko-gui main.cpp)
+add_executable(smelyzajko-gui ImGuiFileDialog/ImGuiFileDialog.cpp main.cpp)
 
 # Link the ImGui, OpenGL, and GLFW libraries
-target_link_libraries(smelyzajko-gui PRIVATE imgui glfw GL ImGuiFileDialog)
+target_link_libraries(smelyzajko-gui PRIVATE imgui glfw GL)
