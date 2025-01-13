@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <iostream>
 #include "widgets/Element.h"
+#include "vector"
+
 namespace fs = std::filesystem;
 
 TemplateManager::TemplateManager() {
@@ -67,4 +69,11 @@ void TemplateManager::removeElementFromActiveTemplate(int index) {
 
 Template TemplateManager::getActiveTemplate() {
     return activeTemplate;
+}
+void TemplateManager::addModuleToActiveTemplate(GraphicModule *module) {
+    activeTemplate.addModule(module);
+}
+
+std::vector<GraphicModule *> TemplateManager::getActiveTemplateModules() {
+    return activeTemplate.getModules();
 }

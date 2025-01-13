@@ -148,13 +148,14 @@ int ConfigurationMode::run() {
         ImGui::SetNextWindowSize(io.DisplaySize); // Fullscreen size
 
         ImGui::Begin("Main Window", nullptr,
-                     ImGuiWindowFlags_NoTitleBar |
-                     ImGuiWindowFlags_NoCollapse |
-                     ImGuiWindowFlags_NoResize |
-                     ImGuiWindowFlags_NoMove |
-                     ImGuiWindowFlags_NoBringToFrontOnFocus |
-                     ImGuiWindowFlags_NoScrollbar
+                     ImGuiWindowFlags_NoTitleBar |    // Remove title bar
+                     ImGuiWindowFlags_NoCollapse |   // Prevent collapsing
+                     ImGuiWindowFlags_NoResize |     // Disable resizing
+                     ImGuiWindowFlags_NoMove |       // Prevent moving the window
+                     ImGuiWindowFlags_NoBringToFrontOnFocus | // Prevent window focus changes
+                     ImGuiWindowFlags_NoScrollbar    // Disable scrollbar (optional)
         );
+
 
             if (isSnapping){
                 drawElementsWithSnappingOn();
@@ -245,7 +246,7 @@ void ConfigurationMode::drawElements() {
             if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
                 ImGui::Text("Delete this element?");
                 if (ImGui::Button("Yes")) {
-                    templateManager.removeElementFromActiveTemplate(i);
+                    activeElements.erase(activeElements.begin() + i);
                     ImGui::CloseCurrentPopup();
                     ImGui::EndPopup();
                     ImGui::PopID();

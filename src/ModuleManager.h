@@ -1,21 +1,40 @@
-// File: ModuleManager.h
-
-#ifndef SMELYZAJKO_GUI_MODULEMANAGER_H
-#define SMELYZAJKO_GUI_MODULEMANAGER_H
-
+#pragma once
+#ifndef MODULEMANAGER_H
+#define MODULEMANAGER_H
 #include <vector>
 #include "Module.h"
+#include "../TestModules/MapModuleGraphics.h"
+#include "../TestModules/CounterModuleGraphics.h"
 
-class ModuleManager {
+
+class ModuleManager  {
 public:
-    void addModule(Module* module);
-    const std::vector<Module*>& getModules() const;
-    void createModules();
-    void renderModules();
-    void readTemplateandCreateModules(const std::string& filename);
+    static ModuleManager& getInstance() {
+        static ModuleManager instance;
+        return instance;
+    }
+
+    int gegisterModule(const std::string& name, Module *module);
+    int registerGraphicModule(const std::string& name,int moduleID);
+
+    void updateValueOfModule(int moduleID, std::string value);
+    void updateValueOfModule(int moduleID, int value);
+    void updateValueOfModule(int moduleID, std::vector<int> value);
+    void setActiveModuleAndDraw(std::vector<GraphicModule *> graphicModules_, ImGuiIO &io);
+
+
+
+    const std::unordered_map<std::string, std::function<GraphicModule*()>> &getModuleConstructors() const;
+    void clearModules();
+    std::vector<GraphicModule*> graphicModules;
 
 private:
-    std::vector<Module*> modules;
+    std::vector<Module*> modules ;
+    std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
+            {"Map Module", []() { return new MapModuleGraphics(); }},
+             {"Counter Module", []() { return new CounterModuleGraphics(); }}
+    };
+
 };
 
-#endif //SMELYZAJKO_GUI_MODULEMANAGER_H
+#endif //MODULEMANAGER_H

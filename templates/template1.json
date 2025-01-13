@@ -1,73 +1,74 @@
 {
-    "elements": [
-        {
-            "label": "test rectangle",
-            "position": [
-                100.0,
-                100.0
-            ],
-            "size": [
-                200.0,
-                100.0
-            ],
-            "type": "rectangle"
-        },
-        {
-            "label": "Rectangle1",
-            "position": [
-                1100.0,
-                516.0
-            ],
-            "size": [
-                200.0,
-                100.0
-            ],
-            "type": "rectangle"
-        },
-        {
-            "font_size": 13.0,
-            "label": "Hello\n, W\nor \nld!",
-            "position": [
-                179.0,
-                589.0
-            ],
-            "size": [
-                84.5,
-                13.0
-            ],
-            "type": "multi-line-label"
-        },
-        {
-            "label": "Slider (int)",
-            "maxValue": 10.0,
-            "minValue": 0.0,
-            "position": [
-                885.0,
-                290.0
-            ],
-            "size": [
-                200.0,
-                20.0
-            ],
-            "type": "slider-float",
-            "value": 5.0
-        },
-        {
-            "label": "fhn asofnmsa",
-            "position": [
-                922.0,
-                345.0
-            ],
-            "size": [
-                285.0,
-                553.0
-            ],
-            "type": "rectangle"
-        }
-    ],
-    "name": "template1",
-    "resolution": [
-        1920.0,
-        1011.0
-    ]
+  "elements": [],
+  "graphicModules": [
+    {
+      "graphicModuleId": 0,
+      "graphicsFrequency": 0.0,
+      "graphicsLogEnabled": true,
+      "moduleId": 0,
+      "name": "Counter Module",
+      "position": [
+        100.0,
+        450.0
+      ],
+      "size": [
+        200.0,
+        300.0
+      ],
+      "textFrequency": 0.0,
+      "textLogEnabled": true
+    },
+    {
+      "graphicModuleId": 0,
+      "graphicsFrequency": 0.0,
+      "graphicsLogEnabled": true,
+      "moduleId": 0,
+      "name": "Counter Module",
+      "position": [
+        450.0,
+        450.0
+      ],
+      "size": [
+        200.0,
+        300.0
+      ],
+      "textFrequency": 0.0,
+      "textLogEnabled": true
+    },
+    {
+      "graphicModuleId": 1,
+      "graphicsFrequency": 0.0,
+      "graphicsLogEnabled": true,
+      "moduleId": 1,
+      "name": "Map Module",
+      "position": [
+        50.0,
+        50.0
+      ],
+      "size": [
+        350.0,
+        350.0
+      ],
+      "textFrequency": 0.0,
+      "textLogEnabled": true
+    },
+    {
+      "graphicModuleId": 1,
+      "graphicsFrequency": 0.0,
+      "graphicsLogEnabled": true,
+      "moduleId": 1,
+      "name": "Map Module",
+      "position": [
+        650.0,
+        50.0
+      ],
+      "size": [
+        350.0,
+        350.0
+      ],
+      "textFrequency": 0.0,
+      "textLogEnabled": true
+    }
+  ],
+  "name": "template1"
 }
