@@ -5,13 +5,29 @@
 #include <algorithm>
 #include "Module.h"
 #include "ModuleManager.h"
-
-#include "../ImGuiFileDialog/ImGuiFileDialog.h"
-
+#include "ImGuiFileDialog.h"
+#include "yaml-cpp/yaml.h"
 
 class ConfigurationMode : GUI {
 public:
-    ConfigurationMode() : io(ImGui::GetIO()) {}
+    ConfigurationMode(YAML::Node config_file) : io(ImGui::GetIO()) {
+        std::vector<std::string> templateNames;
+
+        if (config_file["templates"]) {
+            for (const auto& templateNode : config_file["templates"]) {
+                std::string templateName = templateNode.as<std::string>();
+                templateNames.push_back(templateName);
+            }
+        } else {
+            std::cerr << "No templates found in config file." << std::endl;
+        }
+
+        if (templateNames.empty()) {
+            templateManager = TemplateManager();
+        } else {
+            templateManager = TemplateManager(templateNames);
+        }
+    }
 
     ModuleManager moduleManager;
     ToastNotificationManager toastManager;
