@@ -50,6 +50,7 @@ private:
     void loadMap();
 
 
+    void initializeBallPosition(const std::pair<int, int> &start);
 };
 
 

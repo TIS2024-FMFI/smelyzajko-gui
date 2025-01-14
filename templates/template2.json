@@ -1,69 +1,61 @@
 {
-  "elements": [
+  "name": "template2",
+  "elements": [],
+  "graphicModules": [
     {
-      "label": "Main Panel",
-      "position": [
-        50.0,
-        50.0
-      ],
-      "size": [
-        300.0,
-        150.0
-      ],
-      "type": "rectangle"
+      "graphicModuleId": 0,
+      "moduleId": 0,
+      "name": "Counter Module",
+      "position": [100, 100],
+      "size": [200, 200],
+      "graphicsFrequency": 0.5,
+      "graphicsLogEnabled": true,
+      "textFrequency": 1.0,
+      "textLogEnabled": true
     },
     {
-      "label": "Submit Button",
-      "position": [
-        200.0,
-        300.0
-      ],
-      "size": [
-        120.0,
-        50.0
-      ],
-      "type": "button"
+      "graphicModuleId": 1,
+      "moduleId": 1,
+      "name": "Map Module",
+      "position": [400, 100],
+      "size": [400, 400],
+      "graphicsFrequency": 1.0,
+      "graphicsLogEnabled": true,
+      "textFrequency": 1.5,
+      "textLogEnabled": false
     },
     {
-      "font_size": 16.0,
-      "label": "Welcome Text",
-      "position": [
-        100.0,
-        80.0
-      ],
-      "size": [
-        180.0,
-        20.0
-      ],
-      "type": "single-line-label"
+      "graphicModuleId": 1,
+      "moduleId": 1,
+      "name": "Map Module",
+      "position": [400, 500],
+      "size": [400, 400],
+      "graphicsFrequency": 1.0,
+      "graphicsLogEnabled": true,
+      "textFrequency": 1.5,
+      "textLogEnabled": false
     },
     {
-      "label": "Progress Bar",
-      "maxValue": 100,
-      "minValue": 0,
-      "position": [
-        400.0,
-        250.0
-      ],
-      "size": [
-        400.0,
-        30.0
-      ],
-      "type": "slider-int",
-      "value": 60
+      "graphicModuleId": 2,
+      "moduleId": 2,
+      "name": "Ultrasonic Module",
+      "position": [100, 400],
+      "size": [200, 200],
+      "graphicsFrequency": 2.0,
+      "graphicsLogEnabled": true,
+      "textFrequency": 2.5,
+      "textLogEnabled": false
     },
     {
-      "label": "Logo Area",
-      "position": [
-        800.0,
-        100.0
-      ],
-      "size": [
-        250.0,
-        150.0
-      ],
-      "type": "rectangle"
+      "graphicModuleId": 0,
+      "moduleId": 0,
+      "name": "Counter Module",
+      "position": [100, 700],
+      "size": [200, 200],
+      "graphicsFrequency": 3.0,
+      "graphicsLogEnabled": true,
+      "textFrequency": 1.0,
+      "textLogEnabled": true
     }
-  ],
-  "name": "template2"
+  ]
 }

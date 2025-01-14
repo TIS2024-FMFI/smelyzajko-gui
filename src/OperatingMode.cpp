@@ -11,11 +11,13 @@
 
 #include "../TestModules/MapModule.h"
 #include "../TestModules/CounterModule.h"
-
+#include "../TestModules/UltrasonicModule.h"
 
 int OperatingMode::run() {
     CounterModule counterModule = CounterModule(&moduleManager);
     MapModule mapModule = MapModule(&moduleManager);
+    UltrasonicModule ultrasonicModule = UltrasonicModule(&moduleManager);
+
     io = ImGui::GetIO();
     (void)io;
     if (!glfwInit()) {

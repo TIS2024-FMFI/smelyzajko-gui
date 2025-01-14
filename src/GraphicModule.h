@@ -2,7 +2,7 @@
 #define SMELYZAJKO_GUI_GRAPHICMODULE_H
 #include "iostream"
 #include "imgui.h"
-#include "json.hpp"
+#include "../json.hpp"
 
 
 class GraphicModule {
@@ -25,6 +25,11 @@ public:
 
     virtual void to_json(nlohmann::json& j) const = 0;
     virtual void from_json(const nlohmann::json& j) = 0;
+
+
+    nlohmann::basic_json<> toJson() {
+        return nlohmann::basic_json<>();
+    }
 
 protected:
     int graphicModuleId;

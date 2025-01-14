@@ -13,6 +13,7 @@ struct UltrasonicSensorData {
 class UltrasonicModuleGraphics: public GraphicModule {
 public:
 
+
     //same in all modules
     void draw(ImGuiIO &io) override;
     void to_json(nlohmann::json& j) const override;
@@ -33,14 +34,25 @@ public:
     int graphicModuleId;
     int moduleId;
 
+    // Graphics settings
+    float graphicsFrequency;
+    bool graphicsLogEnabled;
 
-    void updateRandomSensorData();
-    std::vector<UltrasonicSensorData> sensors;
+    // Text settings
+    float textFrequency;
+    bool textLogEnabled;
+
+
+    std::vector<UltrasonicSensorData> sensors = {
+            {0, 5}, {45, 7}, {90, 4}, {135, 8},
+            {180, 6}, {225, 3}, {270, 2}, {315, 5}
+    };
 
 private:
     int frameCounter = 0;
-    int updateIntervalFrames = 180;
+    int updateIntervalFrames = 4;
 
+    void updateDynamicSensors();
 };
 
 

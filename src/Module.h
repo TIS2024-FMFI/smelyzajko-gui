@@ -3,10 +3,11 @@
 
 #include "imgui.h"
 #include <string>
-#include "json.hpp"
+#include "../json.hpp"
+
 class Module {
 public:
-    ~Module() = default;
+    virtual ~Module() = default;
     Module() : graphicsFrequency(10.0f), graphicsLogEnabled(false),
                        textFrequency(10.0f), textLogEnabled(false) {}
 
@@ -14,6 +15,7 @@ public:
 
     virtual void run() = 0;
 
+    Module(const std::string& name) : moduleName(name) {}
 
 
     virtual std::string getName() const = 0;
@@ -38,6 +40,8 @@ public:
 
 private:
 
+    ImVec2 position;
+    ImVec2 size;
     // Graphics settings
     float graphicsFrequency;
     bool graphicsLogEnabled;
@@ -45,6 +49,8 @@ private:
     // Text settings
     float textFrequency;
     bool textLogEnabled;
-
+protected:
+    std::string name;
 };
+
 #endif // MODULE_H

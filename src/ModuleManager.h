@@ -30,11 +30,14 @@ public:
     void clearModules();
     std::vector<GraphicModule*> graphicModules;
 
+    std::vector<Module *> getModules();
+
 private:
     std::vector<Module*> modules ;
     std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
             {"Map Module", []() { return new MapModuleGraphics(); }},
-             {"Counter Module", []() { return new CounterModuleGraphics(); }}
+             {"Counter Module", []() { return new CounterModuleGraphics(); }},
+            {"Ultrasonic Module", []() { return new UltrasonicModuleGraphics(); }},
     };
 
 };
