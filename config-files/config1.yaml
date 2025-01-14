@@ -1,0 +1,6 @@
+templates:
+  - template1.json
+  - template2.json
+  - template3.json
+
+modules:
