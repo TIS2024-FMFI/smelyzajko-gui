@@ -2,32 +2,53 @@
 #include "src/OperatingMode.h"
 #include <iostream>
 #include <string>
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
+std::string getFirstConfigFile(const std::string& directory) {
+    for (const auto& entry : fs::directory_iterator(directory)) {
+        if (entry.is_regular_file() && entry.path().extension() == ".yaml") {
+            return entry.path().string();
+        }
+    }
+    return ""; // Return an empty string if no valid file is found
+}
 
 int main(int argc, char* argv[]) {
     if (argc < 2 || argc > 3) {
-        std::cerr << "Usage: " << argv[0] << " (--config | --operate) [config_file.yaml]\n";
+        std::cerr << "Usage: " << argv[0] << " (--config | --operate) [path for config_file.yaml]\n";
         return 1;
     }
 
     std::string mode = argv[1];
-    std::string configFile = (argc == 3) ? argv[2] : "";
+    std::string configFile;
 
-    YAML::Node config = YAML::LoadFile(configFile);
-
-    if (mode == "--config") {
+    // If no config file is provided, choose the first one in the "config-files" directory
+    if (argc == 3) {
+        configFile = argv[2];
+    } else {
+        configFile = getFirstConfigFile("../config-files");
         if (configFile.empty()) {
-            std::cerr << "Error: Missing configuration file for --config mode.\n";
+            std::cerr << "Error: No configuration file provided and no `.yaml` files found in the `config-files` directory.\n";
             return 1;
         }
+    }
 
+    // Load the YAML configuration
+    YAML::Node config;
+    try {
+        config = YAML::LoadFile(configFile);
+    } catch (const std::exception& e) {
+        std::cerr << "Error loading configuration file: " << e.what() << "\n";
+        return 1;
+    }
+
+    // Determine the mode
+    if (mode == "--config") {
         ConfigurationMode gui(config);
         gui.run();
     } else if (mode == "--operate") {
-        if (configFile.empty()) {
-            std::cerr << "Error: Missing configuration file for --operate mode.\n";
-            return 1;
-        }
-
         OperatingMode operatingMode;
         operatingMode.run();
     } else {
