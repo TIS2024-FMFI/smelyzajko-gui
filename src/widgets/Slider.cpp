@@ -119,7 +119,7 @@ void Slider<E>::from_json(const nlohmann::json& j, ImVec2 resolution) {
         value = std::clamp(j["value"].get<E>(), minValue, maxValue);
     }
 
-    ImVec2 scale = Element::getScalingFactorsFromTemplate(resolution);
+    ImVec2 scale = Element::getScaleFactors(resolution);
 
     position = ImVec2(position.x * scale.x, position.y * scale.y);
     size = ImVec2(size.x * scale.x, size.y * scale.y);

@@ -78,7 +78,7 @@ void Element::from_json(const nlohmann::json &j, ImVec2 resolution) {
 }
 
 
-ImVec2 Element::getScalingFactorsFromTemplate(ImVec2 templateResolution) {
+ImVec2 Element::getScaleFactors(ImVec2 templateResolution) {
     ImVec2 currentResolution = ImGui::GetIO().DisplaySize;
 
     float scaleX = currentResolution.x / templateResolution.x;
