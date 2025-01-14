@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "Module.h"
 #include "ModuleManager.h"
+#include "ShortcutsManager.h"
 
 #include "../ImGuiFileDialog/ImGuiFileDialog.h"
 
@@ -14,10 +15,11 @@ public:
     ModuleManager moduleManager;
 
 
-    ConfigurationMode() : io(ImGui::GetIO()) {}
+    ConfigurationMode() : io(ImGui::GetIO())  {}
 
     ToastNotificationManager toastManager;
     TemplateManager templateManager;
+    ShortcutsManager shortcutsManager;
     ImGuiIO& io;
 
     int run() override;
@@ -34,6 +36,10 @@ public:
     void createFloatSliderSettings();
     void createIntSliderSettings();
     void createLabelSettings();
+    void setupShortcuts();
+    void processShortcuts();
+    void initializeWindow(GLFWwindow* window);
+
 private:
     float gridSize = 60.0f;
     bool isSnapping = false;

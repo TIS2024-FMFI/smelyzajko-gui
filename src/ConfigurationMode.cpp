@@ -131,12 +131,37 @@ ImVec2 findNearestFreeGridCorner(const std::vector<Element*>& elements, const Im
 }
 
 
+void ConfigurationMode::setupShortcuts() {
+
+
+    shortcutsManager.registerShortcut("Ctrl+E", [this]() {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    });
+    shortcutsManager.registerShortcut("Ctrl+G", [this]() {
+        drawGrid();
+    });
+}
+
+void ConfigurationMode::processShortcuts() {
+    shortcutsManager.processShortcuts();
+}
+
+void ConfigurationMode::initializeWindow(GLFWwindow* window) {
+    this->window = window;
+    shortcutsManager.setWindow(window);
+}
+
+
 int ConfigurationMode::run() {
     io = ImGui::GetIO();
     (void)io;
+    initializeWindow(window);
+    shortcutsManager.setWindow(window);
+    setupShortcuts();
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
+        processShortcuts();
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
