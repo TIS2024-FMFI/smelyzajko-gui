@@ -5,6 +5,7 @@ class TemplateManager {
 private:
     Template activeTemplate;
     std::vector<Template> allTemplates;
+    bool configMode = false;
     void loadAllTemplates();
 public:
     TemplateManager();
@@ -18,6 +19,7 @@ public:
     std::vector<Element *> getActiveTemplateElements();
     std::vector<GraphicModule *> getActiveTemplateModules();
     std::vector<Template> getAllTemplates();
+    void setConfigMode(bool mode);
 
 };
 

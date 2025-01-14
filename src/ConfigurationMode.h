@@ -32,6 +32,9 @@ private:
     float gridSize = 60.0f;
     bool isSnapping = false;
     bool showGrid = false;
+
+    void addModuleToActiveTemplate(GraphicModule *graphicModule);
+
 };
 
 

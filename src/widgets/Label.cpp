@@ -56,5 +56,11 @@ void Label::from_json(const nlohmann::json &j) {
     } else {
         font_size = 13.0f;
     }
+    }
+
+std::vector<Setting> Label::getSettings() {
+    return {
+            {"label",label, [this](const SettingValue& val) { label = std::get<std::string>(val); }}
+    };
 }
 

@@ -45,7 +45,8 @@ void Checkbox::to_json(nlohmann::json &j) const {
             {"type", "checkbox"},
             {"label", label},
             {"position", {position.x, position.y}},
-            {"checked", checked}
+            {"checked", checked},
+            {"moduleID", moduleID}
     };
 }
 
@@ -61,4 +62,15 @@ void Checkbox::from_json(const nlohmann::json &j) {
     } else {
         checked = false;
     }
+    if (j.contains("moduleID") && j["moduleID"].is_number_integer()) {
+        moduleID = j["moduleID"];
+    } else {
+        moduleID = -1;
+    }
+}
+std::vector<Setting> Checkbox::getSettings() {
+    return {
+            {"moduleID",moduleID, [this](const SettingValue& val) { moduleID = std::get<int>(val); }},
+            {"label", label, [this](const SettingValue& val) { label = std::get<std::string>(val); }}
+    };
 }

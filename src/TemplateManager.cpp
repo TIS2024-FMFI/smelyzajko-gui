@@ -5,7 +5,7 @@
 #include "vector"
 namespace fs = std::filesystem;
 
-TemplateManager::TemplateManager() {
+TemplateManager::TemplateManager()  {
     loadAllTemplates();
 }
 
@@ -32,7 +32,7 @@ void TemplateManager::loadAllTemplates() {
         std::cout << "No JSON files found in the 'templates' directory." << std::endl;
     } else {
         for (const auto& path : jsonFiles) {
-            Template aTemplate(path);
+            Template aTemplate(path,configMode);
             allTemplates.push_back(aTemplate);
         }
     }
@@ -58,6 +58,7 @@ void TemplateManager::addElementToActiveTemplate(Element *element) {
     activeTemplate.addElement(element);
 }
 
+
 std::string TemplateManager::getActiveTemplateName() const {
     return activeTemplate.getName();
 }
@@ -76,4 +77,7 @@ void TemplateManager::addModuleToActiveTemplate(GraphicModule *module) {
 
 std::vector<GraphicModule *> TemplateManager::getActiveTemplateModules() {
     return activeTemplate.getModules();
+}
+void TemplateManager::setConfigMode(bool mode) {
+    configMode = mode;
 }

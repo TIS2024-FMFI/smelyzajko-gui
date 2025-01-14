@@ -24,9 +24,21 @@ void Element::move(const ImVec2& delta) {
 bool Element::getPendingDelete() const {
     return pendingDelete;
 }
+bool Element::getPendingEdit() const {
+    return pendingEdit;
+}
+bool Element::getPendingChooseWhatToDo() const {
+    return pendingChooseWhatToDo;
+}
 
 void Element::setPendingDelete(bool newPendingDelete) {
     pendingDelete = newPendingDelete;
+}
+void Element::setPendingEdit(bool newPendingEdit) {
+    pendingEdit = newPendingEdit;
+}
+void  Element::setPendingChooseWhatToDo(bool newPendingChooseWhatToDo) {
+    pendingChooseWhatToDo = newPendingChooseWhatToDo;
 }
 
 ImVec2 Element::getDeletePopupPosition() {
@@ -39,7 +51,7 @@ void Element::setDeletePopupPosition(ImVec2 newPopupPosition) {
 
 void Element::detectRightClickDelete() {
     deletePopupPosition = ImGui::GetMousePos();
-    pendingDelete = true; // Mark that the element is pending deletion
+    pendingChooseWhatToDo = true; // Mark that the element is pending deletion
 }
 
 int Element::getZIndex() const {
@@ -66,6 +78,10 @@ void Element::from_json(const nlohmann::json &j) {
     } else {
         position = ImVec2(0.0f, 0.0f);
     }
+}
+
+void Element::setConfigurationMode(bool newBool) {
+    configurationMode = newBool;
 }
 
 

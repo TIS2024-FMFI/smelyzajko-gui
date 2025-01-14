@@ -2,14 +2,14 @@
 #include "src/OperatingMode.h"
 
 int main() {
-bool config = false;
+bool config = true;
 
 if (config){
     ConfigurationMode gui;
     gui.run();
 }
 else{
-    OperatingMode operatingMode;
+    OperatingMode operatingMode ;
     operatingMode.run();
 }
 

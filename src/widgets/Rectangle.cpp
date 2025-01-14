@@ -1,5 +1,5 @@
 #include "Rectangle.h"
-
+#include <iostream>
 ImVec2 Rectangle::getSize() const {
     return size;
 }
@@ -34,7 +34,6 @@ void Rectangle::draw(ImGuiIO& io) {
 
     draw_list->AddRectFilled(rect_min, rect_max, IM_COL32(20, 20, 255, 255));
     draw_list->AddRect(rect_min, rect_max, IM_COL32(255, 255, 255, 255)); // White outline
-
     if (configurationMode) {
         // Draw the resizing handle
         ImVec2 handle_screen_pos_min = ImVec2(resize_handle_pos.x + ImGui::GetWindowPos().x - handle_size.x,
@@ -90,7 +89,14 @@ void Rectangle::to_json(nlohmann::json& j) const {
             {"type", "rectangle"},
             {"label", label},
             {"position", {position.x, position.y}},
-            {"size", {size.x, size.y}}
+            {"size", {size.x, size.y}},
+            {"moduleId", moduleId},
+            {"graphicModuleId", graphicModuleId},
+            {"graphicsFrequency", graphicsFrequency},
+            {"graphicsLogEnabled", graphicsLogEnabled},
+            {"textFrequency", textFrequency},
+            {"textLogEnabled", textLogEnabled},
+            {"name",label}
     };
 }
 
@@ -100,11 +106,63 @@ void Rectangle::from_json(const nlohmann::json& j) {
     }
 
     Element::from_json(j);
-
     if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
         size.x = j["size"][0];
         size.y = j["size"][1];
     } else {
         size = ImVec2(100.0f, 50.0f);
     }
+    if (j.contains("moduleId") && j["moduleId"].is_number_integer()) {
+        moduleId = j["moduleId"];
+    } else {
+        moduleId = -1;
+    }
+    if (j.contains("graphicModuleId") && j["graphicModuleId"].is_number_integer()) {
+        graphicModuleId = j["graphicModuleId"];
+    } else {
+        graphicModuleId = -1;
+    }
+    if (j.contains("graphicsFrequency") && j["graphicsFrequency"].is_number_integer()) {
+        graphicsFrequency = j["graphicsFrequency"];
+    } else {
+        graphicsFrequency = 0;
+    }
+    if (j.contains("graphicsLogEnabled") && j["graphicsLogEnabled"].is_boolean()) {
+        graphicsLogEnabled = j["graphicsLogEnabled"];
+    } else {
+        graphicsLogEnabled = false;
+    }
+    if (j.contains("textFrequency") && j["textFrequency"].is_number_integer()) {
+        textFrequency = j["textFrequency"];
+    } else {
+        textFrequency = 0;
+    }
+    if (j.contains("textLogEnabled") && j["textLogEnabled"].is_boolean()) {
+        textLogEnabled = j["textLogEnabled"];
+    } else {
+        textLogEnabled = false;
+    }
+    if (j.contains("name") && j["name"].is_string() && !j["name"].empty() && label.empty()) {
+        label = j["name"];
+    }
+
 }
+std::vector<Setting> Rectangle::getSettings() {
+
+    if (label.find("Rectangle") != std::string::npos) {
+        return {
+                {"label",label, [this](const SettingValue &val) { label = std::get<std::string>(val); }}
+        };
+    }
+    else {
+        return {
+                {"moduleId",moduleId, [this](const SettingValue &val) { moduleId = std::get<int>(val); }},
+                {"graphicModuleId",graphicModuleId, [this](const SettingValue &val) { graphicModuleId = std::get<int>(val); }},
+                {"graphicsFrequency",graphicsFrequency, [this](const SettingValue &val) { graphicsFrequency = std::get<int>(val); }},
+                {"graphicsLogEnabled",graphicsLogEnabled, [this](const SettingValue &val) { graphicsLogEnabled = std::get<bool>(val); }},
+                {"textFrequency",textFrequency, [this](const SettingValue &val) { textFrequency = std::get<int>(val); }},
+                {"textLogEnabled",textLogEnabled, [this](const SettingValue &val) { textLogEnabled = std::get<bool>(val); }}
+        };
+        }
+    }
+

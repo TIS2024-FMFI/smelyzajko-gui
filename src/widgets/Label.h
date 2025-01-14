@@ -22,4 +22,5 @@ public:
     virtual ImRect getBoundingBox() const override;
 
     void from_json(const nlohmann::json &j) override;
+    std::vector<Setting> getSettings() override;
 };
