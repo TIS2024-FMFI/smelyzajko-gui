@@ -120,7 +120,7 @@ void Template::from_json(const nlohmann::json& j) {
                     } else {
                         // Create and add the module as usual
                         GraphicModule* module = it->second();
-                        module->from_json(moduleJson);
+                        module->from_json(moduleJson, resolution);
                         graphicModules.push_back(module);
                     }
                 } else {

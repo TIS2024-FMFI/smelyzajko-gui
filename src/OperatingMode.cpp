@@ -1,19 +1,12 @@
 #include <iostream>
-#include "ConfigurationMode.h"
-#include "widgets/Rectangle.h"
-#include "widgets/Checkbox.h"
-#include "widgets/Button.h"
-#include "widgets/Slider.h"
-#include "widgets/SingleLineLabel.h"
-#include "widgets/MultiLineLabel.h"
 #include "OperatingMode.h"
-#include "ModuleManager.h"
-
 #include "../TestModules/MapModule.h"
 #include "../TestModules/CounterModule.h"
 
 
 int OperatingMode::run() {
+    MapModule mapModule = MapModule(&moduleManager);
+    CounterModule counterModule = CounterModule(&moduleManager);
 
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;

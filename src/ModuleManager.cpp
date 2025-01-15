@@ -3,7 +3,6 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "ModuleManager.h"
 
 int ModuleManager::registerModule(const std::string &name, Module *module) {
     modules.push_back(module);
@@ -33,7 +32,6 @@ int ModuleManager::registerGraphicModule(const std::string &name, int moduleID) 
     graphicModule->setModuleID(moduleID);
     graphicModules.push_back(graphicModule);
     return graphicModules.size() - 1;
-
 }
 
 
