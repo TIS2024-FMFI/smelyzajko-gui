@@ -5,6 +5,7 @@
 #include "imgui.h"
 #include "string"
 #include "imgui_internal.h"
+#include <GLFW/glfw3.h>
 // Typ alias pre variant
 using SettingValue = std::variant<bool, int, float, std::string>;
 // Struct pre nastavenie
@@ -13,6 +14,7 @@ struct Setting {
     SettingValue value;
     std::function<void(const SettingValue&)> setter;
 };
+
 
 class Element {
 protected:
@@ -32,7 +34,7 @@ public:
 
     virtual ~Element() = default;
 
-    // Getters
+// Getters
     ImVec2 getPosition() const;
     std::string getLabel() const;
     bool getPendingDelete() const;
@@ -42,7 +44,7 @@ public:
     int getZIndex() const;
     bool getWasDragged() const;
 
-    // Setters
+// Setters
     void setPosition(const ImVec2& newPos);
     void setLabel(const std::string& newLabel);
     void setPendingDelete(bool newBool);
@@ -68,4 +70,3 @@ public:
     static ImVec2 getScaleFactors(ImVec2 templateResolution);
     virtual std::vector<Setting> getSettings()  = 0;
 };
-

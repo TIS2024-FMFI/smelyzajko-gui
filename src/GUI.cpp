@@ -1,4 +1,5 @@
 #include <stdexcept>
+
 #include "GUI.h"
 
 GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()) {
@@ -25,16 +26,13 @@ GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()) {
     setupImGui();
 }
 
-
 void GUI::setupImGui() {
     IMGUI_CHECKVERSION();
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
-    io.DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
+    io.DisplaySize = ImVec2(static_cast<float>(monitorWidth), static_cast<float>(monitorHeight));
 
     ImFontConfig fontConfig;
     fontConfig.RasterizerDensity = 5.0f;

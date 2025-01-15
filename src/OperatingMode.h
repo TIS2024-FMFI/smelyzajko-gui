@@ -1,7 +1,7 @@
+#pragma once
 #include "GUI.h"
 #include <algorithm>
 #include "Module.h"
-
 class OperatingMode :  GUI {
 public:
 

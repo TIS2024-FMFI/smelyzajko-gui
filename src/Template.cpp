@@ -1,6 +1,7 @@
 #include "Template.h"
 #include <fstream>
 #include <stdexcept>
+#include <GLFW/glfw3.h>
 
 #include "libs/json.hpp"
 #include "widgets/Button.h"
@@ -151,7 +152,14 @@ void Template::saveTemplate(const std::filesystem::path& filePath, std::string n
     }
 
     json j = to_json();
-    j["resolution"] = {ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y}; // Save current resolution
+
+    GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* videoMode = glfwGetVideoMode(primaryMonitor);
+
+    int monitorWidth = videoMode->width;
+    int monitorHeight = videoMode->height;
+
+    j["resolution"] = {monitorWidth, monitorHeight};
     outFile << j.dump(4);
 }
 

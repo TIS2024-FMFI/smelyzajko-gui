@@ -9,6 +9,7 @@
 #include "ModuleManager.h"
 #include "ShortcutsManager.h"
 #include "ToastNotificationManager.h"
+#include "ShortcutsManager.h"
 #include "TemplateManager.h"
 
 #include "widgets/Element.h"
@@ -32,11 +33,13 @@ protected:
     ToastNotificationManager toastManager;
 
     ShortcutsManager shortcutsManager;
+    YAML::Node configFile;
+
 public:
     GUI(YAML::Node configFile);
 
     void setupImGui();
     void cleanupImGui();
+
     virtual int run() = 0;
 };
-
