@@ -25,37 +25,15 @@
       "textLogEnabled": false
     },
     {
-      "graphicModuleId": 1,
-      "moduleId": 1,
-      "name": "Map Module",
-      "position": [400, 500],
-      "size": [400, 400],
-      "graphicsFrequency": 1.0,
-      "graphicsLogEnabled": true,
-      "textFrequency": 1.5,
-      "textLogEnabled": false
-    },
-    {
       "graphicModuleId": 2,
       "moduleId": 2,
       "name": "Ultrasonic Module",
-      "position": [100, 400],
+      "position": [100, 500],
       "size": [200, 200],
       "graphicsFrequency": 2.0,
       "graphicsLogEnabled": true,
       "textFrequency": 2.5,
       "textLogEnabled": false
-    },
-    {
-      "graphicModuleId": 0,
-      "moduleId": 0,
-      "name": "Counter Module",
-      "position": [100, 700],
-      "size": [200, 200],
-      "graphicsFrequency": 3.0,
-      "graphicsLogEnabled": true,
-      "textFrequency": 1.0,
-      "textLogEnabled": true
     }
   ]
 }

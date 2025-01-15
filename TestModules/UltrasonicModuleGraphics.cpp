@@ -1,6 +1,16 @@
 #include "UltrasonicModuleGraphics.h"
-#include <cstdlib>
+#include <nlohmann/json.hpp>
+#include <iostream>
+#include <iomanip>
 #include <cmath>
+
+UltrasonicModuleGraphics::UltrasonicModuleGraphics()
+        : scrollOffset(0.0f), autoscrollEnabled(true) {
+    // Initialize previous distances to match initial sensor values
+    for (const auto& sensor : sensors) {
+        previousDistances.push_back(sensor.distance);
+    }
+}
 
 void UltrasonicModuleGraphics::draw(ImGuiIO& io) {
     ImVec2 center = ImVec2(position.x + size.x / 2, position.y + size.y / 2);
@@ -32,31 +42,113 @@ void UltrasonicModuleGraphics::draw(ImGuiIO& io) {
         draw_list->AddLine(center, ImVec2(x, y), IM_COL32(0, 255, 0, 255), 2.0f); // Green line
         draw_list->AddCircleFilled(ImVec2(x, y), 4.0f, IM_COL32(0, 255, 0, 255)); // Green dot
     }
+
+    // Scrollable log for sensor data
+    float log_area_height = 100.0f;
+    float inner_padding = 5.0f;
+    ImVec2 log_area_min = ImVec2(position.x, position.y + size.y + 10.0f);
+    ImVec2 log_area_max = ImVec2(position.x + size.x - 25.0f, position.y + size.y + log_area_height); // Adjusted for scrollbar space
+
+    draw_list->AddRect(log_area_min, log_area_max, IM_COL32(255, 255, 255, 255));
+
+    float visible_height = log_area_height - 2 * inner_padding;
+    float total_log_height = 0.0f;
+    float log_y_offset = log_area_min.y - scrollOffset;
+
+    // Enable scissor/clipping for log area
+    draw_list->PushClipRect(log_area_min, log_area_max, true);
+
+    for (const std::string& log : logValues) {
+        ImVec2 log_text_size = ImGui::CalcTextSize(log.c_str());
+        total_log_height += log_text_size.y + inner_padding;
+
+        if (log_y_offset + log_text_size.y >= log_area_min.y &&
+            log_y_offset <= log_area_max.y) {
+            ImVec2 log_pos = ImVec2(log_area_min.x + inner_padding, log_y_offset);
+            draw_list->AddText(log_pos, IM_COL32(255, 255, 255, 255), log.c_str());
+        }
+        log_y_offset += log_text_size.y + inner_padding;
+    }
+
+    draw_list->PopClipRect();
+
+    // Scrollbar
+    float scrollbar_width = 20.0f;
+    ImVec2 scrollbar_min = ImVec2(log_area_max.x + 5.0f, log_area_min.y); // Positioned slightly to the side
+    ImVec2 scrollbar_max = ImVec2(log_area_max.x + 5.0f + scrollbar_width, log_area_max.y);
+    draw_list->AddRectFilled(scrollbar_min, scrollbar_max, IM_COL32(180, 180, 180, 255));
+
+    // Calculate the scrollbar thumb height and position
+    float scrollbar_thumb_height = std::max((visible_height / total_log_height) * visible_height, 10.0f);
+    float thumb_offset = (scrollOffset / total_log_height) * visible_height;
+    thumb_offset = std::clamp(thumb_offset, 0.0f, visible_height - scrollbar_thumb_height);
+
+    ImVec2 thumb_min = ImVec2(scrollbar_min.x, scrollbar_min.y + thumb_offset);
+    ImVec2 thumb_max = ImVec2(scrollbar_max.x, thumb_min.y + scrollbar_thumb_height);
+    draw_list->AddRectFilled(thumb_min, thumb_max, IM_COL32(100, 100, 100, 255));
+
+    // Handle interactions
+    if (ImGui::IsMouseHoveringRect(scrollbar_min, scrollbar_max) && ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
+        ImVec2 mouse_pos = io.MousePos;
+        float mouse_scroll_position = mouse_pos.y - scrollbar_min.y - scrollbar_thumb_height / 2;
+        scrollOffset = (mouse_scroll_position / visible_height) * total_log_height;
+        scrollOffset = std::clamp(scrollOffset, 0.0f, std::max(0.0f, total_log_height - visible_height));
+    }
+
+    if (ImGui::IsMouseHoveringRect(log_area_min, log_area_max)) {
+        scrollOffset -= io.MouseWheel * 20.0f;
+        scrollOffset = std::clamp(scrollOffset, 0.0f, std::max(0.0f, total_log_height - visible_height));
+    }
+
+    // Autoscroll logic
+    if (autoscrollEnabled && !logValues.empty()) {
+        scrollOffset = std::max(0.0f, total_log_height - visible_height);
+    }
+
+    // Checkbox for autoscroll
+    ImGui::SetCursorScreenPos(ImVec2(log_area_min.x, log_area_max.y + 10.0f));
+    ImGui::Checkbox("Enable Ultrasonic Autoscroll", &autoscrollEnabled);
 }
 
+
 void UltrasonicModuleGraphics::updateDynamicSensors() {
-    static int frameCounter = 0; // Počítadlo snímok
+    auto now = std::chrono::steady_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUpdateTime);
 
-    frameCounter++;
+    if (elapsed.count() < updateDelayMs) {
+        return; // Skip update if delay has not passed
+    }
 
-    // Aktualizácia iba po určitom počte snímok
-    if (frameCounter >= updateIntervalFrames) {
-        frameCounter = 0; // Resetovať počítadlo
+    lastUpdateTime = now; // Reset the timer
 
-        for (auto& sensor : sensors) {
-            // Náhodná variácia uhla a vzdialenosti
-            sensor.angle += (std::rand() % 11 - 5); // -5° až +5°
-            if (sensor.angle >= 360.0f) sensor.angle -= 360.0f;
-            if (sensor.angle < 0.0f) sensor.angle += 360.0f;
+    std::lock_guard<std::mutex> lock(logMutex); // Ensure thread safety
 
-            float distanceVariation = static_cast<float>(std::rand() % 21 - 10) / 10.0f; // -1.0 až +1.0
-            sensor.distance += distanceVariation;
-            sensor.distance = std::clamp(sensor.distance, 0.0f, 10.0f); // Orezanie na rozsah [0, 10]
+    for (size_t i = 0; i < sensors.size(); ++i) {
+        auto& sensor = sensors[i];
+        float distanceVariation = static_cast<float>(std::rand() % 21 - 10) / 10.0f;
+        sensor.distance = std::clamp(sensor.distance + distanceVariation, 0.0f, 10.0f);
+
+        // Log only if the distance has changed
+        if (sensor.distance != previousDistances[i]) {
+            std::ostringstream logStream;
+            logStream << "Angle: " << sensor.angle << ", Dist: " << std::fixed << std::setprecision(1) << sensor.distance;
+            logValues.push_back(logStream.str());
+            previousDistances[i] = sensor.distance;
         }
     }
 }
 
 
+void UltrasonicModuleGraphics::updateValueOfModule(std::vector<int> value) {
+    if (value.size() == sensors.size()) {
+        for (size_t i = 0; i < sensors.size(); ++i) {
+            sensors[i].distance = value[i];
+        }
+
+        std::lock_guard<std::mutex> lock(logMutex);
+        logValues.push_back("Sensor data updated.");
+    }
+}
 
 void UltrasonicModuleGraphics::updateValueOfModule(std::string value) {
     std::cout << "Updating Ultrasonic Module with string value: " << value << std::endl;
@@ -67,13 +159,6 @@ void UltrasonicModuleGraphics::updateValueOfModule(int value) {
     std::cout << "Update interval set to: " << updateIntervalFrames << " frames." << std::endl;
 }
 
-void UltrasonicModuleGraphics::updateValueOfModule(std::vector<int> value) {
-    if (value.size() == sensors.size()) {
-        for (size_t i = 0; i < sensors.size(); ++i) {
-            sensors[i].distance = value[i];
-        }
-    }
-}
 
 void UltrasonicModuleGraphics::from_json(const nlohmann::json &j) {
     if (j.contains("graphicModuleId") && j["graphicModuleId"].is_number_integer()) {

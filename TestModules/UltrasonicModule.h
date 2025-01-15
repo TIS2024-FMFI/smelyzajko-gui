@@ -4,6 +4,7 @@
 
 #include "imgui.h"
 #include <vector>
+#include <thread>
 #include "../src/Module.h"
 #include "../src/ModuleManager.h"
 
