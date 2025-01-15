@@ -9,9 +9,18 @@
 #include "ModuleManager.h"
 #include "ShortcutsManager.h"
 #include "ToastNotificationManager.h"
-#include "ShortcutsManager.h"
 #include "TemplateManager.h"
 
+#include "widgets/Element.h"
+#include "widgets/Rectangle.h"
+#include "widgets/Checkbox.h"
+#include "widgets/Button.h"
+#include "widgets/Slider.h"
+#include "widgets/SingleLineLabel.h"
+#include "widgets/MultiLineLabel.h"
+
+#include "../TestModules/MapModule.h"
+#include "../TestModules/CounterModule.h"
 class GUI {
 protected:
     ImGuiIO& io;
@@ -21,17 +30,13 @@ protected:
 
     ModuleManager moduleManager;
     ToastNotificationManager toastManager;
-    TemplateManager templateManager;
+
     ShortcutsManager shortcutsManager;
-
-    YAML::Node configFile;
-
 public:
     GUI(YAML::Node configFile);
 
     void setupImGui();
     void cleanupImGui();
-    void setupTemplates();
     virtual int run() = 0;
 };
 
