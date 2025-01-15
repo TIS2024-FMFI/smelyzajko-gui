@@ -19,6 +19,6 @@ public:
     void handleClicks(ImGuiIO &io) override;
 
     void to_json(nlohmann::json &j) const override;
-    void from_json(const nlohmann::json &j) override;
     std::vector<Setting> getSettings() override;
+    void from_json(const nlohmann::json &j, ImVec2 resolution) override;
 };

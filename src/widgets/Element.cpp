@@ -62,12 +62,21 @@ void Element::setZIndex(int z) {
     zIndex = z;
 }
 
+void Element::setWasDragged(bool value) {
+    wasDragged = value;
+}
+
+bool Element::getWasDragged() const {
+    return wasDragged;
+}
+
+
 void Element::to_json(nlohmann::json &j) const {
     j["label"] = label;
     j["position"] = {position.x, position.y};
 }
 
-void Element::from_json(const nlohmann::json &j) {
+void Element::from_json(const nlohmann::json &j, ImVec2 resolution) {
     if (j.contains("label") && j["label"].is_string()) {
         label = j["label"];
     }
@@ -82,6 +91,16 @@ void Element::from_json(const nlohmann::json &j) {
 
 void Element::setConfigurationMode(bool newBool) {
     configurationMode = newBool;
+}
+
+
+ImVec2 Element::getScaleFactors(ImVec2 templateResolution) {
+    ImVec2 currentResolution = ImGui::GetIO().DisplaySize;
+
+    float scaleX = currentResolution.x / templateResolution.x;
+    float scaleY = currentResolution.y / templateResolution.y;
+
+    return ImVec2(scaleX, scaleY);
 }
 
 

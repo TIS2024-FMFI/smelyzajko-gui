@@ -1,15 +1,19 @@
 #pragma once
 #include "Template.h"
+#include "widgets/Element.h"
 #include "Module.h"
+
 class TemplateManager {
 private:
     Template activeTemplate;
-    std::vector<Template> allTemplates;
-    bool configMode = false;
-    void loadAllTemplates();
 public:
     TemplateManager();
+    TemplateManager(const std::vector<std::string>& templateNames);
+    std::vector<Template> allTemplates;
+    void loadAllTemplates();
+    void loadTemplates(const std::vector<std::string>& templateNames);
     void setActiveTemplate(Template aTemplate);
+    void saveTemplate();
     void addModuleToActiveTemplate(GraphicModule *module);
     void saveCurrentTemplate(const std::string& fileName);
     void addElementToActiveTemplate(Element* element);
@@ -19,8 +23,7 @@ public:
     std::vector<Element *> getActiveTemplateElements();
     std::vector<GraphicModule *> getActiveTemplateModules();
     std::vector<Template> getAllTemplates();
-    void setConfigMode(bool mode);
-
+    Template getActiveTemplate();
 };
 
 

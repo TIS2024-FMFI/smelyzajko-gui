@@ -1,15 +1,16 @@
 #include "Template.h"
 #include <fstream>
 #include <stdexcept>
-#include <json.hpp>
-#include "src/widgets/Button.h"
-#include "src/widgets/Slider.h"
-#include "src/widgets/Checkbox.h"
-#include "src/widgets/Rectangle.h"
-#include "src/widgets/SingleLineLabel.h"
-#include "src/widgets/MultiLineLabel.h"
-#include "iostream"
-#include "src/ModuleManager.h"
+
+#include "libs/json.hpp"
+#include "widgets/Button.h"
+#include "widgets/Slider.h"
+#include "widgets/Checkbox.h"
+#include "widgets/Rectangle.h"
+#include "widgets/SingleLineLabel.h"
+#include "widgets/MultiLineLabel.h"
+#include "TemplateManager.h"
+#include "ModuleManager.h"
 
 using json = nlohmann::json;
 
@@ -57,6 +58,17 @@ void Template::from_json(const nlohmann::json& j) {
     } else {
         throw std::invalid_argument("Template JSON is missing a valid 'name' field.");
     }
+
+    if (j.contains("resolution") && j["resolution"].is_array() && j["resolution"].size() == 2) {
+        float width = j["resolution"][0];
+        float height = j["resolution"][1];
+
+        resolution.x = width;
+        resolution.y = height;
+    } else {
+        throw std::invalid_argument("Invalid or missing resolution in JSON!");
+    }
+
     if (j.contains("elements") && j["elements"].is_array()) {
         rightFlag ++;
         for (const auto& elementJson : j["elements"]) {
@@ -76,7 +88,7 @@ void Template::from_json(const nlohmann::json& j) {
                 auto it = elementCreators.find(type);
                 if (it != elementCreators.end()) {
                     Element* element = it->second();
-                    element->from_json(elementJson);
+                    element->from_json(elementJson, resolution);
                     elements.push_back(element);
                 } else {
                     throw std::invalid_argument("Unknown element type in JSON: " + type);
@@ -116,13 +128,23 @@ void Template::from_json(const nlohmann::json& j) {
 }
 
 
-void Template::saveTemplate(const std::filesystem::path& filePath) const {
+void Template::saveTemplate(const std::filesystem::path& filePath, std::string newName) {
     std::ofstream outFile(filePath);
     if (!outFile) {
         throw std::runtime_error("Failed to open file for saving template: " + filePath.string());
     }
 
+    if (!newName.empty()) {
+        std::string fileName = filePath.filename().string();
+        if (fileName.size() > 5 && fileName.substr(fileName.size() - 5) == ".json") {
+            fileName = fileName.substr(0, fileName.size() - 5);  // Remove the ".json" part
+        }
+
+        name = fileName;
+    }
+
     json j = to_json();
+    j["resolution"] = {ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y}; // Save current resolution
     outFile << j.dump(4);
 }
 

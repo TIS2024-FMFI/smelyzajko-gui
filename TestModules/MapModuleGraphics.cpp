@@ -1,6 +1,5 @@
 #include "MapModuleGraphics.h"
 #include <fstream>
-#include <nlohmann/json.hpp>
 #include <iostream>
 
 MapModuleGraphics::MapModuleGraphics() {
@@ -8,7 +7,7 @@ MapModuleGraphics::MapModuleGraphics() {
 }
 
 void MapModuleGraphics::loadMap() {
-    std::ifstream inFile("map.json");
+    std::ifstream inFile("../TestModules/map.json");
     if (inFile.is_open()) {
         nlohmann::json j;
         inFile >> j;

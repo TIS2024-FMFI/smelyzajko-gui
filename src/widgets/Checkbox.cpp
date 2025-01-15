@@ -50,12 +50,12 @@ void Checkbox::to_json(nlohmann::json &j) const {
     };
 }
 
-void Checkbox::from_json(const nlohmann::json &j) {
+void Checkbox::from_json(const nlohmann::json &j, ImVec2 resolution) {
     if (j.contains("type") && j["type"] != "checkbox") {
         throw std::invalid_argument("Invalid type for Checkbox: expected 'checkbox'");
     }
 
-    Element::from_json(j);
+    Element::from_json(j, resolution);
 
     if (j.contains("checked") && j["checked"].is_boolean()) {
         checked = j["checked"];
@@ -73,4 +73,8 @@ std::vector<Setting> Checkbox::getSettings() {
             {"moduleID",moduleID, [this](const SettingValue& val) { moduleID = std::get<int>(val); }},
             {"label", label, [this](const SettingValue& val) { label = std::get<std::string>(val); }}
     };
+
+    ImVec2 scale = Element::getScaleFactors(resolution);
+
+    position = ImVec2(position.x * scale.x, position.y * scale.y);
 }

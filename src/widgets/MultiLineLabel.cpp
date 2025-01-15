@@ -38,10 +38,14 @@ void MultiLineLabel::to_json(nlohmann::json& j) const {
     };
 }
 
-void MultiLineLabel::from_json(const nlohmann::json& j) {
+void MultiLineLabel::from_json(const nlohmann::json& j, ImVec2 resolution) {
     if (j.contains("type") && j["type"] != "multi-line-label") {
         throw std::invalid_argument("Invalid type for Label: expected 'multi-line-label'");
     }
 
-    Label::from_json(j);
+    Label::from_json(j, resolution);
+
+    ImVec2 scale = Element::getScaleFactors(resolution);
+
+    position = ImVec2(position.x * scale.x, position.y * scale.y);
 }

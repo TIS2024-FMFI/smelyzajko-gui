@@ -65,5 +65,9 @@
       "type": "single-line-label"
     }
   ],
-  "name": "template4"
+  "name": "template4",
+  "resolution": [
+    1920.0,
+    1011.0
+  ]
 }

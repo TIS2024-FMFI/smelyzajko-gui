@@ -2,16 +2,21 @@
 #include <utility>
 #include <filesystem>
 #include <iostream>
+#include "widgets/Element.h"
 #include "vector"
+
 namespace fs = std::filesystem;
 
 TemplateManager::TemplateManager()  {
     loadAllTemplates();
 }
 
+TemplateManager::TemplateManager(const std::vector<std::string> &templateNames) {
+    loadTemplates(templateNames);
+}
+
 void TemplateManager::loadAllTemplates() {
     std::vector<fs::path> jsonFiles;
-    // this is development path TODO
     fs::path templatesDir = fs::path("../templates");
     try {
         if (fs::exists(templatesDir) && fs::is_directory(templatesDir)) {
@@ -38,6 +43,38 @@ void TemplateManager::loadAllTemplates() {
     }
 }
 
+void TemplateManager::loadTemplates(const std::vector<std::string>& templateNames) {
+    std::vector<fs::path> jsonFiles;
+    fs::path templatesDir = fs::path("../templates");
+    try {
+        if (fs::exists(templatesDir) && fs::is_directory(templatesDir)) {
+            for (const auto& file : fs::directory_iterator(templatesDir)) {
+                if (file.is_regular_file() && file.path().extension() == ".json") {
+                    jsonFiles.push_back(file.path());
+                }
+            }
+        } else {
+            std::cerr << "Templates directory not found at root level." << std::endl;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error while searching for JSON files: " << e.what() << std::endl;
+    }
+
+    // Load only templates that are listed in the config file
+    if (jsonFiles.empty()) {
+        std::cout << "No JSON files found in the 'templates' directory." << std::endl;
+    } else {
+        for (const auto& path : jsonFiles) {
+            std::string fileName = path.filename().string();
+            if (std::find(templateNames.begin(), templateNames.end(), fileName) != templateNames.end()) {
+                // Load template if it is in the list of templates from the config file
+                Template aTemplate(path);
+                allTemplates.push_back(aTemplate);
+            }
+        }
+    }
+}
+
 void TemplateManager::setActiveTemplate(Template aTemplate) {
     activeTemplate = std::move(aTemplate);
 }
@@ -48,10 +85,6 @@ std::vector<Element *> TemplateManager::getActiveTemplateElements() {
 
 std::vector<Template> TemplateManager::getAllTemplates() {
     return allTemplates;
-}
-
-void TemplateManager::saveCurrentTemplate(const std::string& fileName) {
-    activeTemplate.saveTemplate(fileName);
 }
 
 void TemplateManager::addElementToActiveTemplate(Element *element) {
@@ -71,6 +104,9 @@ void TemplateManager::removeElementFromActiveTemplate(int index) {
     activeTemplate.removeElement(index);
 }
 
+Template TemplateManager::getActiveTemplate() {
+    return activeTemplate;
+}
 void TemplateManager::addModuleToActiveTemplate(GraphicModule *module) {
     activeTemplate.addModule(module);
 }

@@ -14,15 +14,13 @@ public:
         return instance;
     }
 
-    int gegisterModule(const std::string& name, Module *module);
+    int registerModule(const std::string& name, Module *module);
     int registerGraphicModule(const std::string& name,int moduleID);
 
     void updateValueOfModule(int moduleID, std::string value);
     void updateValueOfModule(int moduleID, int value);
     void updateValueOfModule(int moduleID, std::vector<int> value);
     void setActiveModuleAndDraw(std::vector<GraphicModule *> graphicModules_, ImGuiIO &io);
-
-
 
     const std::unordered_map<std::string, std::function<GraphicModule*()>> &getModuleConstructors() const;
     void clearModules();
@@ -35,6 +33,9 @@ private:
              {"Counter Module", []() { return new CounterModuleGraphics(); }}
     };
 
+    void renderModules();
+
+    void readTemplateandCreateModules(const std::string &filename);
 };
 
 #endif //MODULEMANAGER_H

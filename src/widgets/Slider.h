@@ -23,7 +23,7 @@ public:
 
     float getNormalizedValue() const;
 
-    void from_json(const nlohmann::json &j) override;
+    void from_json(const nlohmann::json &j, ImVec2 resolution) override;
     void to_json(nlohmann::json &j) const override;
     std::vector<Setting> getSettings() override;
 };
