@@ -14,10 +14,10 @@ file(GLOB PROJECT_SOURCES src/*/*.cpp src/*.cpp TestModules/*.cpp)
 add_library(imgui ${IMGUI_SRC} ${IMGUI_HEADERS} ${PROJECT_SOURCES})
 
 # Include directories
-add_subdirectory(libs/yaml-cpp)
-include_directories(libs/imgui libs/imgui/backends ${CMAKE_SOURCE_DIR} libs/ImGuiFileDialog libs/yaml-cpp/include /opt/homebrew/include ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR})
+include_directories(libs/imgui libs/imgui/backends ${CMAKE_SOURCE_DIR} libs/ImGuiFileDialog libs/yaml-cpp/include)
 
-find_package(glfw3 REQUIRED)
+add_subdirectory(libs/yaml-cpp)
+
 # Create the main executable
 add_executable(smelyzajko-gui libs/ImGuiFileDialog/ImGuiFileDialog.cpp main.cpp)
 
@@ -31,6 +31,3 @@ else()
 endif()
 
 target_include_directories(smelyzajko-gui PRIVATE ${CMAKE_SOURCE_DIR}/libs/ImGuiFileDialog)
-
-
-############################################
