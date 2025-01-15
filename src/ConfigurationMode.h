@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "Module.h"
 #include "ModuleManager.h"
+#include "ShortcutsManager.h"
 #include "ImGuiFileDialog.h"
 #include "yaml-cpp/yaml.h"
 
@@ -32,6 +33,7 @@ public:
     ModuleManager moduleManager;
     ToastNotificationManager toastManager;
     TemplateManager templateManager;
+    ShortcutsManager shortcutsManager;
     ImGuiIO& io;
     YAML::Node configFile;
 
@@ -49,6 +51,10 @@ public:
     void createFloatSliderSettings();
     void createIntSliderSettings();
     void createLabelSettings();
+    void setupShortcuts();
+    void processShortcuts();
+    void initializeWindow(GLFWwindow* window);
+
 private:
     float gridSize = 60.0f;
     bool isSnapping = false;
