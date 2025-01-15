@@ -10,11 +10,11 @@
 
 class ConfigurationMode : GUI {
 public:
-    ConfigurationMode(YAML::Node config_file) : io(ImGui::GetIO()) {
+    ConfigurationMode(YAML::Node configFile) : io(ImGui::GetIO()), configFile(configFile) {
         std::vector<std::string> templateNames;
 
-        if (config_file["templates"]) {
-            for (const auto& templateNode : config_file["templates"]) {
+        if (configFile["templates"]) {
+            for (const auto& templateNode : configFile["templates"]) {
                 std::string templateName = templateNode.as<std::string>();
                 templateNames.push_back(templateName);
             }
@@ -33,6 +33,7 @@ public:
     ToastNotificationManager toastManager;
     TemplateManager templateManager;
     ImGuiIO& io;
+    YAML::Node configFile;
 
     int run() override;
 
