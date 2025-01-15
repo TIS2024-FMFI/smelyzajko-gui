@@ -131,12 +131,35 @@ ImVec2 findNearestFreeGridCorner(const std::vector<Element*>& elements, const Im
 }
 
 
+void ConfigurationMode::setupShortcuts() {
+
+
+    shortcutsManager.registerShortcut("Ctrl+Q", [this]() {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    });
+
+}
+
+void ConfigurationMode::processShortcuts() {
+    shortcutsManager.processShortcuts();
+}
+
+void ConfigurationMode::initializeWindow(GLFWwindow* window) {
+    this->window = window;
+    shortcutsManager.setWindow(window);
+}
+
+
 int ConfigurationMode::run() {
     io = ImGui::GetIO();
     (void)io;
+    initializeWindow(window);
+    shortcutsManager.setWindow(window);
+    setupShortcuts();
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
+        processShortcuts();
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -246,7 +269,7 @@ void ConfigurationMode::drawElements() {
             if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
                 ImGui::Text("Delete this element?");
                 if (ImGui::Button("Yes")) {
-                    activeElements.erase(activeElements.begin() + i);
+                    templateManager.removeElementFromActiveTemplate(i);
                     ImGui::CloseCurrentPopup();
                     ImGui::EndPopup();
                     ImGui::PopID();
