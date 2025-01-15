@@ -24,9 +24,7 @@ GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()), configFile(configFile) {
     glfwMakeContextCurrent(window);
 
     setupImGui();
-    setupTemplates();
 }
-
 
 void GUI::setupImGui() {
     IMGUI_CHECKVERSION();
@@ -34,9 +32,7 @@ void GUI::setupImGui() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
-    io.DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
+    io.DisplaySize = ImVec2(static_cast<float>(monitorWidth), static_cast<float>(monitorHeight));
 
     ImFontConfig fontConfig;
     fontConfig.RasterizerDensity = 5.0f;
@@ -49,25 +45,3 @@ void GUI::cleanupImGui() {
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
-
-void GUI::setupTemplates() {
-    std::vector<std::string> templateNames;
-
-    if (configFile["templates"]) {
-        for (const auto& templateNode : configFile["templates"]) {
-            std::string templateName = templateNode.as<std::string>();
-            templateNames.push_back(templateName);
-        }
-    } else {
-        std::cerr << "No templates found in config file." << std::endl;
-    }
-
-    if (templateNames.empty()) {
-        templateManager = TemplateManager();
-    } else {
-        templateManager = TemplateManager(templateNames);
-    }
-}
-
-
-
