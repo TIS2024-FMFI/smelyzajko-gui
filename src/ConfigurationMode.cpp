@@ -14,6 +14,7 @@
 #include "../ImGuiFileDialog/ImGuiFileDialog.h"
 #include "../ImGuiFileDialog/ImGuiFileDialogConfig.h"
 #include "Template.h"
+
 #include <iostream> // For std::cerr (debugging)
 #ifdef _WIN32
 #include <windows.h> // For Beep on Windows
@@ -131,8 +132,8 @@ ImVec2 findNearestFreeGridCorner(const std::vector<Element*>& elements, const Im
     return ImVec2(-1.0f, menuBarHeight);
 }
 
-
 void ConfigurationMode::setupShortcuts() {
+
     shortcutsManager.registerShortcut("Ctrl+Q", [this]() {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     });
@@ -150,11 +151,11 @@ void ConfigurationMode::initializeWindow(GLFWwindow* window) {
 
 
 int ConfigurationMode::run() {
+
     MapModule mapModule = MapModule(&moduleManager);
     CounterModule counterModule = CounterModule(&moduleManager);
 
-    io = ImGui::GetIO();
-    (void)io;
+
     initializeWindow(window);
     shortcutsManager.setWindow(window);
     setupShortcuts();

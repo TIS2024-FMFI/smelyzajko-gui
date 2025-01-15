@@ -3,6 +3,7 @@
 #include <iostream>
 
 MapModuleGraphics::MapModuleGraphics() {
+    moduleName = "Map Module";
     loadMap();
 }
 
@@ -34,7 +35,6 @@ void MapModuleGraphics::loadMap() {
 
 }
 
-
 void MapModuleGraphics::draw(ImGuiIO &io) {
     loadMap();
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -65,9 +65,7 @@ void MapModuleGraphics::draw(ImGuiIO &io) {
     );
 }
 
-
-
-void MapModuleGraphics::from_json(const nlohmann::json &j) {
+void MapModuleGraphics::from_json(const nlohmann::json &j, ImVec2 resolution) {
     if (j.contains("graphicModuleId") && j["graphicModuleId"].is_number_integer()) {
         graphicModuleId = j["graphicModuleId"];
     }
@@ -97,7 +95,7 @@ void MapModuleGraphics::from_json(const nlohmann::json &j) {
         textLogEnabled = j["textLogEnabled"];
     }
 
-
+    GraphicModule::scaleFromResolution(resolution);
 
 }
 

@@ -8,9 +8,10 @@ class MapModuleGraphics : public GraphicModule  {
 
 public:
     MapModuleGraphics();
+
     void draw(ImGuiIO &io) override;
     void to_json(nlohmann::json& j) const override;
-    void from_json(const nlohmann::json& j) override;
+    void from_json(const nlohmann::json& j, ImVec2 resolution) override;
 
     void updateValueOfModule( std::string value) override;
     void updateValueOfModule( int value) override;
@@ -38,17 +39,8 @@ private:
     int cols =10;
     std::vector<std::vector<int>> map;
     float cellSize = 40.0f;
-    // Graphics settings
-    float graphicsFrequency;
-    bool graphicsLogEnabled;
-
-    // Text settings
-    float textFrequency;
-    bool textLogEnabled;
-
 
     void loadMap();
-
 
 };
 

@@ -24,7 +24,17 @@ public:
     virtual void updateValueOfModule(std::vector<int> value) = 0;
 
     virtual void to_json(nlohmann::json& j) const = 0;
-    virtual void from_json(const nlohmann::json& j) = 0;
+    virtual void from_json(const nlohmann::json& j, ImVec2 resolution) = 0;
+
+    virtual void scaleFromResolution(ImVec2 templateResolution);
+
+    // Graphics settings
+    float graphicsFrequency;
+    bool graphicsLogEnabled;
+
+    // Text settings
+    float textFrequency;
+    bool textLogEnabled;
 
 
 

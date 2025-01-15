@@ -102,9 +102,9 @@ void Template::from_json(const nlohmann::json& j) {
             }
         }
     }
+
     if (j.contains("graphicModules") && j["graphicModules"].is_array()) {
-    rightFlag++;
-        std::cout<<configurationMode<<std::endl;
+        rightFlag ++;
         for (const auto& moduleJson : j["graphicModules"]) {
             if (moduleJson.contains("name") && moduleJson["name"].is_string()) {
                 std::string name = moduleJson["name"];

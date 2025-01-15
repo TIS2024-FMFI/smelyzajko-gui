@@ -2,7 +2,7 @@
 
 #include "GUI.h"
 
-GUI::GUI() {
+GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()), configFile(configFile) {
     if (!glfwInit()) {
         throw std::runtime_error("GLFW initialization error");
     }
@@ -24,28 +24,24 @@ GUI::GUI() {
     glfwMakeContextCurrent(window);
 
     setupImGui();
+    setupTemplates();
 }
+
 
 void GUI::setupImGui() {
     IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
-    ImGui::GetIO().DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
-
+    io.DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
 
     ImFontConfig fontConfig;
-    // higher resolution when rendering text
     fontConfig.RasterizerDensity = 5.0f;
 
-    ImGuiIO& io = ImGui::GetIO();
     io.Fonts->AddFontDefault(&fontConfig);
-
-     // io.Fonts->AddFontFromFileTTF("../Turbo-Pascal-Font.ttf", 18.0f);
 }
 
 void GUI::cleanupImGui() {
@@ -53,3 +49,25 @@ void GUI::cleanupImGui() {
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
+
+void GUI::setupTemplates() {
+    std::vector<std::string> templateNames;
+
+    if (configFile["templates"]) {
+        for (const auto& templateNode : configFile["templates"]) {
+            std::string templateName = templateNode.as<std::string>();
+            templateNames.push_back(templateName);
+        }
+    } else {
+        std::cerr << "No templates found in config file." << std::endl;
+    }
+
+    if (templateNames.empty()) {
+        templateManager = TemplateManager();
+    } else {
+        templateManager = TemplateManager(templateNames);
+    }
+}
+
+
+
