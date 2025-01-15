@@ -1,11 +1,5 @@
 #include "CounterModuleGraphics.h"
 
-
-CounterModuleGraphics::CounterModuleGraphics() {
-
-}
-
-
 void CounterModuleGraphics::draw(ImGuiIO &io) {
 
     ImDrawList* draw_list = ImGui::GetForegroundDrawList();
@@ -30,10 +24,6 @@ void CounterModuleGraphics::draw(ImGuiIO &io) {
     draw_list->AddText(text_pos, text_color, text_cstr);
 }
 
-
-
-
-
 void CounterModuleGraphics::updateValueOfModule(int value) {
     counter = value;
 }
@@ -47,13 +37,7 @@ void CounterModuleGraphics::updateValueOfModule(std::vector<int> value) {
 
 }
 
-
-
-
-
-
-
-void CounterModuleGraphics::from_json(const nlohmann::json &j) {
+void CounterModuleGraphics::from_json(const nlohmann::json &j, ImVec2 resolution) {
     if (j.contains("graphicModuleId") && j["graphicModuleId"].is_number_integer()) {
         graphicModuleId = j["graphicModuleId"];
     }
@@ -82,6 +66,8 @@ void CounterModuleGraphics::from_json(const nlohmann::json &j) {
     if (j.contains("textLogEnabled") && j["textLogEnabled"].is_boolean()) {
         textLogEnabled = j["textLogEnabled"];
     }
+
+    GraphicModule::scaleFromResolution(resolution);
 }
 void CounterModuleGraphics::to_json(nlohmann::json &j) const {
     j["graphicModuleId"] = graphicModuleId;

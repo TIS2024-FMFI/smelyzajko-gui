@@ -96,6 +96,7 @@ void Template::from_json(const nlohmann::json& j) {
             }
         }
     }
+
     if (j.contains("graphicModules") && j["graphicModules"].is_array()) {
         rightFlag ++;
         for (const auto& moduleJson : j["graphicModules"]) {
@@ -106,7 +107,7 @@ void Template::from_json(const nlohmann::json& j) {
                 auto it = moduleConstructors.find(name);
                 if (it != moduleConstructors.end()) {
                     GraphicModule* module = it->second();
-                    module->from_json(moduleJson);
+                    module->from_json(moduleJson, resolution);
                     graphicModules.push_back(module);
                 } else {
                     throw std::invalid_argument("Unknown module type in JSON: " + name);
