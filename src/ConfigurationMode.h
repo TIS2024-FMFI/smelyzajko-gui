@@ -16,7 +16,26 @@
 class ConfigurationMode : GUI {
 public:
 
-    ConfigurationMode(YAML::Node configFile) : GUI(configFile) {};
+    ConfigurationMode(YAML::Node configFile) : GUI(configFile) {
+        std::vector<std::string> templateNames;
+
+        if (configFile["templates"]) {
+            for (const auto& templateNode : configFile["templates"]) {
+                std::string templateName = templateNode.as<std::string>();
+                templateNames.push_back(templateName);
+            }
+        } else {
+            std::cerr << "No templates found in config file." << std::endl;
+        }
+
+        if (templateNames.empty()) {
+            templateManager = TemplateManager();
+        } else {
+            templateManager = TemplateManager(templateNames);
+        }
+    };
+
+    TemplateManager templateManager;
 
     int run() override;
 
@@ -35,7 +54,6 @@ public:
     void setupShortcuts();
     void processShortcuts();
     void initializeWindow(GLFWwindow* window);
-
 private:
     float gridSize = 60.0f;
     bool isSnapping = false;
@@ -45,4 +63,3 @@ private:
     const float minGridValue = 10.0f;
     const float maxGridValue = 1000.0f;
 };
-

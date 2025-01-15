@@ -5,6 +5,7 @@
 #include "imgui.h"
 #include "string"
 #include "imgui_internal.h"
+#include <GLFW/glfw3.h>
 
 class Element {
 protected:
@@ -21,7 +22,7 @@ public:
 
     virtual ~Element() = default;
 
-    // Getters
+// Getters
     ImVec2 getPosition() const;
     std::string getLabel() const;
     bool getPendingDelete() const;
@@ -29,7 +30,7 @@ public:
     int getZIndex() const;
     bool getWasDragged() const;
 
-    // Setters
+// Setters
     void setPosition(const ImVec2& newPos);
     void setLabel(const std::string& newLabel);
     void setPendingDelete(bool newBool);
@@ -38,7 +39,7 @@ public:
     void setWasDragged(bool value);
 
 
-    // Utility
+// Utility
     void move(const ImVec2& delta);
     virtual void draw(ImGuiIO& io) = 0;
     void detectRightClickDelete();
@@ -51,4 +52,3 @@ public:
 
     static ImVec2 getScaleFactors(ImVec2 templateResolution);
 };
-

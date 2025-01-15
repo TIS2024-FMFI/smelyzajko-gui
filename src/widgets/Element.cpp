@@ -58,7 +58,6 @@ bool Element::getWasDragged() const {
     return wasDragged;
 }
 
-
 void Element::to_json(nlohmann::json &j) const {
     j["label"] = label;
     j["position"] = {position.x, position.y};
@@ -77,17 +76,15 @@ void Element::from_json(const nlohmann::json &j, ImVec2 resolution) {
     }
 }
 
-
 ImVec2 Element::getScaleFactors(ImVec2 templateResolution) {
-    ImVec2 currentResolution = ImGui::GetIO().DisplaySize;
+    GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* videoMode = glfwGetVideoMode(primaryMonitor);
 
-    float scaleX = currentResolution.x / templateResolution.x;
-    float scaleY = currentResolution.y / templateResolution.y;
+    int monitorWidth = videoMode->width;
+    int monitorHeight = videoMode->height;
+
+    float scaleX = monitorWidth / templateResolution.x;
+    float scaleY = monitorHeight / templateResolution.y;
 
     return ImVec2(scaleX, scaleY);
 }
-
-
-
-
-
