@@ -45,7 +45,7 @@ void MultiLineLabel::from_json(const nlohmann::json& j, ImVec2 resolution) {
 
     Label::from_json(j, resolution);
 
-    ImVec2 scale = Element::getScalingFactorsFromTemplate(resolution);
+    ImVec2 scale = Element::getScaleFactors(resolution);
 
     position = ImVec2(position.x * scale.x, position.y * scale.y);
 }

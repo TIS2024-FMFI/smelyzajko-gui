@@ -8,8 +8,10 @@ private:
     Template activeTemplate;
 public:
     TemplateManager();
+    TemplateManager(const std::vector<std::string>& templateNames);
     std::vector<Template> allTemplates;
     void loadAllTemplates();
+    void loadTemplates(const std::vector<std::string>& templateNames);
     void setActiveTemplate(Template aTemplate);
     void saveTemplate();
     void addModuleToActiveTemplate(GraphicModule *module);

@@ -83,7 +83,7 @@ void Button::from_json(const nlohmann::json &j, ImVec2 resolution) {
         size.y = j["size"][1];
     }
 
-    ImVec2 scale = Element::getScalingFactorsFromTemplate(resolution);
+    ImVec2 scale = Element::getScaleFactors(resolution);
 
     position = ImVec2(position.x * scale.x, position.y * scale.y);
     size = ImVec2(size.x * scale.x, size.y * scale.y);

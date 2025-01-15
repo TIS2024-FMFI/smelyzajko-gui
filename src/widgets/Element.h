@@ -49,6 +49,6 @@ public:
     virtual void to_json(nlohmann::json& j) const;
     virtual void from_json(const nlohmann::json& j, ImVec2 resolution);
 
-    static ImVec2 getScalingFactorsFromTemplate(ImVec2 templateResolution);
+    static ImVec2 getScaleFactors(ImVec2 templateResolution);
 };
 

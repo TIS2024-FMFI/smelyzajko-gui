@@ -2,7 +2,7 @@
 #include <fstream>
 #include <stdexcept>
 
-#include <../json.hpp>
+#include "libs/json.hpp"
 #include "widgets/Button.h"
 #include "widgets/Slider.h"
 #include "widgets/Checkbox.h"

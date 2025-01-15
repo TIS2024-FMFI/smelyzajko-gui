@@ -2,7 +2,7 @@
 #define SMELYZAJKO_GUI_GRAPHICMODULE_H
 #include "iostream"
 #include "imgui.h"
-#include "../json.hpp"
+#include "libs/json.hpp"
 
 
 class GraphicModule {

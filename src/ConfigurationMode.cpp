@@ -403,16 +403,6 @@ void ConfigurationMode::drawElementsWithSnappingOn() {
 void ConfigurationMode::setupMenuBar() {
     if (ImGui::BeginMainMenuBar()) {
         menuBarHeight = ImGui::GetWindowHeight();
-        if (ImGui::BeginMenu("File")) {
-            if (ImGui::MenuItem("Open")) {
-            }
-            if (ImGui::MenuItem("Save")) {
-            }
-            if (ImGui::MenuItem("Exit")) {
-                glfwSetWindowShouldClose(window, GLFW_TRUE);
-            }
-            ImGui::EndMenu();
-        }
         if (ImGui::BeginMenu("Templates")) {
             if (ImGui::MenuItem("New template")) {
                 templateManager.setActiveTemplate(Template());
