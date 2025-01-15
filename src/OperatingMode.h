@@ -1,15 +1,12 @@
 #pragma once
 #include "GUI.h"
-#include "TemplateManager.h"
 #include <algorithm>
 #include "Module.h"
 class OperatingMode :  GUI {
 public:
-    OperatingMode() : io(ImGui::GetIO()) {}
-    ModuleManager moduleManager;
 
-    TemplateManager templateManager = TemplateManager();
-    ImGuiIO& io;
+    OperatingMode(YAML::Node configFile) : GUI(configFile) {};
+
     int run() override;
     void drawElements();
     void setupMenuBar();

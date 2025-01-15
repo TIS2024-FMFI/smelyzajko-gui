@@ -44,12 +44,15 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    ImGui::CreateContext();  // Create the ImGui context here
+    ImGui::SetCurrentContext(ImGui::GetCurrentContext());  // Ensure that we are setting the context if needed
+
     // Determine the mode
     if (mode == "--config") {
         ConfigurationMode gui(config);
         gui.run();
     } else if (mode == "--operate") {
-        OperatingMode operatingMode;
+        OperatingMode operatingMode(config);
         operatingMode.run();
     } else {
         std::cerr << "Invalid flag. Use --config or --operate.\n";
