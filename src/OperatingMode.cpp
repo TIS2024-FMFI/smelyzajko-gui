@@ -1,5 +1,4 @@
 #include <iostream>
-#include "ConfigurationMode.h"
 #include "widgets/Rectangle.h"
 #include "widgets/Checkbox.h"
 #include "widgets/Button.h"
@@ -14,10 +13,7 @@
 
 
 int OperatingMode::run() {
-    CounterModule counterModule = CounterModule(&moduleManager);
-    MapModule mapModule = MapModule(&moduleManager);
-    io = ImGui::GetIO();
-    (void)io;
+
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return 1;
