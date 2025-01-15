@@ -27,10 +27,10 @@ bool ShortcutsManager::isShortcutPressed(const std::string& shortcut) {
         return (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS ||
                 glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS) &&
                glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS;
-    } else if (shortcut == "Ctrl+E") {
+    } else if (shortcut == "Ctrl+Q") {
         return (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS ||
                 glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS) &&
-               glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS;
+               glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS;
     }
     // Add more shortcuts as needed
     return false;
