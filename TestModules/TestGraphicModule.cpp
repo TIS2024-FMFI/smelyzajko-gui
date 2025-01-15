@@ -10,25 +10,16 @@ void TestGraphicModule::draw(ImGuiIO& io){
 }
 void TestGraphicModule::renderStandalone(ImGuiIO io, ImVec2 possition) {
 
-    if (1 ==1){
-        ImGui::SetNextWindowPos(getPos()); // Set the position of the window
-        ImGui::SetNextWindowSize(getSize()); // Set the size of the window
-        ImGui::Begin(moduleName.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar |    // Remove title bar
-                                            ImGuiWindowFlags_NoCollapse |   // Prevent collapsing
-                                            ImGuiWindowFlags_NoResize |     // Disable resizing
-                                            ImGuiWindowFlags_NoBringToFrontOnFocus | // Prevent window focus changes
-                                            ImGuiWindowFlags_NoScrollbar |   // Disable scrollbar (optional)
-                                            ImGuiWindowFlags_NoBackground); // Disable resizing
-
-    }
-    else {
-        ImGui::Begin(moduleName.c_str());
-        setPos(ImGui::GetWindowPos());
-        setSize(ImGui::GetWindowSize());
-    }
-
+    ImGui::SetNextWindowPos(getPos());// Set the position of the window
     static float phase = 0.0f;
+    ImGui::SetNextWindowSize(getSize());// Set the size of the window
     phase += 0.01f;
+    ImGui::Begin(moduleName.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar |    // Remove title bar
+                                              ImGuiWindowFlags_NoCollapse |   // Prevent collapsing
+                                              ImGuiWindowFlags_NoResize |     // Disable resizing
+                                              ImGuiWindowFlags_NoBringToFrontOnFocus | // Prevent window focus changes
+                                              ImGuiWindowFlags_NoScrollbar |   // Disable scrollbar (optional)
+                                              ImGuiWindowFlags_NoBackground);// Disable resizing
 
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
     float width = ImGui::GetContentRegionAvail().x;
@@ -124,4 +115,6 @@ void TestGraphicModule::from_json(const nlohmann::json &j) {
 void TestGraphicModule::run() {
 
 }
+
+
 

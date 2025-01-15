@@ -38,8 +38,14 @@ nlohmann::json Template::to_json() const {
 
     for (const auto& element : elements) {
         json elementJson;
+
         element->to_json(elementJson);
-        j["elements"].push_back(elementJson);
+        std::cout<<elementJson["type"]<<std::endl;
+        if (elementJson["type"] == "rectangle"){
+            j["graphicModules"].push_back(elementJson);
+        }else {
+            j["elements"].push_back(elementJson);
+        }
     }
 
     for (const auto& module : graphicModules) {
@@ -98,6 +104,7 @@ void Template::from_json(const nlohmann::json& j) {
     }
     if (j.contains("graphicModules") && j["graphicModules"].is_array()) {
     rightFlag++;
+        std::cout<<configurationMode<<std::endl;
         for (const auto& moduleJson : j["graphicModules"]) {
             if (moduleJson.contains("name") && moduleJson["name"].is_string()) {
                 std::string name = moduleJson["name"];
@@ -108,7 +115,7 @@ void Template::from_json(const nlohmann::json& j) {
                     if (configurationMode) {
                         // Create a Rectangle based on parameters in the template
                         Rectangle* rectangle = new Rectangle();
-                        rectangle->from_json(moduleJson);
+                        rectangle->from_json(moduleJson,resolution);
                         elements.push_back(rectangle);
                     } else {
                         // Create and add the module as usual

@@ -8,7 +8,7 @@ public:
     OperatingMode() : io(ImGui::GetIO()) {}
     ModuleManager moduleManager;
 
-    TemplateManager templateManager = TemplateManager();
+    TemplateManager templateManager = TemplateManager(false);
     ImGuiIO& io;
     int run() override;
     void drawElements();

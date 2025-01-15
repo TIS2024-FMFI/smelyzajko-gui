@@ -1,0 +1,48 @@
+{
+    "elements": [],
+    "graphicModules": [
+        {
+            "graphicModuleId": 0,
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "label": "Counter Module",
+            "moduleId": 1,
+            "name": "Counter Module",
+            "position": [
+                83.0,
+                172.0
+            ],
+            "size": [
+                724.0,
+                360.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        },
+        {
+            "graphicModuleId": 1,
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "label": "Map Module",
+            "moduleId": -1,
+            "name": "Map Module",
+            "position": [
+                824.0,
+                174.0
+            ],
+            "size": [
+                783.0,
+                359.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        }
+    ],
+    "name": "template6",
+    "resolution": [
+        1850.0,
+        1027.0
+    ]
+}

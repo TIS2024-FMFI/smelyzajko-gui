@@ -67,6 +67,9 @@ void Checkbox::from_json(const nlohmann::json &j, ImVec2 resolution) {
     } else {
         moduleID = -1;
     }
+    ImVec2 scale = Element::getScaleFactors(resolution);
+
+    position = ImVec2(position.x * scale.x, position.y * scale.y);
 }
 std::vector<Setting> Checkbox::getSettings() {
     return {
@@ -74,7 +77,5 @@ std::vector<Setting> Checkbox::getSettings() {
             {"label", label, [this](const SettingValue& val) { label = std::get<std::string>(val); }}
     };
 
-    ImVec2 scale = Element::getScaleFactors(resolution);
 
-    position = ImVec2(position.x * scale.x, position.y * scale.y);
 }

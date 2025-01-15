@@ -24,15 +24,15 @@ public:
         }
 
         if (templateNames.empty()) {
-            templateManager = TemplateManager();
+            templateManager = TemplateManager(true);
         } else {
-            templateManager = TemplateManager(templateNames);
+            templateManager = TemplateManager(templateNames, true);
         }
     }
 
     ModuleManager moduleManager;
     ToastNotificationManager toastManager;
-    TemplateManager templateManager;
+    TemplateManager templateManager = TemplateManager(true);
     ShortcutsManager shortcutsManager;
     ImGuiIO& io;
     YAML::Node configFile;
@@ -54,7 +54,7 @@ public:
     void setupShortcuts();
     void processShortcuts();
     void initializeWindow(GLFWwindow* window);
-
+    void handleElementClick(Element* element,int i);
 private:
     float gridSize = 60.0f;
     bool isSnapping = false;

@@ -4,7 +4,6 @@
 //#include "TemplateManager.h"
 #include "ModuleManager.h"
 #include "widgets/Element.h"
-
 #include "widgets/Rectangle.h"
 #include "widgets/Checkbox.h"
 #include "widgets/Button.h"
@@ -13,6 +12,7 @@
 #include "widgets/MultiLineLabel.h"
 #include "../ImGuiFileDialog/ImGuiFileDialog.h"
 #include "../ImGuiFileDialog/ImGuiFileDialogConfig.h"
+#include "Template.h"
 #include <iostream> // For std::cerr (debugging)
 #ifdef _WIN32
 #include <windows.h> // For Beep on Windows
@@ -265,28 +265,8 @@ void ConfigurationMode::drawElements() {
                 clickHandled = true;
             }
         }
+        handleElementClick(element,i);
 
-        if (element->getPendingDelete()) {
-            ImGui::SetNextWindowPos(element->getDeletePopupPosition(), ImGuiCond_Always);
-            ImGui::OpenPopup("Delete Confirmation");
-
-            if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ImGui::Text("Delete this element?");
-                if (ImGui::Button("Yes")) {
-                    templateManager.removeElementFromActiveTemplate(i);
-                    ImGui::CloseCurrentPopup();
-                    ImGui::EndPopup();
-                    ImGui::PopID();
-                    break;
-                }
-                ImGui::SameLine();
-                if (ImGui::Button("No")) {
-                    element->setPendingDelete(false);
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::EndPopup();
-            }
-        }
 
         ImGui::PopID();
 
@@ -373,94 +353,7 @@ void ConfigurationMode::drawElementsWithSnappingOn() {
         }
 
 
-
-        if (element->getPendingChooseWhatToDo()) {
-            ImGui::SetNextWindowPos(element->getDeletePopupPosition(), ImGuiCond_Always);
-            ImGui::OpenPopup("Element Options");
-
-            if (ImGui::BeginPopupModal("Element Options", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ImGui::Text("What would you like to do with this element?");
-                if (ImGui::Button("Delete")) {
-                    element->setPendingDelete(true);
-                    element->setPendingChooseWhatToDo(false);
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::SameLine();
-                if (ImGui::Button("Edit")) {
-                    element->setPendingEdit(true);
-                    element->setPendingChooseWhatToDo(false);
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::SameLine();
-                if (ImGui::Button("Cancel")) {
-                    element->setPendingChooseWhatToDo(false);
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::EndPopup();
-            }
-        }
-        if (element->getPendingDelete()){
-            ImGui::SetNextWindowPos(element->getDeletePopupPosition(), ImGuiCond_Always);
-            ImGui::OpenPopup("Delete Confirmation");
-            if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ImGui::Text("Delete this element?");
-                if (ImGui::Button("Yes")) {
-                    //activeElements.erase(activeElements.begin() + i);
-                    templateManager.removeElementFromActiveTemplate(i);
-                    ImGui::CloseCurrentPopup();
-                    ImGui::EndPopup();
-                    ImGui::PopID();
-                    break;
-                }
-                ImGui::SameLine();
-                if (ImGui::Button("No")) {
-                    element->setPendingDelete(false);
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::EndPopup();
-            }
-        }
-        if (element->getPendingEdit()) {
-            ImGui::SetNextWindowPos(element->getDeletePopupPosition(), ImGuiCond_Always);
-            ImGui::OpenPopup("Edit Element Settings");
-            if (ImGui::BeginPopupModal("Edit Element Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ImGui::Text("Settings for element: %s", element->getLabel().c_str());
-                auto settings = element->getSettings();
-                for (auto& setting : settings) {
-                    std::visit([&](auto&& value) {
-                        using T = std::decay_t<decltype(value)>;
-                        if constexpr (std::is_same_v<T, bool>) {
-                            bool val = value;
-                            if (ImGui::Checkbox(setting.name.c_str(), &val)) {
-                                setting.setter(val);
-                            }
-                        } else if constexpr (std::is_same_v<T, int>) {
-                            int val = value;
-                            if (ImGui::InputInt(setting.name.c_str(), &val)) {
-                                setting.setter(val);
-                            }
-                        } else if constexpr (std::is_same_v<T, float>) {
-                            float val = value;
-                            if (ImGui::InputFloat(setting.name.c_str(), &val)) {
-                                setting.setter(val);
-                            }
-                        } else if constexpr (std::is_same_v<T, std::string>) {
-                            char buffer[256];
-                            std::strncpy(buffer, value.c_str(), sizeof(buffer));
-                            if (ImGui::InputText(setting.name.c_str(), buffer, sizeof(buffer))) {
-                                setting.setter(std::string(buffer));
-                            }
-                        }
-                    }, setting.value);
-                }
-                if (ImGui::Button("Close")) {
-                    element->setPendingEdit(false);
-                    ImGui::CloseCurrentPopup();
-
-                }
-                ImGui::EndPopup();
-            }
-        }
+        handleElementClick(element,i);
 
         ImGui::PopID();
 
@@ -470,7 +363,93 @@ void ConfigurationMode::drawElementsWithSnappingOn() {
     }
 }
 
+void ConfigurationMode::handleElementClick(Element *element,int i) {
+    if (element->getPendingChooseWhatToDo()) {
+        ImGui::SetNextWindowPos(element->getDeletePopupPosition(), ImGuiCond_Always);
+        ImGui::OpenPopup("Element Options");
 
+        if (ImGui::BeginPopupModal("Element Options", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+            ImGui::Text("What would you like to do with this element?");
+            if (ImGui::Button("Delete")) {
+                element->setPendingDelete(true);
+                element->setPendingChooseWhatToDo(false);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Edit")) {
+                element->setPendingEdit(true);
+                element->setPendingChooseWhatToDo(false);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel")) {
+                element->setPendingChooseWhatToDo(false);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+    }
+    else if (element->getPendingDelete()){
+        ImGui::SetNextWindowPos(element->getDeletePopupPosition(), ImGuiCond_Always);
+        ImGui::OpenPopup("Delete Confirmation");
+        if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+            ImGui::Text("Delete this element?");
+            if (ImGui::Button("Yes")) {
+                //activeElements.erase(activeElements.begin() + i);
+                templateManager.removeElementFromActiveTemplate(i);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("No")) {
+                element->setPendingDelete(false);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+    }
+    else if (element->getPendingEdit()) {
+        ImGui::SetNextWindowPos(element->getDeletePopupPosition(), ImGuiCond_Always);
+        ImGui::OpenPopup("Edit Element Settings");
+        if (ImGui::BeginPopupModal("Edit Element Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+            ImGui::Text("Settings for element: %s", element->getLabel().c_str());
+            auto settings = element->getSettings();
+            for (auto& setting : settings) {
+                std::visit([&](auto&& value) {
+                    using T = std::decay_t<decltype(value)>;
+                    if constexpr (std::is_same_v<T, bool>) {
+                        bool val = value;
+                        if (ImGui::Checkbox(setting.name.c_str(), &val)) {
+                            setting.setter(val);
+                        }
+                    } else if constexpr (std::is_same_v<T, int>) {
+                        int val = value;
+                        if (ImGui::InputInt(setting.name.c_str(), &val)) {
+                            setting.setter(val);
+                        }
+                    } else if constexpr (std::is_same_v<T, float>) {
+                        float val = value;
+                        if (ImGui::InputFloat(setting.name.c_str(), &val)) {
+                            setting.setter(val);
+                        }
+                    } else if constexpr (std::is_same_v<T, std::string>) {
+                        char buffer[256];
+                        std::strncpy(buffer, value.c_str(), sizeof(buffer));
+                        if (ImGui::InputText(setting.name.c_str(), buffer, sizeof(buffer))) {
+                            setting.setter(std::string(buffer));
+                        }
+                    }
+                }, setting.value);
+            }
+            if (ImGui::Button("Close")) {
+                element->setPendingEdit(false);
+                ImGui::CloseCurrentPopup();
+
+            }
+            ImGui::EndPopup();
+        }
+    }
+
+}
 
 
 void ConfigurationMode::setupMenuBar() {
@@ -519,7 +498,7 @@ void ConfigurationMode::setupMenuBar() {
 
                         if (isNew) {
                             templateManager.getActiveTemplate().saveTemplate(filePathName, fileName);
-                            Template newTemplate = Template("../templates/" + filePathName.filename().string());
+                            Template newTemplate = Template("../templates/" + filePathName.filename().string(), true);
                             templateManager.allTemplates.push_back(newTemplate);
                             templateManager.setActiveTemplate(newTemplate);
                             std::string windowTitle = std::string("GUI") + " - " + newTemplate.getName();
@@ -685,17 +664,18 @@ void ConfigurationMode::setupMenuBar() {
 
         ImGui::EndMenu();
 
-        if (ImGui::BeginMenu("Add Modules")) {
-            for (const auto& [name, constructor] : ModuleManager::getInstance().getModuleConstructors()) {
-                if (ImGui::MenuItem(name.c_str())) {
-                    addElementToActiveTemplate(new Rectangle(name, ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
-                    std::cout << "Selected module: " << name << std::endl;
-                }
+
+
+
+    }
+    if (ImGui::BeginMenu("Add Modules")) {
+        for (const auto& [name, constructor] : ModuleManager::getInstance().getModuleConstructors()) {
+            if (ImGui::MenuItem(name.c_str())) {
+                addElementToActiveTemplate(new Rectangle(name, ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
+                std::cout << "Selected module: " << name << std::endl;
             }
-            ImGui::EndMenu();
         }
-
-
+        ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
 }
