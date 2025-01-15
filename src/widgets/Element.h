@@ -5,6 +5,7 @@
 #include "imgui.h"
 #include "string"
 #include "imgui_internal.h"
+#include <GLFW/glfw3.h>
 
 class Element {
 protected:

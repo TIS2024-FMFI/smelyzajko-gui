@@ -21,17 +21,14 @@ protected:
 
     ModuleManager moduleManager;
     ToastNotificationManager toastManager;
-    TemplateManager templateManager;
     ShortcutsManager shortcutsManager;
-
     YAML::Node configFile;
-
 public:
     GUI(YAML::Node configFile);
 
     void setupImGui();
     void cleanupImGui();
-    void setupTemplates();
+
     virtual int run() = 0;
 };
 
