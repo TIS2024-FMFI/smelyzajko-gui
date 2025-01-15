@@ -26,6 +26,8 @@ public:
     virtual void to_json(nlohmann::json& j) const = 0;
     virtual void from_json(const nlohmann::json& j) = 0;
 
+
+
 protected:
     int graphicModuleId;
     int moduleId;

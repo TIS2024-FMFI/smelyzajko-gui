@@ -1,6 +1,7 @@
 #include <iostream>
 #include "ConfigurationMode.h"
-
+#include "../TestModules/MapModule.h"
+#include "../TestModules/CounterModule.h"
 //#include "TemplateManager.h"
 #include "ModuleManager.h"
 #include "widgets/Element.h"
@@ -132,8 +133,6 @@ ImVec2 findNearestFreeGridCorner(const std::vector<Element*>& elements, const Im
 
 
 void ConfigurationMode::setupShortcuts() {
-
-
     shortcutsManager.registerShortcut("Ctrl+Q", [this]() {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     });
@@ -151,6 +150,9 @@ void ConfigurationMode::initializeWindow(GLFWwindow* window) {
 
 
 int ConfigurationMode::run() {
+    MapModule mapModule = MapModule(&moduleManager);
+    CounterModule counterModule = CounterModule(&moduleManager);
+
     io = ImGui::GetIO();
     (void)io;
     initializeWindow(window);
@@ -669,10 +671,38 @@ void ConfigurationMode::setupMenuBar() {
 
     }
     if (ImGui::BeginMenu("Add Modules")) {
-        for (const auto& [name, constructor] : ModuleManager::getInstance().getModuleConstructors()) {
-            if (ImGui::MenuItem(name.c_str())) {
-                addElementToActiveTemplate(new Rectangle(name, ImVec2(100.0f, 100.0f), ImVec2(200.0f, 100.0f)));
-                std::cout << "Selected module: " << name << std::endl;
+        auto elements = templateManager.getActiveTemplateElements();
+        for (Module* module : moduleManager.getModules()) {
+            if (ImGui::BeginMenu(module->getName().c_str())) {
+                for (const std::string& graphicElement : module->getPossibleGraphicsElement()) {
+                    if (ImGui::MenuItem(graphicElement.c_str())) {
+                        ImVec2 elementSize(300.0f, 200.0f);
+                        ImVec2 padding(30.0f, 30.0f);
+                        float menuBarHeight = 25.0f;
+                        ImVec2 position;
+
+                        if (isSnapping) {
+                            int widthInSquares = ceil(elementSize.x / gridSize);
+                            int heightInSquares = ceil(elementSize.y / gridSize);
+                            elementSize = ImVec2(widthInSquares * gridSize, heightInSquares * gridSize);
+
+                            position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
+                        } else {
+                            position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
+                        }
+
+                        if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+                            playBeep();
+                            position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+                        }
+
+                        //addElementToActiveTemplate(new class Rectangle("Rectangle", position, elementSize));
+                        Rectangle* tempt = new Rectangle(graphicElement, position, elementSize);
+                        tempt->setModuleID(module->getModuleID());
+                        addElementToActiveTemplate(tempt);
+                    }
+                }
+                ImGui::EndMenu();
             }
         }
         ImGui::EndMenu();

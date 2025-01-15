@@ -21,19 +21,19 @@ public:
     void updateValueOfModule(int moduleID, int value);
     void updateValueOfModule(int moduleID, std::vector<int> value);
     void setActiveModuleAndDraw(std::vector<GraphicModule *> graphicModules_, ImGuiIO &io);
-
+    std::vector<Module*> getModules() const;
     const std::unordered_map<std::string, std::function<GraphicModule*()>> &getModuleConstructors() const;
     void clearModules();
     std::vector<GraphicModule*> graphicModules;
+    std::vector<Module*> modules ;
 
 private:
-    std::vector<Module*> modules ;
     std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
-            {"Map Module", []() { return new MapModuleGraphics(); }},
-             {"Counter Module", []() { return new CounterModuleGraphics(); }}
+            {"Map Graphic Element", []() { return new MapModuleGraphics(); }},
+             {"Counter Graphic Element", []() { return new CounterModuleGraphics(); }}
     };
 
-    void renderModules();
+
 
     void readTemplateandCreateModules(const std::string &filename);
 };

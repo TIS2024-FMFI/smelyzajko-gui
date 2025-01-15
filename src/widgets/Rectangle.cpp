@@ -172,3 +172,6 @@ std::vector<Setting> Rectangle::getSettings() {
         }
     }
 
+void Rectangle::setModuleID(int id) {
+    moduleId = id;
+}

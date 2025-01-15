@@ -25,6 +25,7 @@ public:
     void setSize(const ImVec2& newSize);
     void setWidth(float newWidth);
     void setHeight(float newHeight);
+    void setModuleID(int id);
 
     void draw(ImGuiIO &io) override;
     void handleClicks(ImGuiIO &io) override;
@@ -33,4 +34,5 @@ public:
     void from_json(const nlohmann::json &j, ImVec2 resolution) override;
     void to_json(nlohmann::json &j) const override;
     std::vector<Setting> getSettings() override;
+
 };

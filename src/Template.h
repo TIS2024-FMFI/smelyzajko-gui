@@ -12,7 +12,7 @@ private:
     std::vector<Element *> elements;
     std::vector<GraphicModule*> graphicModules;
     std::string name;
-    bool configurationMode;
+    bool configurationMode = true;
     ImVec2 resolution;
 public:
     Template() = default;

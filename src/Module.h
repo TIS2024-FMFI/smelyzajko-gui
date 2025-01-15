@@ -11,10 +11,12 @@ public:
                textFrequency(10.0f), textLogEnabled(false) {}
 
     Module(int id, const char* name);
-
+    virtual int getModuleID() const = 0;
     virtual void run() = 0;
 
     virtual std::string getName() const = 0;
+    virtual std::vector<std::string>  getPossibleGraphicsElement() = 0;
+
     // Graphics Settings
     float GetGraphicsFrequency() const;
     void SetGraphicsFrequency(float freq);
@@ -28,6 +30,7 @@ public:
 
     bool IsTextLoggingEnabled() const;
     void SetTextLoggingEnabled(bool enabled);
+
 
     int moduleId;            // Module ID for identification
     std::string moduleName;  // Module name

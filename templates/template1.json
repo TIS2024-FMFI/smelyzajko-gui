@@ -6,7 +6,7 @@
       "graphicsFrequency": 0.0,
       "graphicsLogEnabled": true,
       "moduleId": 0,
-      "name": "Counter Module",
+      "name": "Counter Graphic Element",
       "position": [
         100.0,
         450.0
@@ -23,7 +23,7 @@
       "graphicsFrequency": 0.0,
       "graphicsLogEnabled": true,
       "moduleId": 0,
-      "name": "Counter Module",
+      "name": "Counter Graphic Element",
       "position": [
         450.0,
         450.0
@@ -40,7 +40,7 @@
       "graphicsFrequency": 0.0,
       "graphicsLogEnabled": true,
       "moduleId": 1,
-      "name": "Map Module",
+      "name": "Map Graphic Element",
       "position": [
         50.0,
         50.0
@@ -57,7 +57,7 @@
       "graphicsFrequency": 0.0,
       "graphicsLogEnabled": true,
       "moduleId": 1,
-      "name": "Map Module",
+      "name": "Map Graphic Element",
       "position": [
         650.0,
         50.0

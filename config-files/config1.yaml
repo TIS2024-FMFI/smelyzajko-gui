@@ -3,5 +3,6 @@ templates:
   - template2.json
   - template3.json
   - template6.json
+  - template7.json
 
 modules:

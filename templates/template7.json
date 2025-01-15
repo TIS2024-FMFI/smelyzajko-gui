@@ -5,35 +5,35 @@
             "graphicModuleId": 0,
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
-            "label": "Counter Graphic Element",
-            "moduleId": 1,
-            "name": "Counter Graphic Element",
+            "label": "Map Graphic Element",
+            "moduleId": 0,
+            "name": "Map Graphic Element",
             "position": [
-                22.0,
-                77.0
+                60.0,
+                79.0
             ],
             "size": [
-                740.0,
-                350.0
+                300.0,
+                200.0
             ],
             "textFrequency": 0,
             "textLogEnabled": false,
             "type": "rectangle"
         },
         {
-            "graphicModuleId": 1,
+            "graphicModuleId": 0,
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
-            "label": "Map Graphic Element",
-            "moduleId": -1,
-            "name": "Map Graphic Element",
+            "label": "Counter Graphic Element",
+            "moduleId": 0,
+            "name": "Counter Graphic Element",
             "position": [
-                786.0,
-                75.0
+                60.0,
+                319.0
             ],
             "size": [
-                771.0,
-                405.0
+                300.0,
+                240.0
             ],
             "textFrequency": 0,
             "textLogEnabled": false,
@@ -47,19 +47,19 @@
             "moduleId": 1,
             "name": "Counter Graphic Element",
             "position": [
-                33.0,
-                434.0
+                360.0,
+                79.0
             ],
             "size": [
-                626.0,
-                353.0
+                300.0,
+                240.0
             ],
             "textFrequency": 0,
             "textLogEnabled": false,
             "type": "rectangle"
         }
     ],
-    "name": "template6",
+    "name": "template7",
     "resolution": [
         1920.0,
         1080.0

@@ -42,6 +42,7 @@ void TemplateManager::loadAllTemplates() {
             Template aTemplate(path,configMode);
             allTemplates.push_back(aTemplate);
         }
+
     }
 }
 

@@ -31,7 +31,7 @@ public:
 
     ImVec2 size;
     ImVec2 position;
-    std::string moduleName = "Counter " ;  // Module name
+    std::string moduleName = "Counter Graphic Element " ;  // Module name
     int graphicModuleId;
     int moduleId;
 

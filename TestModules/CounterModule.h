@@ -18,11 +18,15 @@ public:
     ~CounterModule() ;
     void run() override;
     std::string getName() const override;
+    int getModuleID() const override ;
 
     void saveLogToJson(const std::vector<int> &values);
     ModuleManager& moduleManager;
     int graphicModuleId;
     int moduleId;
+    std::vector<std::string> getPossibleGraphicsElement() override ;
+
+
 
 private:
     std::string moduleName = "Counter Module";
