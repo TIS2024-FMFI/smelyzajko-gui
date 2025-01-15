@@ -152,7 +152,7 @@ void Rectangle::from_json(const nlohmann::json& j, ImVec2 resolution) {
     size = ImVec2(size.x * scale.x, size.y * scale.y);
 }
 
-}
+
 std::vector<Setting> Rectangle::getSettings() {
 
     if (label.find("Rectangle") != std::string::npos) {
