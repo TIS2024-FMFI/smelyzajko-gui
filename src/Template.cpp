@@ -15,7 +15,7 @@
 
 using json = nlohmann::json;
 
-std::vector<Element *> Template::getElements() {
+std::vector<Element *> &Template::getElements() {
     return elements;
 }
 
