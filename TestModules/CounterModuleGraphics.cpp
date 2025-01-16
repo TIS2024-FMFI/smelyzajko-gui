@@ -1,9 +1,12 @@
 #include "CounterModuleGraphics.h"
 
 CounterModuleGraphics::CounterModuleGraphics()
-        : counter(0), scrollOffset(0.0f), autoscrollEnabled(true) {setGraphicElementName("Counter Graphic Element");}
+        : counter(0), autoscrollEnabled(true),
+          scrollbar(100.0f, 0.0f) { // Initialize scrollbar with visibleHeight = 100.0f, totalHeight = 0.0f
+    setGraphicElementName("Counter Graphic Element");
+}
 
-void CounterModuleGraphics::draw(ImGuiIO& io) {
+void CounterModuleGraphics::draw(ImGuiIO &io) {
     ImDrawList* draw_list = ImGui::GetForegroundDrawList();
     ImU32 text_color = IM_COL32(255, 255, 255, 255);
 
@@ -27,15 +30,23 @@ void CounterModuleGraphics::draw(ImGuiIO& io) {
 
     draw_list->AddRect(scroll_area_min, scroll_area_max, text_color);
 
-    float log_y_offset = scroll_area_min.y - scrollOffset;
-    float visible_height = text_area_height - 2 * inner_padding;
+    // Calculate total log height dynamically
     float total_log_height = 0.0f;
-
-    draw_list->PushClipRect(scroll_area_min, scroll_area_max, true);
     for (const std::string& log : logValues) {
         ImVec2 log_text_size = ImGui::CalcTextSize(log.c_str());
         total_log_height += log_text_size.y + inner_padding;
+    }
 
+    // Update scrollbar dimensions
+    float visible_height = text_area_height - 2 * inner_padding;
+    scrollbar.updateTotalHeight(total_log_height);
+    scrollbar.updateVisibleHeight(visible_height);
+
+    // Render logs using the updated scrollOffset
+    float log_y_offset = scroll_area_min.y - scrollbar.getScrollOffset();
+    draw_list->PushClipRect(scroll_area_min, scroll_area_max, true);
+    for (const std::string& log : logValues) {
+        ImVec2 log_text_size = ImGui::CalcTextSize(log.c_str());
         if (log_y_offset + log_text_size.y >= scroll_area_min.y &&
             log_y_offset <= scroll_area_max.y) {
             ImVec2 log_pos = ImVec2(scroll_area_min.x + inner_padding, log_y_offset);
@@ -45,61 +56,21 @@ void CounterModuleGraphics::draw(ImGuiIO& io) {
     }
     draw_list->PopClipRect();
 
-    // Render scrollbar only if the total log height exceeds the visible area
+    // Conditionally draw scrollbar if needed
     if (total_log_height > visible_height) {
-        float scrollbar_width = 20.0f;
-        ImVec2 scrollbar_min = ImVec2(scroll_area_max.x + inner_padding, scroll_area_min.y);
-        ImVec2 scrollbar_max = ImVec2(scroll_area_max.x + scrollbar_width, scroll_area_max.y);
-        draw_list->AddRectFilled(scrollbar_min, scrollbar_max, IM_COL32(180, 180, 180, 255));
-
-        float scrollbar_thumb_height = std::max((visible_height / total_log_height) * visible_height, 10.0f);
-        scrollbar_thumb_height = std::min(scrollbar_thumb_height, visible_height);
-        float thumb_offset = (scrollOffset / std::max(1.0f, total_log_height)) * visible_height;
-        thumb_offset = std::clamp(thumb_offset, 0.0f, visible_height - scrollbar_thumb_height);
-
-        ImVec2 thumb_min = ImVec2(scrollbar_min.x, scrollbar_min.y + thumb_offset);
-        ImVec2 thumb_max = ImVec2(scrollbar_max.x, thumb_min.y + scrollbar_thumb_height);
-        draw_list->AddRectFilled(thumb_min, thumb_max, IM_COL32(100, 100, 100, 255));
-
-        // Handle manual scrollbar interaction
-        if (!autoscrollEnabled && ImGui::IsMouseHoveringRect(scrollbar_min, scrollbar_max) &&
-            ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
-            ImVec2 mouse_pos = io.MousePos;
-            float mouse_scroll_position = mouse_pos.y - scrollbar_min.y - scrollbar_thumb_height / 2;
-            scrollOffset = (mouse_scroll_position / visible_height) * total_log_height;
-            scrollOffset = std::clamp(scrollOffset, 0.0f, std::max(0.0f, total_log_height - visible_height));
-        }
+        scrollbar.drawScrollbar(scroll_area_min, scroll_area_max, io);
+        scrollbar.updateScrollOffset(io);
     }
 
-    // Handle autoscroll
-    if (autoscrollEnabled && !logValues.empty()) {
-        scrollOffset = std::max(0.0f, total_log_height - visible_height);
-    }
-
-    // Handle mouse wheel scrolling
-    if (ImGui::IsMouseHoveringRect(scroll_area_min, scroll_area_max)) {
-        scrollOffset -= io.MouseWheel * 20.0f;
-        scrollOffset = std::clamp(scrollOffset, 0.0f, std::max(0.0f, total_log_height - visible_height));
-    }
-
-    // Autoscroll toggle checkbox in the top-right corner of the text area
+    // Autoscroll toggle checkbox
     ImVec2 checkbox_position = ImVec2(scroll_area_max.x - 20.0f, scroll_area_min.y);
     ImGui::SetCursorScreenPos(checkbox_position);
-    ImGui::Checkbox("##AutoscrollCheckbox2", &autoscrollEnabled); // Invisible label with a unique ID
+    ImGui::Checkbox("##AutoscrollCheckbox2", &autoscrollEnabled);
+    scrollbar.enableAutoscroll(autoscrollEnabled);
 }
-
-
-
-
 
 void CounterModuleGraphics::updateValueOfModule(int value) {
     counter = value;
     std::lock_guard<std::mutex> lock(logMutex);
     logValues.push_back("Counter updated: " + std::to_string(value));
 }
-
-
-
-
-
-

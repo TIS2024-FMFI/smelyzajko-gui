@@ -8,6 +8,7 @@
 #include <atomic>
 #include <mutex>
 #include <thread>
+#include "Scrollbar.h"
 
 class CounterModuleGraphics : public GraphicModule {
 public:
@@ -23,7 +24,7 @@ private:
     std::thread generatorThread;
     bool autoscrollEnabled;
     float scrollOffset;
-
+    Scrollbar scrollbar;
 
 };
 
