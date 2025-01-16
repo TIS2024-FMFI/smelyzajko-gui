@@ -82,7 +82,7 @@ void TemplateManager::setActiveTemplate(Template aTemplate) {
     activeTemplate = std::move(aTemplate);
 }
 
-std::vector<Element *> TemplateManager::getActiveTemplateElements() {
+std::vector<Element *> &TemplateManager::getActiveTemplateElements() {
     return activeTemplate.getElements();
 }
 
