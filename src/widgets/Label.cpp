@@ -63,3 +63,9 @@ void Label::from_json(const nlohmann::json &j, ImVec2 resolution) {
     size = ImVec2(size.x * scale.x, size.y * scale.y);
 }
 
+std::vector<Setting> Label::getSettings() {
+    return {
+            {"label",label, [this](const SettingValue& val) { label = std::get<std::string>(val); }}
+    };
+}
+

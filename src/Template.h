@@ -12,10 +12,11 @@ private:
     std::vector<Element *> elements;
     std::vector<GraphicModule*> graphicModules;
     std::string name;
+    bool configurationMode = true;
     ImVec2 resolution;
 public:
     Template() = default;
-    Template(const std::filesystem::path& filePath) {
+    Template(const std::filesystem::path& filePath, bool configurationMode) : configurationMode(configurationMode) {
         loadTemplate(filePath);
     }
 

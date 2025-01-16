@@ -11,25 +11,9 @@
 
 class CounterModuleGraphics : public GraphicModule {
 public:
-    CounterModuleGraphics() {
-        moduleName = "Counter Module";
-    };
+    CounterModuleGraphics();
     void draw(ImGuiIO &io) override;
-    void to_json(nlohmann::json& j) const override;
-    void from_json(const nlohmann::json& j, ImVec2 resolution) override;
-
-    void updateValueOfModule( std::string value) override;
     void updateValueOfModule( int value) override;
-    void updateValueOfModule( std::vector<int> value) override;
-    ImVec2 getPos() override { return position; }
-    ImVec2 getSize() override { return size; }
-    std::string getName() const override { return moduleName; }
-    int getGraphicModuleID() override { return graphicModuleId; }
-    void setPos(ImVec2 pos_) override { position = pos_; }
-    void setSize(ImVec2 size_) override { size = size_; }
-    void setGraphicModuleID(int id) override { graphicModuleId = id; }
-//    void setModuleID(int id) { moduleId = id; }
-
 private:
     int counter;
     std::atomic<bool> stopGeneration;

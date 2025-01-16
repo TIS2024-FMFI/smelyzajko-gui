@@ -3,7 +3,7 @@
 #include <iostream>
 
 MapModuleGraphics::MapModuleGraphics() {
-    moduleName = "Map Module";
+    setGraphicElementName("Map Graphic Element");
     loadMap();
 }
 
@@ -65,59 +65,7 @@ void MapModuleGraphics::draw(ImGuiIO &io) {
     );
 }
 
-void MapModuleGraphics::from_json(const nlohmann::json &j, ImVec2 resolution) {
-    if (j.contains("graphicModuleId") && j["graphicModuleId"].is_number_integer()) {
-        graphicModuleId = j["graphicModuleId"];
-    }
-    if (j.contains("moduleId") && j["moduleId"].is_number_integer()) {
-        moduleId = j["moduleId"];
-    }
-    if (j.contains("position") && j["position"].is_array() && j["position"].size() == 2) {
-        position.x = j["position"][0];
-        position.y = j["position"][1];
-        setPos({j["position"][0], j["position"][1]});
-    }
-    if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
-        size.x = j["size"][0];
-        size.y = j["size"][1];
-        setSize({j["size"][0], j["size"][1]});
-    }
-    if (j.contains("graphicsFrequency") && j["graphicsFrequency"].is_number_float()) {
-        graphicsFrequency = j["graphicsFrequency"];
-    }
-    if (j.contains("graphicsLogEnabled") && j["graphicsLogEnabled"].is_boolean()) {
-        graphicsLogEnabled = j["graphicsLogEnabled"];
-    }
-    if (j.contains("textFrequency") && j["textFrequency"].is_number_float()) {
-        textFrequency = j["textFrequency"];
-    }
-    if (j.contains("textLogEnabled") && j["textLogEnabled"].is_boolean()) {
-        textLogEnabled = j["textLogEnabled"];
-    }
 
-    GraphicModule::scaleFromResolution(resolution);
-
-}
-
-void MapModuleGraphics::to_json(nlohmann::json &j) const {
-    j["graphicModuleId"] = graphicModuleId;
-    j["moduleId"] = moduleId;
-    j["name"] = moduleName;
-    j["position"] = {position.x, position.y};
-    j["size"] = {size.x, size.y};
-    j["graphicsFrequency"] = graphicsFrequency;
-    j["graphicsLogEnabled"] = graphicsLogEnabled;
-    j["textFrequency"] = textFrequency;
-    j["textLogEnabled"] = textLogEnabled;
-}
-
-void MapModuleGraphics::updateValueOfModule(int value) {
-    std::cerr << "Invalid value for MapModuleGraphics." << std::endl;
-}
-
-void MapModuleGraphics::updateValueOfModule(std::string value) {
-    std::cerr << "Invalid value for MapModuleGraphics." << std::endl;
-}
 
 void MapModuleGraphics::updateValueOfModule(std::vector<int> value) {
     if (value.size() == 2) {

@@ -7,12 +7,14 @@
 
 namespace fs = std::filesystem;
 
-TemplateManager::TemplateManager() {
+TemplateManager::TemplateManager(bool mode) : configMode(mode) {
     loadAllTemplates();
+
 }
 
-TemplateManager::TemplateManager(const std::vector<std::string> &templateNames) {
+TemplateManager::TemplateManager(const std::vector<std::string> &templateNames,bool mode) : configMode(mode) {
     loadTemplates(templateNames);
+
 }
 
 void TemplateManager::loadAllTemplates() {
@@ -37,9 +39,10 @@ void TemplateManager::loadAllTemplates() {
         std::cout << "No JSON files found in the 'templates' directory." << std::endl;
     } else {
         for (const auto& path : jsonFiles) {
-            Template aTemplate(path);
+            Template aTemplate(path,configMode);
             allTemplates.push_back(aTemplate);
         }
+
     }
 }
 
@@ -68,7 +71,7 @@ void TemplateManager::loadTemplates(const std::vector<std::string>& templateName
             std::string fileName = path.filename().string();
             if (std::find(templateNames.begin(), templateNames.end(), fileName) != templateNames.end()) {
                 // Load template if it is in the list of templates from the config file
-                Template aTemplate(path);
+                Template aTemplate(path,configMode);
                 allTemplates.push_back(aTemplate);
             }
         }
@@ -91,6 +94,7 @@ void TemplateManager::addElementToActiveTemplate(Element *element) {
     activeTemplate.addElement(element);
 }
 
+
 std::string TemplateManager::getActiveTemplateName() const {
     return activeTemplate.getName();
 }
@@ -112,4 +116,7 @@ void TemplateManager::addModuleToActiveTemplate(GraphicModule *module) {
 
 std::vector<GraphicModule *> TemplateManager::getActiveTemplateModules() {
     return activeTemplate.getModules();
+}
+void TemplateManager::setConfigMode(bool mode) {
+    configMode = mode;
 }

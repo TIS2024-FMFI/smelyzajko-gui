@@ -21,5 +21,6 @@ public:
     void handleClicks(ImGuiIO &io) override;
     virtual ImRect getBoundingBox() const override;
 
+    std::vector<Setting> getSettings() override;
     void from_json(const nlohmann::json &j, ImVec2 resolution) override;
 };
