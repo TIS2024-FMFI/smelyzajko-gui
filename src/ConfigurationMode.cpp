@@ -124,42 +124,18 @@ ImVec2 findNearestFreeGridCorner(const std::vector<Element*>& elements, const Im
     return ImVec2(-1.0f, menuBarHeight);
 }
 
-void ConfigurationMode::setupShortcuts() {
-
-    shortcutsManager.registerShortcut("Ctrl+Q", [this]() {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    });
-
-}
-
-void ConfigurationMode::processShortcuts() {
-    shortcutsManager.processShortcuts();
-}
-
-void ConfigurationMode::initializeWindow(GLFWwindow* window) {
-    this->window = window;
-    shortcutsManager.setWindow(window);
-}
-
-
 int ConfigurationMode::run() {
     MapModule mapModule = MapModule(&moduleManager);
     CounterModule counterModule = CounterModule(&moduleManager);
 
-
-    initializeWindow(window);
-    shortcutsManager.setWindow(window);
-    setupShortcuts();
-
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        processShortcuts();
-        templateManager.setConfigMode(true);
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        shortcutsManager.processShortcuts();
         setupMenuBar();
 
         ImGui::SetNextWindowPos(ImVec2(0, 0)); // Top-left corner of the screen
@@ -976,4 +952,12 @@ void ConfigurationMode::handleClicksOnElements(std::vector<Element*>& elements) 
             break;
         }
     }
+}
+
+void ConfigurationMode::setupShortcuts() {
+    shortcutsManager.setWindow(window);
+
+    shortcutsManager.registerShortcut("Ctrl+Q", [this]() {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    });
 }

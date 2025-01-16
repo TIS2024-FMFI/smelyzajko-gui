@@ -26,6 +26,10 @@ public:
         } else {
             templateManager = TemplateManager(templateNames, true);
         }
+
+        setupShortcuts();
+
+        templateManager.setConfigMode(true);
     };
 
     int run() override;
@@ -41,12 +45,11 @@ public:
     void createFloatSliderSettings();
     void createIntSliderSettings();
     void createLabelSettings();
-    void setupShortcuts();
-    void processShortcuts();
     void initializeWindow(GLFWwindow* window);
     void handleElementClick(Element* element,int i);
     void handleClicksOnElements(std::vector<Element*>& elements);
     bool isAnyPendingElement(std::vector<Element*>& elements);
+    void setupShortcuts() override;
     TemplateManager templateManager = TemplateManager(true);
 
 private:
@@ -56,8 +59,6 @@ private:
     float menuBarHeight;
 
     void addModuleToActiveTemplate(GraphicModule *graphicModule);
-
-
 
     const float minGridValue = 10.0f;
     const float maxGridValue = 1000.0f;
