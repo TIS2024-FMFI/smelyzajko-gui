@@ -105,10 +105,12 @@ void UltrasonicModuleGraphics::draw(ImGuiIO& io) {
         scrollOffset = std::max(0.0f, total_log_height - visible_height);
     }
 
-    // Checkbox for autoscroll
-    ImGui::SetCursorScreenPos(ImVec2(log_area_min.x, log_area_max.y + 10.0f));
-    ImGui::Checkbox("Enable Ultrasonic Autoscroll", &autoscrollEnabled);
+    // Checkbox for autoscroll (top-right corner)
+    ImGui::SetCursorScreenPos(ImVec2(log_area_max.x - 20.0f, log_area_min.y + 5.0f));
+    ImGui::Checkbox("##AutoscrollCheckbox", &autoscrollEnabled); // Invisible label with a unique ID
 }
+
+
 
 
 void UltrasonicModuleGraphics::updateDynamicSensors() {

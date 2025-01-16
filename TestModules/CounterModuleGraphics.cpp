@@ -45,20 +45,31 @@ void CounterModuleGraphics::draw(ImGuiIO& io) {
     }
     draw_list->PopClipRect();
 
-    // Scrollbar
-    float scrollbar_width = 20.0f;
-    ImVec2 scrollbar_min = ImVec2(scroll_area_max.x + inner_padding, scroll_area_min.y);
-    ImVec2 scrollbar_max = ImVec2(scroll_area_max.x + scrollbar_width, scroll_area_max.y);
-    draw_list->AddRectFilled(scrollbar_min, scrollbar_max, IM_COL32(180, 180, 180, 255));
+    // Render scrollbar only if the total log height exceeds the visible area
+    if (total_log_height > visible_height) {
+        float scrollbar_width = 20.0f;
+        ImVec2 scrollbar_min = ImVec2(scroll_area_max.x + inner_padding, scroll_area_min.y);
+        ImVec2 scrollbar_max = ImVec2(scroll_area_max.x + scrollbar_width, scroll_area_max.y);
+        draw_list->AddRectFilled(scrollbar_min, scrollbar_max, IM_COL32(180, 180, 180, 255));
 
-    float scrollbar_thumb_height = std::max((visible_height / total_log_height) * visible_height, 10.0f);
-    scrollbar_thumb_height = std::min(scrollbar_thumb_height, visible_height);
-    float thumb_offset = (scrollOffset / std::max(1.0f, total_log_height)) * visible_height;
-    thumb_offset = std::clamp(thumb_offset, 0.0f, visible_height - scrollbar_thumb_height);
+        float scrollbar_thumb_height = std::max((visible_height / total_log_height) * visible_height, 10.0f);
+        scrollbar_thumb_height = std::min(scrollbar_thumb_height, visible_height);
+        float thumb_offset = (scrollOffset / std::max(1.0f, total_log_height)) * visible_height;
+        thumb_offset = std::clamp(thumb_offset, 0.0f, visible_height - scrollbar_thumb_height);
 
-    ImVec2 thumb_min = ImVec2(scrollbar_min.x, scrollbar_min.y + thumb_offset);
-    ImVec2 thumb_max = ImVec2(scrollbar_max.x, thumb_min.y + scrollbar_thumb_height);
-    draw_list->AddRectFilled(thumb_min, thumb_max, IM_COL32(100, 100, 100, 255));
+        ImVec2 thumb_min = ImVec2(scrollbar_min.x, scrollbar_min.y + thumb_offset);
+        ImVec2 thumb_max = ImVec2(scrollbar_max.x, thumb_min.y + scrollbar_thumb_height);
+        draw_list->AddRectFilled(thumb_min, thumb_max, IM_COL32(100, 100, 100, 255));
+
+        // Handle manual scrollbar interaction
+        if (!autoscrollEnabled && ImGui::IsMouseHoveringRect(scrollbar_min, scrollbar_max) &&
+            ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
+            ImVec2 mouse_pos = io.MousePos;
+            float mouse_scroll_position = mouse_pos.y - scrollbar_min.y - scrollbar_thumb_height / 2;
+            scrollOffset = (mouse_scroll_position / visible_height) * total_log_height;
+            scrollOffset = std::clamp(scrollOffset, 0.0f, std::max(0.0f, total_log_height - visible_height));
+        }
+    }
 
     // Handle autoscroll
     if (autoscrollEnabled && !logValues.empty()) {
@@ -71,19 +82,12 @@ void CounterModuleGraphics::draw(ImGuiIO& io) {
         scrollOffset = std::clamp(scrollOffset, 0.0f, std::max(0.0f, total_log_height - visible_height));
     }
 
-    // Handle manual scrollbar interaction
-    if (!autoscrollEnabled && ImGui::IsMouseHoveringRect(scrollbar_min, scrollbar_max) &&
-        ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
-        ImVec2 mouse_pos = io.MousePos;
-        float mouse_scroll_position = mouse_pos.y - scrollbar_min.y - scrollbar_thumb_height / 2;
-        scrollOffset = (mouse_scroll_position / visible_height) * total_log_height;
-        scrollOffset = std::clamp(scrollOffset, 0.0f, std::max(0.0f, total_log_height - visible_height));
-    }
-
-    // Autoscroll toggle checkbox below text area
-    ImGui::SetCursorScreenPos(ImVec2(scroll_area_min.x, scroll_area_max.y + 10.0f));
-    ImGui::Checkbox("Enable Counter Autoscroll", &autoscrollEnabled);
+    // Autoscroll toggle checkbox in the top-right corner of the text area
+    ImVec2 checkbox_position = ImVec2(scroll_area_max.x - 20.0f, scroll_area_min.y);
+    ImGui::SetCursorScreenPos(checkbox_position);
+    ImGui::Checkbox("##AutoscrollCheckbox2", &autoscrollEnabled); // Invisible label with a unique ID
 }
+
 
 
 

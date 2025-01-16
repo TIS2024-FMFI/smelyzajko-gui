@@ -91,47 +91,49 @@ void MapModuleGraphics::draw(ImGuiIO& io) {
     }
     draw_list->PopClipRect();
 
-    // Scrollbar
-    float scrollbar_width = 20.0f;
-    ImVec2 scrollbar_min = ImVec2(log_area_max.x + 10.0f, log_area_min.y); // Positioned 10px to the right
-    ImVec2 scrollbar_max = ImVec2(scrollbar_min.x + scrollbar_width, log_area_max.y);
-    draw_list->AddRectFilled(scrollbar_min, scrollbar_max, IM_COL32(180, 180, 180, 255));
+    // Render scrollbar only if the total log height exceeds the visible area
+    if (total_log_height > visible_height) {
+        float scrollbar_width = 20.0f;
+        ImVec2 scrollbar_min = ImVec2(log_area_max.x + inner_padding, log_area_min.y);
+        ImVec2 scrollbar_max = ImVec2(scrollbar_min.x + scrollbar_width, log_area_max.y);
+        draw_list->AddRectFilled(scrollbar_min, scrollbar_max, IM_COL32(180, 180, 180, 255));
 
-    // Calculate the scrollbar thumb height and position
-    float scrollbar_thumb_height = std::max((visible_height / total_log_height) * visible_height, 10.0f);
-    scrollbar_thumb_height = std::min(scrollbar_thumb_height, visible_height); // Cap thumb height to visible area
-    float thumb_offset = (scrollOffset / std::max(1.0f, total_log_height)) * visible_height;
-    thumb_offset = std::clamp(thumb_offset, 0.0f, visible_height - scrollbar_thumb_height);
+        float scrollbar_thumb_height = std::max((visible_height / total_log_height) * visible_height, 10.0f);
+        scrollbar_thumb_height = std::min(scrollbar_thumb_height, visible_height); // Cap thumb height to visible area
+        float thumb_offset = (scrollOffset / std::max(1.0f, total_log_height)) * visible_height;
+        thumb_offset = std::clamp(thumb_offset, 0.0f, visible_height - scrollbar_thumb_height);
 
-    ImVec2 thumb_min = ImVec2(scrollbar_min.x, scrollbar_min.y + thumb_offset);
-    ImVec2 thumb_max = ImVec2(scrollbar_max.x, thumb_min.y + scrollbar_thumb_height);
-    draw_list->AddRectFilled(thumb_min, thumb_max, IM_COL32(100, 100, 100, 255));
+        ImVec2 thumb_min = ImVec2(scrollbar_min.x, scrollbar_min.y + thumb_offset);
+        ImVec2 thumb_max = ImVec2(scrollbar_max.x, thumb_min.y + scrollbar_thumb_height);
+        draw_list->AddRectFilled(thumb_min, thumb_max, IM_COL32(100, 100, 100, 255));
 
-    // Handle manual scrolling
+        // Manual scrollbar interaction
+        if (!autoscrollEnabled && ImGui::IsMouseHoveringRect(scrollbar_min, scrollbar_max) &&
+            ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
+            ImVec2 mouse_pos = io.MousePos;
+            float mouse_scroll_position = mouse_pos.y - scrollbar_min.y - scrollbar_thumb_height / 2;
+            scrollOffset = (mouse_scroll_position / visible_height) * total_log_height;
+            scrollOffset = std::clamp(scrollOffset, 0.0f, std::max(0.0f, total_log_height - visible_height));
+        }
+    }
+
+    // Handle mouse wheel scrolling
     if (ImGui::IsMouseHoveringRect(log_area_min, log_area_max)) {
         scrollOffset -= io.MouseWheel * 20.0f;
+        scrollOffset = std::clamp(scrollOffset, 0.0f, std::max(0.0f, total_log_height - visible_height));
     }
-
-    // Manual scrollbar interaction
-    if (ImGui::IsMouseHoveringRect(scrollbar_min, scrollbar_max) &&
-        ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
-        ImVec2 mouse_pos = io.MousePos;
-        float mouse_scroll_position = mouse_pos.y - scrollbar_min.y - scrollbar_thumb_height / 2;
-        scrollOffset = (mouse_scroll_position / visible_height) * total_log_height;
-    }
-
-    // Clamp scroll offset
-    scrollOffset = std::clamp(scrollOffset, 0.0f, std::max(0.0f, total_log_height - visible_height));
 
     // Autoscroll logic
     if (autoscrollEnabled && !logValues.empty()) {
         scrollOffset = std::max(0.0f, total_log_height - visible_height);
     }
 
-    // Checkbox for autoscroll
-    ImGui::SetCursorScreenPos(ImVec2(log_area_min.x, log_area_max.y + 10.0f));
-    ImGui::Checkbox("Enable Map Autoscroll ", &autoscrollEnabled);
+    // Autoscroll toggle checkbox in the top-right corner of the log area
+    ImVec2 checkbox_position = ImVec2(log_area_max.x - 20.0f, log_area_min.y + 5.0f);
+    ImGui::SetCursorScreenPos(checkbox_position);
+    ImGui::Checkbox("##AutoscrollCheckbox3", &autoscrollEnabled); // Invisible label with a unique ID
 }
+
 
 
 
