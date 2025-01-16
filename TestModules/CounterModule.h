@@ -17,22 +17,16 @@ public:
     CounterModule(ModuleManager* moduleManager);
     ~CounterModule() ;
     void run() override;
-    std::string getName() const override;
-    int getModuleID() const override ;
+
 
     void saveLogToJson(const std::vector<int> &values);
     ModuleManager& moduleManager;
     int graphicModuleId;
-    int moduleId;
     std::vector<std::string> getPossibleGraphicsElement() override ;
 
 
 
 private:
-    std::string moduleName = "Counter Module";
-    ImVec2 size;
-    ImVec2 position;
-
     std::atomic<int> counter;
     std::atomic<bool> stopGeneration;
     std::vector<int> logValues;

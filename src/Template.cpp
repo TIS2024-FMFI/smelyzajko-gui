@@ -107,25 +107,25 @@ void Template::from_json(const nlohmann::json& j) {
     if (j.contains("graphicModules") && j["graphicModules"].is_array()) {
         rightFlag ++;
         for (const auto& moduleJson : j["graphicModules"]) {
-            if (moduleJson.contains("name") && moduleJson["name"].is_string()) {
-                std::string name = moduleJson["name"];
+            if (moduleJson.contains("graphicElementName") && moduleJson["graphicElementName"].is_string()) {
+                std::string graphicElementName = moduleJson["graphicElementName"];
                 ModuleManager moduleManager;
                 std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = moduleManager.getModuleConstructors();
-                auto it = moduleConstructors.find(name);
-                if (it != moduleConstructors.end()) {
-                    if (configurationMode) {
-                        // Create a Rectangle based on parameters in the template
-                        Rectangle* rectangle = new Rectangle();
-                        rectangle->from_json(moduleJson,resolution);
-                        elements.push_back(rectangle);
-                    } else {
-                        // Create and add the module as usual
-                        GraphicModule* module = it->second();
-                        module->from_json(moduleJson, resolution);
-                        graphicModules.push_back(module);
-                    }
+                auto it = moduleConstructors.find(graphicElementName);
+                if (configurationMode) {
+                    // Create a Rectangle based on parameters in the template
+                    Rectangle* rectangle = new Rectangle();
+                    rectangle->from_json(moduleJson,resolution);
+                    elements.push_back(rectangle);
+                }
+                else if (it != moduleConstructors.end()) {
+                    // Create and add the module as usual
+                    GraphicModule* module = it->second();
+                    module->from_json(moduleJson, resolution);
+                    graphicModules.push_back(module);
+
                 } else {
-                    throw std::invalid_argument("Unknown module type in JSON: " + name);
+                    throw std::invalid_argument("Unknown module type in JSON:  " + graphicElementName);
                 }
             }
         }

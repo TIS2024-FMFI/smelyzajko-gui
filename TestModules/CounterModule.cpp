@@ -6,9 +6,10 @@
 
 CounterModule::CounterModule(ModuleManager* moduleManager)
         : moduleManager(*moduleManager), counter(0), stopGeneration(false) {
-    moduleId = this->moduleManager.registerModule("Counter Module", this);
+    setModuleName("Counter Module");
+    moduleId = this->moduleManager.registerModule(moduleName, this);
     std::cout<<moduleId<<std::endl;
-    graphicModuleId = this->moduleManager.registerGraphicModule("Counter Graphic Element", moduleId);
+    graphicModuleId = this->moduleManager.registerGraphicModule("Counter Graphic Element",moduleName, moduleId);
     generatorThread = std::thread(&CounterModule::run, this);
 }
 
@@ -23,7 +24,7 @@ void CounterModule::run() {
     while (!stopGeneration.load()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         counter.fetch_add(1);
-        moduleManager.updateValueOfModule(graphicModuleId, counter.load());
+        moduleManager.updateValueOfModule(moduleId,graphicModuleId, counter.load());
     }
 }
 
@@ -44,18 +45,6 @@ void CounterModule::saveLogToJson(const std::vector<int>& values) {
     }
 }
 
-
-
-
-
-//getter
-
-std::string CounterModule::getName() const {
-    return moduleName;
-}
-int CounterModule::getModuleID() const {
-    return moduleId;
-}
 
 std::vector<std::string> CounterModule::getPossibleGraphicsElement() {
     return {"Counter Graphic Element"};

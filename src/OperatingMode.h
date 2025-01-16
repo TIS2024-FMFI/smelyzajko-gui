@@ -27,7 +27,7 @@ public:
     int run() override;
     void drawElements();
     void setupMenuBar();
-    void renderSettingsPopup(Module& module, const std::string& part);
+//    void renderSettingsPopup(GraphicModule& module, const std::string& part);
     void addElementToActiveTemplate(Element *element);
     void bringElementToTop(Element *element);
     TemplateManager templateManager = TemplateManager(false);

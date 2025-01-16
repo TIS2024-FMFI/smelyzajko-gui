@@ -15,11 +15,11 @@ public:
     }
 
     int registerModule(const std::string& name, Module *module);
-    int registerGraphicModule(const std::string& name,int moduleID);
+    int registerGraphicModule(const std::string& graphicElementName,const std::string& moduleName,  int moduleID);
 
-    void updateValueOfModule(int moduleID, std::string value);
-    void updateValueOfModule(int moduleID, int value);
-    void updateValueOfModule(int moduleID, std::vector<int> value);
+    void updateValueOfModule(int moduleID,int graphicModuleID, std::string value);
+    void updateValueOfModule(int moduleID,int graphicModuleID, int value);
+    void updateValueOfModule(int moduleID,int graphicModuleID, std::vector<int> value);
     void setActiveModuleAndDraw(std::vector<GraphicModule *> graphicModules_, ImGuiIO &io);
     std::vector<Module*> getModules() const;
     const std::unordered_map<std::string, std::function<GraphicModule*()>> &getModuleConstructors() const;

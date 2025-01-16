@@ -20,17 +20,14 @@ public:
 //    MapModule(int id, const char* name) : Module(id, name) {}
     ~MapModule() ;
     void run() override;
-    std::string getName() const override;
     void logToJson(const std::pair<int, int>& position);
     void generatePassableMap();
     void saveMapToJson();
     void generatePath();
-    int getModuleID() const override { return moduleId; }
     ModuleManager& moduleManager;
+    std::vector<int> graphicModuleId;
 
 //    void drawButtons();
-    std::string moduleName = "Map Module" ;  // Module name
-    std::vector<int> graphicModuleId;
     std::vector<std::string> getPossibleGraphicsElement() override {
         return {"Map Graphic Element","Counter Graphic Element"};
     }

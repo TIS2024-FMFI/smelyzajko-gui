@@ -4,8 +4,13 @@
 class Rectangle : public Element {
 private:
     ImVec2 size;
+
     int moduleId = -1;
-    int graphicModuleId;
+    std::string moduleName;
+
+    std::string graphicElementName;
+    int graphicElementId;
+
     int graphicsFrequency = 0.0;
     bool graphicsLogEnabled= false;
     int textFrequency =  0.0;
@@ -25,7 +30,11 @@ public:
     void setSize(const ImVec2& newSize);
     void setWidth(float newWidth);
     void setHeight(float newHeight);
+
     void setModuleID(int id);
+    void setGraphicElementId(int id);
+    void setModuleName(std::string name);
+    void setGraphicElementName(std::string name);
 
     void draw(ImGuiIO &io) override;
     void handleClicks(ImGuiIO &io) override;

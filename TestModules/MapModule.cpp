@@ -7,8 +7,9 @@
 #include <cmath> // Pre výpočet vzdialenosti
 
 MapModule::MapModule(ModuleManager* moduleManager) : moduleManager(*moduleManager), running(false), deltaTime(0.0f){ // Initialize rows and cols
+    setModuleName("Map Module") ;
     moduleId = this->moduleManager.registerModule("Map Module",  this);
-    graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Map Graphic Element", moduleId));
+    graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Map Graphic Element",moduleName, moduleId));
 
     if (!mapInitialized) {
         generatePassableMap();
@@ -50,7 +51,7 @@ void MapModule::run() {
                     logToJson(path[currentStep]); // Logovanie aktuálnej pozície do JSON
                     int ballRow = path[currentStep].first;
                     int ballCol = path[currentStep].second;
-                    moduleManager.updateValueOfModule(moduleId, std::vector<int>{ballRow, ballCol});
+                    moduleManager.updateValueOfModule(moduleId,graphicModuleId[0], std::vector<int>{ballRow, ballCol});
                 }
             }
         }
@@ -182,8 +183,6 @@ void MapModule::saveMapToJson() {
 }
 
 
-std::string MapModule::getName() const {
-    return moduleName;
-}
+
 
 
