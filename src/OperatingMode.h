@@ -2,7 +2,6 @@
 #include "GUI.h"
 #include <algorithm>
 #include "Module.h"
-
 class OperatingMode :  GUI {
 public:
 
@@ -19,21 +18,19 @@ public:
         }
 
         if (templateNames.empty()) {
-            templateManager = TemplateManager();
+            templateManager = TemplateManager(false);
         } else {
-            templateManager = TemplateManager(templateNames);
+            templateManager = TemplateManager(templateNames, false);
         }
     };
-
-    TemplateManager templateManager;
 
     int run() override;
     void drawElements();
     void setupMenuBar();
-    void renderSettingsPopup(Module& module, const std::string& part);
+//    void renderSettingsPopup(GraphicModule& module, const std::string& part);
     void addElementToActiveTemplate(Element *element);
     void bringElementToTop(Element *element);
-
+    TemplateManager templateManager = TemplateManager(false);
 
 private:
     float gridSize = 60.0f;

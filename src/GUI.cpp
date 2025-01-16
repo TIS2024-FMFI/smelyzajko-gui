@@ -2,7 +2,7 @@
 
 #include "GUI.h"
 
-GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()), configFile(configFile) {
+GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()) {
     if (!glfwInit()) {
         throw std::runtime_error("GLFW initialization error");
     }
@@ -25,7 +25,6 @@ GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()), configFile(configFile) {
 
     setupImGui();
 }
-
 
 void GUI::setupImGui() {
     IMGUI_CHECKVERSION();

@@ -1,8 +1,22 @@
 #include "Element.h"
 
+
 class Rectangle : public Element {
 private:
     ImVec2 size;
+
+    int moduleId = -1;
+    std::string moduleName;
+
+    std::string graphicElementName;
+    int graphicElementId;
+
+    int graphicsFrequency = 0.0;
+    bool graphicsLogEnabled= false;
+    int textFrequency =  0.0;
+    bool textLogEnabled= false;
+
+
 
 public:
     // Constructor to initialize position, label, and size
@@ -17,10 +31,17 @@ public:
     void setWidth(float newWidth);
     void setHeight(float newHeight);
 
+    void setModuleID(int id);
+    void setGraphicElementId(int id);
+    void setModuleName(std::string name);
+    void setGraphicElementName(std::string name);
+
     void draw(ImGuiIO &io) override;
     void handleClicks(ImGuiIO &io) override;
     ImRect getBoundingBox() const override;
 
     void from_json(const nlohmann::json &j, ImVec2 resolution) override;
     void to_json(nlohmann::json &j) const override;
+    std::vector<Setting> getSettings() override;
+
 };

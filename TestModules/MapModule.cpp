@@ -7,8 +7,9 @@
 #include <cmath> // Pre výpočet vzdialenosti
 
 MapModule::MapModule(ModuleManager* moduleManager) : moduleManager(*moduleManager), running(false), deltaTime(0.0f){ // Initialize rows and cols
+    setModuleName("Map Module") ;
     moduleId = this->moduleManager.registerModule("Map Module",  this);
-    graphicModuleId = this->moduleManager.registerGraphicModule("Map Module", moduleId);
+    graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Map Graphic Element",moduleName, moduleId));
 
     if (!mapInitialized) {
         generatePassableMap();
@@ -18,6 +19,7 @@ MapModule::MapModule(ModuleManager* moduleManager) : moduleManager(*moduleManage
     if (path.empty()) {
         generatePath();
     }
+
     saveMapToJson();
     running = true;
     mapThread = std::thread(&MapModule::run, this);
@@ -49,7 +51,7 @@ void MapModule::run() {
                     logToJson(path[currentStep]); // Logovanie aktuálnej pozície do JSON
                     int ballRow = path[currentStep].first;
                     int ballCol = path[currentStep].second;
-                    moduleManager.updateValueOfModule(moduleId, std::vector<int>{ballRow, ballCol});
+                    moduleManager.updateValueOfModule(moduleId,graphicModuleId[0], std::vector<int>{ballRow, ballCol});
                 }
             }
         }
@@ -61,87 +63,86 @@ void MapModule::run() {
     }
 }
 
-    void MapModule::generatePassableMap() {
+void MapModule::generatePassableMap() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 1);
+    map.resize(rows, std::vector<int>(cols, 0));
+    while (true) {
+        // Generovanie náhodnej mapy
+        for (int row = 0; row < rows; ++row) {
+            for (int col = 0; col < cols; ++col) {
+                if (row == 0 || row == rows - 1 || col == 0 || col == cols - 1) {
+                    map[row][col] = 1; // Hranice sú vždy múry
+                } else {
+                    map[row][col] = dis(gen);
+                }
+            }
+        }
+        // Cieľová pozícia musí byť priechodná
+        map[rows - 2][cols - 2] = 0;
 
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis(0, 1);
-        map.resize(rows, std::vector<int>(cols, 0));
-        while (true) {
-            // Generovanie náhodnej mapy
-            for (int row = 0; row < rows; ++row) {
-                for (int col = 0; col < cols; ++col) {
-                    if (row == 0 || row == rows - 1 || col == 0 || col == cols - 1) {
-                        map[row][col] = 1; // Hranice sú vždy múry
-                    } else {
-                        map[row][col] = dis(gen);
+        // Nájdeme priechodné políčko čo najďalej od cieľa
+        int maxDistance = -1;
+        std::pair<int, int> farthestPosition;
+
+        for (int row = 1; row < rows - 1; ++row) {
+            for (int col = 1; col < cols - 1; ++col) {
+                if (map[row][col] == 0) { // Priechodné políčko
+                    int distance =
+                            std::abs(row - (rows - 2)) + std::abs(col - (cols - 2)); // Manhattanova vzdialenosť
+                    if (distance > maxDistance) {
+                        maxDistance = distance;
+                        farthestPosition = {row, col};
                     }
                 }
             }
-            // Cieľová pozícia musí byť priechodná
-            map[rows - 2][cols - 2] = 0;
+        }
 
-            // Nájdeme priechodné políčko čo najďalej od cieľa
-            int maxDistance = -1;
-            std::pair<int, int> farthestPosition;
+        // Ak existuje vzdialená pozícia, nastavíme ju ako počiatočnú
+        if (maxDistance != -1) {
+            startPosition = farthestPosition;
 
-            for (int row = 1; row < rows - 1; ++row) {
-                for (int col = 1; col < cols - 1; ++col) {
-                    if (map[row][col] == 0) { // Priechodné políčko
-                        int distance =
-                                std::abs(row - (rows - 2)) + std::abs(col - (cols - 2)); // Manhattanova vzdialenosť
-                        if (distance > maxDistance) {
-                            maxDistance = distance;
-                            farthestPosition = {row, col};
-                        }
-                    }
-                }
-            }
+            // Overíme, že existuje cesta z počiatočnej pozície do cieľa
+            generatePath();
 
-            // Ak existuje vzdialená pozícia, nastavíme ju ako počiatočnú
-            if (maxDistance != -1) {
-                startPosition = farthestPosition;
-
-                // Overíme, že existuje cesta z počiatočnej pozície do cieľa
-                generatePath();
-
-                if (!path.empty()) {
-                    break;
-                }
+            if (!path.empty()) {
+                break;
             }
         }
     }
+}
 
-    void MapModule::generatePath() {
-        path.clear();
-        int row = startPosition.first;
-        int col = startPosition.second;
+void MapModule::generatePath() {
+    path.clear();
+    int row = startPosition.first;
+    int col = startPosition.second;
 
-        while (row < rows - 1 && col < cols - 1) {
-            path.emplace_back(row, col);
+    while (row < rows - 1 && col < cols - 1) {
+        path.emplace_back(row, col);
 
-            if (map[row + 1][col] == 0) {
-                row++;
-            } else if (map[row][col + 1] == 0) {
-                col++;
-            } else {
-                break; // Ak sa nedá pohnúť, ukončí trasu
-            }
-        }
-        if (row == rows - 2 && col == cols - 2) {
-            path.emplace_back(row, col); // Pridaj cieľ
+        if (map[row + 1][col] == 0) {
+            row++;
+        } else if (map[row][col + 1] == 0) {
+            col++;
         } else {
-            path.clear(); // Vyprázdni trasu, ak nedosiahne cieľ
+            break; // Ak sa nedá pohnúť, ukončí trasu
         }
     }
+    if (row == rows - 2 && col == cols - 2) {
+        path.emplace_back(row, col); // Pridaj cieľ
+    } else {
+        path.clear(); // Vyprázdni trasu, ak nedosiahne cieľ
+    }
+}
 
-    void MapModule::logToJson(const std::pair<int, int> &position) {
-        std::ofstream outFile("map_log.json", std::ios::app);
-        if (outFile.is_open()) {
-            outFile << "{ \"row\": " << position.first << ", \"col\": " << position.second << " }\n";
-            outFile.close();
-        }
+void MapModule::logToJson(const std::pair<int, int> &position) {
+    std::ofstream outFile("../TestModules/map_log.json", std::ios::app);
+    if (outFile.is_open()) {
+        outFile << "{ \"row\": " << position.first << ", \"col\": " << position.second << " }\n";
+        outFile.close();
     }
+}
 
 //
 //    void MapModule::drawButtons() {
@@ -164,7 +165,7 @@ void MapModule::run() {
 
 
 void MapModule::saveMapToJson() {
-    std::ofstream outFile("map.json");
+    std::ofstream outFile("../TestModules/map.json");
     if (outFile.is_open()) {
         nlohmann::json j;
         j["rows"] = rows;
@@ -182,8 +183,6 @@ void MapModule::saveMapToJson() {
 }
 
 
-    std::string MapModule::getName() const {
-        return "Map Module";
-    }
+
 
 

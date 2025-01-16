@@ -3,6 +3,7 @@
 class Button : public Element {
 private:
     ImVec2 size;
+    int moduleID = -1;
 public:
     Button(const std::string& lbl = "", const ImVec2& pos = ImVec2(0.0f, 0.0f), const ImVec2& sz = ImVec2(100.0f, 25.0f))
             : Element(pos, lbl), size(sz) {}
@@ -19,4 +20,5 @@ public:
 
     void to_json(nlohmann::json &j) const override;
     void from_json(const nlohmann::json &j, ImVec2 resolution) override;
+    std::vector<Setting> getSettings()  override;
 };
