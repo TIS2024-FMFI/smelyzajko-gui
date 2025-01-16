@@ -50,6 +50,8 @@ public:
     void handleClicksOnElements(std::vector<Element*>& elements);
     bool isAnyPendingElement(std::vector<Element*>& elements);
     void setupShortcuts() override;
+    void saveTemplate();
+    void processFileDialog();
     TemplateManager templateManager = TemplateManager(true);
 
 private:
