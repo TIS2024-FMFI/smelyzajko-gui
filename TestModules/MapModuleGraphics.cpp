@@ -37,6 +37,8 @@ void MapModuleGraphics::loadMap() {
 
 void MapModuleGraphics::draw(ImGuiIO &io) {
     loadMap();
+    cellSize = std::min(size.x / cols, size.y / rows);
+
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
     // Draw map

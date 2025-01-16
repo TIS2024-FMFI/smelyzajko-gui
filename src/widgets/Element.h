@@ -22,10 +22,10 @@ class Element {
 protected:
     ImVec2 position;
     std::string label;
-    bool pendingChooseWhatToDo;
-    bool pendingEdit;
-    bool pendingDelete;
-    ImVec2 deletePopupPosition;
+    bool pendingChooseWhatToDo = false;
+    bool pendingEdit = false;
+    bool pendingDelete = false;
+    ImVec2 popupPosition;
     int zIndex = 0;
     bool configurationMode;
     bool wasDragged = false;
@@ -42,7 +42,7 @@ public:
     bool getPendingDelete() const;
     bool getPendingEdit() const;
     bool getPendingChooseWhatToDo() const;
-    ImVec2 getDeletePopupPosition();
+    ImVec2 getPopupPosition();
     int getZIndex() const;
     bool getWasDragged() const;
 
@@ -52,7 +52,7 @@ public:
     void setPendingDelete(bool newBool);
     void setPendingEdit(bool newBool);
     void setPendingChooseWhatToDo(bool newBool);
-    void setDeletePopupPosition(ImVec2 newPopupPosition);
+    void setPopupPosition(ImVec2 newPopupPosition);
     void setZIndex(int z);
     void setConfigurationMode(bool newBool);
     void setWasDragged(bool value);
@@ -61,7 +61,7 @@ public:
     // Utility
     void move(const ImVec2& delta);
     virtual void draw(ImGuiIO& io) = 0;
-    void detectRightClickDelete();
+    void detectRightClick();
     virtual ImRect getBoundingBox() const = 0;
 
     virtual void handleClicks(ImGuiIO& io) = 0;

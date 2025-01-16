@@ -41,16 +41,16 @@ void  Element::setPendingChooseWhatToDo(bool newPendingChooseWhatToDo) {
     pendingChooseWhatToDo = newPendingChooseWhatToDo;
 }
 
-ImVec2 Element::getDeletePopupPosition() {
-    return deletePopupPosition;
+ImVec2 Element::getPopupPosition() {
+    return popupPosition;
 }
 
-void Element::setDeletePopupPosition(ImVec2 newPopupPosition) {
-    deletePopupPosition = newPopupPosition;
+void Element::setPopupPosition(ImVec2 newPopupPosition) {
+    popupPosition = newPopupPosition;
 }
 
-void Element::detectRightClickDelete() {
-    deletePopupPosition = ImGui::GetMousePos();
+void Element::detectRightClick() {
+    popupPosition = ImGui::GetMousePos();
     pendingChooseWhatToDo = true; // Mark that the element is pending deletion
 }
 
