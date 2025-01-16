@@ -14,12 +14,16 @@ public:
     CounterModuleGraphics();
     void draw(ImGuiIO &io) override;
     void updateValueOfModule( int value) override;
+
 private:
     int counter;
     std::atomic<bool> stopGeneration;
-    std::vector<int> logValues;
+    std::vector<std::string> logValues;
     std::mutex logMutex;
     std::thread generatorThread;
+    bool autoscrollEnabled;
+    float scrollOffset;
+
 
 };
 

@@ -21,4 +21,5 @@ public:
     int moduleId;
     std::string moduleName;
 };
+
 #endif // MODULE_H

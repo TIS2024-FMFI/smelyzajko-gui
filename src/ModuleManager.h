@@ -3,8 +3,10 @@
 #define MODULEMANAGER_H
 #include <vector>
 #include "Module.h"
+#include "../TestModules/TestGraphicModule.h"
 #include "../TestModules/MapModuleGraphics.h"
 #include "../TestModules/CounterModuleGraphics.h"
+#include "../TestModules/UltrasonicModuleGraphics.h"
 
 
 class ModuleManager  {
@@ -30,7 +32,8 @@ public:
 private:
     std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
             {"Map Graphic Element", []() { return new MapModuleGraphics(); }},
-             {"Counter Graphic Element", []() { return new CounterModuleGraphics(); }}
+             {"Counter Graphic Element", []() { return new CounterModuleGraphics(); }},
+            {"Ultrasonic Module", []() { return new UltrasonicModuleGraphics(); }},
     };
 
 
