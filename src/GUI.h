@@ -19,6 +19,7 @@
 #include "widgets/Slider.h"
 #include "widgets/SingleLineLabel.h"
 #include "widgets/MultiLineLabel.h"
+#include "widgets/TextInput.h"
 
 #include "../TestModules/MapModule.h"
 #include "../TestModules/CounterModule.h"

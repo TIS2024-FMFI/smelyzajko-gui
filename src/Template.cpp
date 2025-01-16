@@ -10,6 +10,7 @@
 #include "widgets/Rectangle.h"
 #include "widgets/SingleLineLabel.h"
 #include "widgets/MultiLineLabel.h"
+#include "widgets/TextInput.h"
 #include "TemplateManager.h"
 #include "ModuleManager.h"
 
@@ -90,6 +91,7 @@ void Template::from_json(const nlohmann::json& j) {
                         {"rectangle", []() { return new Rectangle(); }},
                         {"single-line-label", []() { return new SingleLineLabel(); }},
                         {"multi-line-label", []() { return new MultiLineLabel(); }},
+                        {"text-input", []() { return  new TextInput(); }}
                 };
 
                 auto it = elementCreators.find(type);
