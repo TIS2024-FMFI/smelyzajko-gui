@@ -7,6 +7,7 @@
 
 int ModuleManager::registerModule(const std::string &name, Module *module) {
     modules.push_back(module);
+    module->moduleName = name;
     return modules.size() - 1;
 }
 
@@ -72,8 +73,8 @@ const std::unordered_map<std::string, std::function<GraphicModule *()>> &ModuleM
 void ModuleManager::updateValueOfModule(int moduleID, std::string value) {
     graphicModules[moduleID]->updateValueOfModule(value);
 }
-void ModuleManager::updateValueOfModule(int moduleID,std::vector<int> value) {
-    graphicModules[moduleID]->updateValueOfModule(value);
+void ModuleManager::updateValueOfModule(int moduleID, std::vector<int> value) {
+        graphicModules[moduleID]->updateValueOfModule(value);
 }
 void ModuleManager::updateValueOfModule(int moduleID, int value) {
     graphicModules[moduleID]->updateValueOfModule(value);

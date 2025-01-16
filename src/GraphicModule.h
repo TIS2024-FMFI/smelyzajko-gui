@@ -1,8 +1,8 @@
 #ifndef SMELYZAJKO_GUI_GRAPHICMODULE_H
 #define SMELYZAJKO_GUI_GRAPHICMODULE_H
 #include "iostream"
-#include "imgui.h"
-#include "libs/json.hpp"
+#include "../libs/imgui/imgui.h"
+#include "../libs/json.hpp"
 
 
 class GraphicModule {

@@ -1,5 +1,7 @@
 #include <iostream>
 #include "ConfigurationMode.h"
+#include "TestModules/CounterModule.h"
+#include "TestModules/MapModule.h"
 
 #include <iostream> // For std::cerr (debugging)
 #ifdef _WIN32
@@ -20,6 +22,20 @@ void playBeep() {
     std::cout << "\a"; // Linux/macOS beep
 }
 #endif
+
+
+void ConfigurationMode::initializeModules() {
+    ModuleManager& moduleManager = ModuleManager::getInstance();
+
+//    // Registering CounterModule and MapModule
+//    moduleManager.registerModule("Map Module", new MapModule(&moduleManager));
+//    moduleManager.registerModule("Counter Module", new CounterModule(&moduleManager));
+
+    new MapModule(&moduleManager);
+    new CounterModule(&moduleManager);
+
+}
+
 
 inline bool isOverlapping(const ImRect& a, const ImRect& b) {
     return !(a.Max.x <= b.Min.x ||  // No overlap on the left
@@ -118,6 +134,82 @@ ImVec2 findNearestFreeGridCorner(const std::vector<Element*>& elements, const Im
     return ImVec2(-1.0f, menuBarHeight);
 }
 
+void renderSettingsPopupForModule(const std::string& moduleName, const std::string& jsonFilePath) {
+    static int frequency = 0;
+    static bool logEnabled = false;
+    static bool settingsVisible = false;
+
+    static std::string currentModuleName;
+    static nlohmann::json config;
+
+    // Load JSON if not already loaded
+    if (currentModuleName != moduleName) {
+        currentModuleName = moduleName;
+
+        // Open JSON file
+        std::ifstream file(jsonFilePath);
+        if (!file.is_open()) {
+            std::cerr << "Failed to open JSON file: " << jsonFilePath << std::endl;
+            return;
+        }
+
+        file >> config;
+
+        // Load the specific module's settings
+        for (const auto& module : config["graphicModules"]) {
+            if (module["name"] == moduleName) {
+                frequency = static_cast<int>(module["graphicsFrequency"]);
+                logEnabled = module["graphicsLogEnabled"];
+                settingsVisible = true;
+                break;
+            }
+        }
+    }
+
+    // Render the settings window
+    if (settingsVisible) {
+        std::string windowTitle = "Settings: " + moduleName;
+
+        ImGui::Begin(windowTitle.c_str(), &settingsVisible, ImGuiWindowFlags_AlwaysAutoResize);
+
+        ImGui::Text("Module: %s", moduleName.c_str());
+        ImGui::SliderInt("Graphics Frequency", &frequency, 0, 100);
+        ImGui::Checkbox("Enable Logging", &logEnabled);
+
+        ImGui::NewLine();
+
+        // Apply button to save changes
+        if (ImGui::Button("Apply")) {
+            for (auto& module : config["graphicModules"]) {
+                if (module["name"] == moduleName) {
+                    module["graphicsFrequency"] = frequency;
+                    module["graphicsLogEnabled"] = logEnabled;
+                    break;
+                }
+            }
+
+            // Save changes to the JSON file
+            std::ofstream outFile(jsonFilePath);
+            if (!outFile.is_open()) {
+                std::cerr << "Failed to write to JSON file: " << jsonFilePath << std::endl;
+            } else {
+                outFile << config.dump(4); // Save formatted JSON
+                std::cout << "Updated settings for " << moduleName << " in JSON file." << std::endl;
+            }
+            settingsVisible = false; // Close the settings window
+        }
+
+        ImGui::SameLine();
+
+        // Cancel button to discard changes
+        if (ImGui::Button("Cancel")) {
+            settingsVisible = false; // Close the settings window without applying changes
+        }
+
+        ImGui::End();
+    }
+}
+
 void ConfigurationMode::setupShortcuts() {
 
     shortcutsManager.registerShortcut("Ctrl+Q", [this]() {
@@ -141,6 +233,7 @@ int ConfigurationMode::run() {
     initializeWindow(window);
     shortcutsManager.setWindow(window);
     setupShortcuts();
+    initializeModules();
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -465,33 +558,37 @@ void ConfigurationMode::setupMenuBar() {
             ImGui::EndMenu();
         }
 
+        static nlohmann::json config;
+        static bool isConfigLoaded = false;
+
+        // Load JSON once
+        if (!isConfigLoaded) {
+            std::ifstream file("../templates/template1.json");
+            if (!file.is_open()) {
+                std::cerr << "Failed to open JSON file: " << "../templates/template1.json" << std::endl;
+                return;
+            }
+            file >> config;
+            isConfigLoaded = true;
+        }
+
+        // Render the Configuration menu
         if (ImGui::BeginMenu("Configuration")) {
-//            for (Module& module : modules) {
-//                if (ImGui::BeginMenu(module.moduleName.c_str())) {
-//                    // Show Graphics and Text parts as separate items
-//                    if (ImGui::BeginMenu("Graphics")) {
-//                        // Open Settings Popup for Graphics part
-//                        std::string popupName = std::string(module.moduleName) + " Graphics Settings";
-//                        if (ImGui::Button("Settings")) {
-//                            ImGui::OpenPopup(popupName.c_str());
-//                        }
-//                        renderSettingsPopup(module, "Graphics");
-//                        ImGui::EndMenu();
-//                    }
-//
-//                    if (ImGui::BeginMenu("Text")) {
-//                        // Open Settings Popup for Text part
-//                        std::string popupName = std::string(module.moduleName) + " Text Settings";
-//                        if (ImGui::Button("Settings")) {
-//                            ImGui::OpenPopup(popupName.c_str());
-//                        }
-//                        renderSettingsPopup(module, "Text");
-//                        ImGui::EndMenu();
-//                    }
-//
-//                    ImGui::EndMenu();
-//                }
-//            }
+            static std::set<std::string> uniqueModules;
+
+            // Iterate through modules to populate the menu
+            for (const auto& module : config["graphicModules"]) {
+                std::string moduleName = module["name"];
+                if (uniqueModules.find(moduleName) == uniqueModules.end()) {
+                    uniqueModules.insert(moduleName);
+
+                    // Create a menu item for each unique module
+                    if (ImGui::MenuItem(moduleName.c_str())) {
+                        renderSettingsPopupForModule(moduleName, "../templates/template1.json");
+                    }
+                }
+            }
+
             ImGui::EndMenu();
         }
 
@@ -601,61 +698,12 @@ void ConfigurationMode::setupMenuBar() {
 }
 
 
-void ConfigurationMode::renderSettingsPopup(Module& module, const std::string& part) {
-    std::string popupName = std::string(module.moduleName) + " " + part + " Settings";
 
-    // Set the size and position of the popup to be centered on the screen
-    ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_Always);  // Set size of the popup
-    ImVec2 windowSize = ImGui::GetIO().DisplaySize; // Get screen dimensions
-    ImVec2 popupPos = ImVec2(windowSize.x / 2 - 200, windowSize.y / 2 - 150);  // Centering position
-    ImGui::SetNextWindowPos(popupPos, ImGuiCond_Always);  // Set the position of the popup
 
-    // Begin the modal popup
-    if (ImGui::BeginPopupModal(popupName.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-        // Center the content inside the popup
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(20, 20));  // Add padding for a better layout
-        ImGui::Text("Settings for %s", popupName.c_str());
 
-        // Frequency Slider and Logging Checkbox
-        if (part == "Graphics") {
-            float frequency = module.GetGraphicsFrequency();
-            int frequencyInt = static_cast<int>(frequency);  // Convert to integer for the slider
-            if (ImGui::SliderInt("Frequency", &frequencyInt, 0, 100)) {
-                module.SetGraphicsFrequency(static_cast<float>(frequencyInt)); // Set integer as frequency
-            }
 
-            bool logEnabled = module.IsGraphicsLoggingEnabled();
-            if (ImGui::Checkbox("Enable Logging", &logEnabled)) {
-                module.SetGraphicsLoggingEnabled(logEnabled);
-            }
-        } else if (part == "Text") {
-            float frequency = module.GetTextFrequency();
-            int frequencyInt = static_cast<int>(frequency);  // Convert to integer for the slider
-            if (ImGui::SliderInt("Frequency", &frequencyInt, 0, 100)) {
-                module.SetTextFrequency(static_cast<float>(frequencyInt)); // Set integer as frequency
-            }
 
-            bool logEnabled = module.IsTextLoggingEnabled();
-            if (ImGui::Checkbox("Enable Logging", &logEnabled)) {
-                module.SetTextLoggingEnabled(logEnabled);
-            }
-        }
 
-        // Apply and Cancel buttons
-        ImGui::NewLine();
-        if (ImGui::Button("Apply")) {
-            ImGui::CloseCurrentPopup();
-        }
-
-        ImGui::SameLine();
-        if (ImGui::Button("Cancel")) {
-            ImGui::CloseCurrentPopup();
-        }
-
-        ImGui::PopStyleVar();  // Restore the style to default
-        ImGui::EndPopup();
-    }
-}
 
 
 void ConfigurationMode::drawGrid() const {

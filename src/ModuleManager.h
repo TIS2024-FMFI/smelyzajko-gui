@@ -26,8 +26,8 @@ public:
     void clearModules();
     std::vector<GraphicModule*> graphicModules;
 
-private:
     std::vector<Module*> modules ;
+private:
     std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
             {"Map Module", []() { return new MapModuleGraphics(); }},
              {"Counter Module", []() { return new CounterModuleGraphics(); }}
