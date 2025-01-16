@@ -19,6 +19,8 @@ int OperatingMode::run() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        shortcutsManager.processShortcuts();
+
         setupMenuBar();
 
         ImGui::SetNextWindowPos(ImVec2(0, 0)); // Top-left corner of the screen
@@ -33,7 +35,7 @@ int OperatingMode::run() {
                      ImGuiWindowFlags_NoScrollbar    // Disable scrollbar (optional)
         );
 
-        if (!templateManager.getActiveTemplateModules().empty()){
+        if (!templateManager.getActiveTemplateModules().empty()) {
             moduleManager.setActiveModuleAndDraw(templateManager.getActiveTemplateModules(),io);
         }
 
@@ -87,7 +89,6 @@ void OperatingMode::setupMenuBar() {
 }
 
 
-
 void OperatingMode::drawElements() {
     // First, draw the rectangles
     auto activeElements = templateManager.getActiveTemplateElements();
@@ -102,63 +103,32 @@ void OperatingMode::drawElements() {
     }
 }
 
-//
-//void OperatingMode::renderSettingsPopup(Module& module, const std::string& part) {
-//    std::string popupName = std::string(module.moduleName) + " " + part + " Settings";
-//
-//    // Set the size and position of the popup to be centered on the screen
-//    ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_Always);  // Set size of the popup
-//    ImVec2 windowSize = ImGui::GetIO().DisplaySize; // Get screen dimensions
-//    ImVec2 popupPos = ImVec2(windowSize.x / 2 - 200, windowSize.y / 2 - 150);  // Centering position
-//    ImGui::SetNextWindowPos(popupPos, ImGuiCond_Always);  // Set the position of the popup
-//
-//    // Begin the modal popup
-//    if (ImGui::BeginPopupModal(popupName.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-//        // Center the content inside the popup
-//        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(20, 20));  // Add padding for a better layout
-//        ImGui::Text("Settings for %s", popupName.c_str());
-//
-//        // Frequency Slider and Logging Checkbox
-//        if (part == "Graphics") {
-//            float frequency = module.GetGraphicsFrequency();
-//            int frequencyInt = static_cast<int>(frequency);  // Convert to integer for the slider
-//            if (ImGui::SliderInt("Frequency", &frequencyInt, 0, 100)) {
-//                module.SetGraphicsFrequency(static_cast<float>(frequencyInt)); // Set integer as frequency
-//            }
-//
-//            bool logEnabled = module.IsGraphicsLoggingEnabled();
-//            if (ImGui::Checkbox("Enable Logging", &logEnabled)) {
-//                module.SetGraphicsLoggingEnabled(logEnabled);
-//            }
-//        } else if (part == "Text") {
-//            float frequency = module.GetTextFrequency();
-//            int frequencyInt = static_cast<int>(frequency);  // Convert to integer for the slider
-//            if (ImGui::SliderInt("Frequency", &frequencyInt, 0, 100)) {
-//                module.SetTextFrequency(static_cast<float>(frequencyInt)); // Set integer as frequency
-//            }
-//
-//            bool logEnabled = module.IsTextLoggingEnabled();
-//            if (ImGui::Checkbox("Enable Logging", &logEnabled)) {
-//                module.SetTextLoggingEnabled(logEnabled);
-//            }
-//        }
-//
-//        // Apply and Cancel buttons
-//        ImGui::NewLine();
-//        if (ImGui::Button("Apply")) {
-//            ImGui::CloseCurrentPopup();
-//        }
-//
-//        ImGui::SameLine();
-//        if (ImGui::Button("Cancel")) {
-//            ImGui::CloseCurrentPopup();
-//        }
-//
-//        ImGui::PopStyleVar();  // Restore the style to default
-//        ImGui::EndPopup();
-//    }
-//}
+void OperatingMode::setupShortcuts() {
+    shortcutsManager.setWindow(window);
 
-void OperatingMode::addElementToActiveTemplate(Element* element) {
-    templateManager.addElementToActiveTemplate(element);
+    shortcutsManager.registerShortcut("Ctrl+Left", [this]() {
+        switchTemplate(-1);
+    });
+
+    shortcutsManager.registerShortcut("Ctrl+Right", [this]() {
+        switchTemplate(1);
+    });
+}
+
+void OperatingMode::switchTemplate(int direction) {
+    if (templateManager.getAllTemplates().empty()) {
+        std::cerr << "No templates to switch between." << std::endl;
+        return;
+    }
+
+    // Update the index (wrap around if necessary)
+    int templateCount = templateManager.getAllTemplates().size();
+    currentTemplateIndex = (currentTemplateIndex + direction + templateCount) % templateCount;
+
+    // Activate the new template
+    Template activeTemplate = templateManager.getAllTemplates()[currentTemplateIndex];
+    templateManager.setActiveTemplate(activeTemplate);
+    std::string activeTemplateName = templateManager.getActiveTemplateName();
+    std::string windowTitle = std::string("GUI") + " - " + activeTemplateName;
+    glfwSetWindowTitle(window, windowTitle.c_str());
 }
