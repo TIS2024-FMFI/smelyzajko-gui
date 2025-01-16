@@ -41,7 +41,7 @@ examples/*.o.tmp
 examples/*.out.js
 examples/*.out.wasm
 examples/example_glfw_opengl3/web/*
-examples/example_glfw_wgpu/web/*
+examples/example_glfw_wgpu/web/index.html
 examples/example_glfw_wgpu/external/*
 examples/example_sdl2_opengl3/web/*
 

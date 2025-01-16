@@ -2,7 +2,7 @@
 
 #include "GUI.h"
 
-GUI::GUI() {
+GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()) {
     if (!glfwInit()) {
         throw std::runtime_error("GLFW initialization error");
     }
@@ -28,20 +28,16 @@ GUI::GUI() {
 
 void GUI::setupImGui() {
     IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
+    io.DisplaySize = ImVec2(static_cast<float>(monitorWidth), static_cast<float>(monitorHeight));
 
     ImFontConfig fontConfig;
-    // higher resolution when rendering text
     fontConfig.RasterizerDensity = 5.0f;
 
-    ImGuiIO& io = ImGui::GetIO();
     io.Fonts->AddFontDefault(&fontConfig);
-
-     // io.Fonts->AddFontFromFileTTF("../Turbo-Pascal-Font.ttf", 18.0f);
 }
 
 void GUI::cleanupImGui() {
@@ -49,3 +45,8 @@ void GUI::cleanupImGui() {
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
+
+
+
+
+

@@ -67,21 +67,32 @@ void Button::to_json(nlohmann::json &j) const {
             {"type", "button"},
             {"label", label},
             {"position", {position.x, position.y}},
-            {"size", {size.x, size.y}}
+            {"size", {size.x, size.y}},
+            {"moduleID", moduleID}
     };
 }
 
-void Button::from_json(const nlohmann::json &j) {
+void Button::from_json(const nlohmann::json &j, ImVec2 resolution) {
     if (j.contains("type") && j["type"] != "button") {
         throw std::invalid_argument("Invalid type for Checkbox: expected 'button'");
     }
 
-    Element::from_json(j);
+    Element::from_json(j, resolution);
 
     if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
         size.x = j["size"][0];
         size.y = j["size"][1];
     }
+    if (j.contains("moduleID") && j["moduleID"].is_number_integer()) {
+        moduleID = j["moduleID"];
+    } else {
+        moduleID = -1;
+    }
+
+    ImVec2 scale = Element::getScaleFactors(resolution);
+
+    position = ImVec2(position.x * scale.x, position.y * scale.y);
+    size = ImVec2(size.x * scale.x, size.y * scale.y);
 }
 
 void Button::setStyles() {
@@ -95,4 +106,11 @@ void Button::setStyles() {
 void Button::removeStyles() {
     ImGui::PopStyleVar(1); // Restore the default border size
     ImGui::PopStyleColor(4); // Restore the previous colors (Button, Hovered, Active, Border)
+}
+
+std::vector<Setting> Button::getSettings() {
+    return {
+            {"moduleID",moduleID, [this](const SettingValue& val) { moduleID = std::get<int>(val); }},
+            {"label", label, [this](const SettingValue& val) { label = std::get<std::string>(val); }}
+    };
 }

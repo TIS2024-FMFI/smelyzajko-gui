@@ -4,8 +4,7 @@
 #include <sstream>
 #include <iostream>
 
-
-int ModuleManager::gegisterModule(const std::string &name, Module *module) {
+int ModuleManager::registerModule(const std::string &name, Module *module) {
     modules.push_back(module);
     return modules.size() - 1;
 }
@@ -13,40 +12,57 @@ int ModuleManager::gegisterModule(const std::string &name, Module *module) {
 void ModuleManager::clearModules() {
     modules.clear();
 }
-
 const std::unordered_map<std::string, std::function<GraphicModule *()>> &ModuleManager::getModuleConstructors() const {
     return moduleConstructors;
 }
 
-void ModuleManager::updateValueOfModule(int moduleID, std::string value) {
-    graphicModules[moduleID]->updateValueOfModule(value);
+void ModuleManager::updateValueOfModule(int moduleID,int graphicModuleID, std::string value) {
+    for (GraphicModule *module : graphicModules) {
+        if (module->getGraphicModuleID() == graphicModuleID && module->getModuleID() == moduleID) {
+            module->updateValueOfModule(value);
+        }
+    }
 }
-void ModuleManager::updateValueOfModule(int moduleID,std::vector<int> value) {
-    graphicModules[moduleID]->updateValueOfModule(value);
+void ModuleManager::updateValueOfModule(int moduleID,int graphicModuleID,std::vector<int> value) {
+    for (GraphicModule *module : graphicModules) {
+        if (module->getGraphicModuleID() == graphicModuleID && module->getModuleID() == moduleID) {
+            module->updateValueOfModule(value);
+        }
+    }
 }
-void ModuleManager::updateValueOfModule(int moduleID, int value) {
-    graphicModules[moduleID]->updateValueOfModule(value);
+void ModuleManager::updateValueOfModule(int moduleID,int graphicModuleID, int value) {
+    for (GraphicModule *module : graphicModules) {
+        if (module->getGraphicModuleID() == graphicModuleID && module->getModuleID() == moduleID) {
+            module->updateValueOfModule(value);
+        }
+    }
 }
 
-int ModuleManager::registerGraphicModule(const std::string &name, int moduleID) {
-    GraphicModule *graphicModule = moduleConstructors.at(name)();
+int ModuleManager::registerGraphicModule(const std::string &graphicElementName,const std::string &moduleName, int moduleID) {
+    GraphicModule *graphicModule = moduleConstructors.at(graphicElementName)();
     graphicModule->setGraphicModuleID(graphicModules.size());
+    graphicModule->setModuleName(moduleName);
     graphicModule->setModuleID(moduleID);
     graphicModules.push_back(graphicModule);
     return graphicModules.size() - 1;
-
 }
+
 
 void ModuleManager::setActiveModuleAndDraw(std::vector<GraphicModule *> graphicModules_, ImGuiIO &io) {
     for (GraphicModule *module : graphicModules) {
         for (GraphicModule *module_ : graphicModules_) {
-            if (module->getGraphicModuleID() == module_->getGraphicModuleID()) {
+            if (module->getGraphicElementName() == module_->getGraphicElementName() && module->getModuleName() == module_->getModuleName()) {
                 auto pos = module_->getPos();
                 auto size = module_->getSize();
                 module->setPos(pos);
                 module->setSize(size);
                 module->draw(io);
             }
+
         }
     }
+}
+
+std::vector<Module *> ModuleManager::getModules() const {
+    return modules;
 }

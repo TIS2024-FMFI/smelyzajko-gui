@@ -23,10 +23,14 @@ void SingleLineLabel::to_json(nlohmann::json& j) const {
     };
 }
 
-void SingleLineLabel::from_json(const nlohmann::json& j) {
+void SingleLineLabel::from_json(const nlohmann::json& j, ImVec2 resolution) {
     if (j.contains("type") && j["type"] != "single-line-label") {
         throw std::invalid_argument("Invalid type for Label: expected 'single-line-label'");
     }
 
-    Label::from_json(j);
+    Label::from_json(j, resolution);
+
+    ImVec2 scale = Element::getScaleFactors(resolution);
+
+    position = ImVec2(position.x * scale.x, position.y * scale.y);
 }

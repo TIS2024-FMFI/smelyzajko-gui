@@ -1,37 +1,63 @@
 #pragma once
 #include "GUI.h"
-#include "TemplateManager.h"
 #include <algorithm>
 #include "Module.h"
-#include "ModuleManager.h"
+#include "ImGuiFileDialog.h"
+
+
 
 class ConfigurationMode : GUI {
 public:
-    ModuleManager moduleManager;
 
+    ConfigurationMode(YAML::Node configFile) : GUI(configFile) {
+        std::vector<std::string> templateNames;
 
-    ConfigurationMode() : io(ImGui::GetIO()) {}
+        if (configFile["templates"]) {
+            for (const auto& templateNode : configFile["templates"]) {
+                std::string templateName = templateNode.as<std::string>();
+                templateNames.push_back(templateName);
+            }
+        } else {
+            std::cerr << "No templates found in config file." << std::endl;
+        }
 
-    TemplateManager templateManager;
-    ImGuiIO& io;
+        if (templateNames.empty()) {
+            templateManager = TemplateManager(true);
+        } else {
+            templateManager = TemplateManager(templateNames, true);
+        }
+    };
 
     int run() override;
 
     void addElementToActiveTemplate(Element* element);
 
     void drawElements();
+    void drawElementsWithSnappingOn();
     void setupMenuBar();
     void drawGrid() const;
     void bringElementToTop(Element* element);
-    void renderSettingsPopup(Module& module, const std::string& part);
-
+//    void renderSettingsPopup(Module& module, const std::string& part);
     void createFloatSliderSettings();
     void createIntSliderSettings();
     void createLabelSettings();
+    void setupShortcuts();
+    void processShortcuts();
+    void initializeWindow(GLFWwindow* window);
+    void handleElementClick(Element* element,int i);
+    TemplateManager templateManager = TemplateManager(true);
+
 private:
     float gridSize = 60.0f;
     bool isSnapping = false;
     bool showGrid = false;
-};
+    float menuBarHeight;
 
+    void addModuleToActiveTemplate(GraphicModule *graphicModule);
+
+
+
+    const float minGridValue = 10.0f;
+    const float maxGridValue = 1000.0f;
+};
 

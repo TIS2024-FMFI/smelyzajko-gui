@@ -1,5 +1,5 @@
 #include "Rectangle.h"
-
+#include <iostream>
 ImVec2 Rectangle::getSize() const {
     return size;
 }
@@ -34,7 +34,6 @@ void Rectangle::draw(ImGuiIO& io) {
 
     draw_list->AddRectFilled(rect_min, rect_max, IM_COL32(20, 20, 255, 255));
     draw_list->AddRect(rect_min, rect_max, IM_COL32(255, 255, 255, 255)); // White outline
-
     if (configurationMode) {
         // Draw the resizing handle
         ImVec2 handle_screen_pos_min = ImVec2(resize_handle_pos.x + ImGui::GetWindowPos().x - handle_size.x,
@@ -87,24 +86,92 @@ void Rectangle::handleClicks(ImGuiIO &io) {
 
 void Rectangle::to_json(nlohmann::json& j) const {
     j = nlohmann::json{
-            {"type", "rectangle"},
-            {"label", label},
+            {"graphicElementId",graphicElementId},
+            {"graphicElementName", graphicElementName},
+            {"moduleId", moduleId},
+            {"moduleName", moduleName},
             {"position", {position.x, position.y}},
-            {"size", {size.x, size.y}}
+            {"size", {size.x, size.y}},
+            {"graphicsFrequency", graphicsFrequency},
+            {"graphicsLogEnabled", graphicsLogEnabled},
+            {"textFrequency", textFrequency},
+            {"textLogEnabled", textLogEnabled},
+            {"type", "rectangle"}
     };
 }
 
-void Rectangle::from_json(const nlohmann::json& j) {
-    if (j.contains("type") && j["type"] != "rectangle") {
-        throw std::invalid_argument("Invalid type for Rectangle: expected 'rectangle'");
+void Rectangle::from_json(const nlohmann::json& j, ImVec2 resolution) {
+    Element::from_json(j, resolution);
+    if (j.contains("graphicElementId") && j["graphicElementId"].is_number_integer()) {
+        graphicElementId = j["graphicElementId"];
     }
-
-    Element::from_json(j);
-
+    if (j.contains("graphicElementName") && j["graphicElementName"].is_string()) {
+        graphicElementName = j["graphicElementName"];
+        label = graphicElementName ;
+    }
+    if (j.contains("moduleId") && j["moduleId"].is_number_integer()) {
+        moduleId = j["moduleId"];
+    }
+    if (j.contains("moduleName") && j["moduleName"].is_string()) {
+        moduleName = j["moduleName"];
+        label += "\n" + moduleName;
+    }
+    if (j.contains("position") && j["position"].is_array() && j["position"].size() == 2) {
+        position.x = j["position"][0];
+        position.y = j["position"][1];
+    }
     if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
         size.x = j["size"][0];
         size.y = j["size"][1];
-    } else {
-        size = ImVec2(100.0f, 50.0f);
+        setSize({j["size"][0], j["size"][1]});
     }
+    if (j.contains("graphicsFrequency") && j["graphicsFrequency"].is_number_float()) {
+        graphicsFrequency = j["graphicsFrequency"];
+    }
+    if (j.contains("graphicsLogEnabled") && j["graphicsLogEnabled"].is_boolean()) {
+        graphicsLogEnabled = j["graphicsLogEnabled"];
+    }
+    if (j.contains("textFrequency") && j["textFrequency"].is_number_float()) {
+        textFrequency = j["textFrequency"];
+    }
+    if (j.contains("textLogEnabled") && j["textLogEnabled"].is_boolean()) {
+        textLogEnabled = j["textLogEnabled"];
+    }
+
+    ImVec2 scale = Element::getScaleFactors(resolution);
+    position = ImVec2(position.x * scale.x, position.y * scale.y);
+    size = ImVec2(size.x * scale.x, size.y * scale.y);
 }
+
+
+std::vector<Setting> Rectangle::getSettings() {
+    return {
+            {"graphicsFrequency",  graphicsFrequency,  [this](
+                    const SettingValue &val) { graphicsFrequency = std::get<int>(val); }},
+            {"graphicsLogEnabled", graphicsLogEnabled, [this](
+                    const SettingValue &val) { graphicsLogEnabled = std::get<bool>(val); }},
+            {"textFrequency",      textFrequency,      [this](const SettingValue &val) {
+                textFrequency = std::get<int>(val);
+            }},
+            {"textLogEnabled",     textLogEnabled,     [this](
+                    const SettingValue &val) { textLogEnabled = std::get<bool>(val); }}
+    };
+}
+
+
+void Rectangle::setModuleID(int id) {
+    moduleId = id;
+}
+
+void Rectangle::setGraphicElementId(int id) {
+    graphicElementId = id;
+}
+void Rectangle::setModuleName(std::string name) {
+    moduleName = name;
+    label = graphicElementName + "\n" + moduleName;
+}
+void Rectangle::setGraphicElementName(std::string name) {
+    graphicElementName = name;
+    label = graphicElementName+ "\n" + moduleName;
+}
+

@@ -92,11 +92,12 @@ void Slider<E>::to_json(nlohmann::json& j) const {
             {"minValue", minValue},
             {"maxValue", maxValue},
             {"value", value},
+            {"moduleId", moduleId}
     };
 }
 
 template<typename E>
-void Slider<E>::from_json(const nlohmann::json& j) {
+void Slider<E>::from_json(const nlohmann::json& j, ImVec2 resolution) {
     std::string type;
     if constexpr (std::is_same_v<E, int>) {
         type = "slider-int";
@@ -107,7 +108,7 @@ void Slider<E>::from_json(const nlohmann::json& j) {
         throw std::invalid_argument("Invalid type for Slider: expected either slider-int or slider-float");
     }
 
-    Element::from_json(j);
+    Element::from_json(j, resolution);
 
     if (j.contains("minValue")) {
         minValue = j["minValue"].get<E>();
@@ -118,4 +119,21 @@ void Slider<E>::from_json(const nlohmann::json& j) {
     if (j.contains("value")) {
         value = std::clamp(j["value"].get<E>(), minValue, maxValue);
     }
+    if (j.contains("moduleId")) {
+        moduleId = j["moduleId"].get<int>();
+    }
+
+    ImVec2 scale = Element::getScaleFactors(resolution);
+
+    position = ImVec2(position.x * scale.x, position.y * scale.y);
+    size = ImVec2(size.x * scale.x, size.y * scale.y);
+}
+template<typename E>
+std::vector<Setting> Slider<E>::getSettings() {
+    return {
+            {"moduleId",moduleId, [this](const SettingValue& val) { moduleId = std::get<int>(val); }},
+            {"label", label, [this](const SettingValue& val) { label = std::get<std::string>(val); }},
+            {"minValue", minValue, [this](const SettingValue& val) { minValue = std::get<E>(val); }},
+            {"maxValue", maxValue, [this](const SettingValue& val) { maxValue = std::get<E>(val); }}
+    };
 }

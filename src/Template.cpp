@@ -1,14 +1,16 @@
 #include "Template.h"
 #include <fstream>
 #include <stdexcept>
-#include <nlohmann/json.hpp>
+#include <GLFW/glfw3.h>
+
+#include "libs/json.hpp"
 #include "widgets/Button.h"
 #include "widgets/Slider.h"
 #include "widgets/Checkbox.h"
 #include "widgets/Rectangle.h"
 #include "widgets/SingleLineLabel.h"
 #include "widgets/MultiLineLabel.h"
-#include "iostream"
+#include "TemplateManager.h"
 #include "ModuleManager.h"
 
 using json = nlohmann::json;
@@ -37,8 +39,14 @@ nlohmann::json Template::to_json() const {
 
     for (const auto& element : elements) {
         json elementJson;
+
         element->to_json(elementJson);
-        j["elements"].push_back(elementJson);
+        std::cout<<elementJson["type"]<<std::endl;
+        if (elementJson["type"] == "rectangle"){
+            j["graphicModules"].push_back(elementJson);
+        }else {
+            j["elements"].push_back(elementJson);
+        }
     }
 
     for (const auto& module : graphicModules) {
@@ -57,6 +65,17 @@ void Template::from_json(const nlohmann::json& j) {
     } else {
         throw std::invalid_argument("Template JSON is missing a valid 'name' field.");
     }
+
+    if (j.contains("resolution") && j["resolution"].is_array() && j["resolution"].size() == 2) {
+        float width = j["resolution"][0];
+        float height = j["resolution"][1];
+
+        resolution.x = width;
+        resolution.y = height;
+    } else {
+        throw std::invalid_argument("Invalid or missing resolution in JSON!");
+    }
+
     if (j.contains("elements") && j["elements"].is_array()) {
         rightFlag ++;
         for (const auto& elementJson : j["elements"]) {
@@ -76,7 +95,7 @@ void Template::from_json(const nlohmann::json& j) {
                 auto it = elementCreators.find(type);
                 if (it != elementCreators.end()) {
                     Element* element = it->second();
-                    element->from_json(elementJson);
+                    element->from_json(elementJson, resolution);
                     elements.push_back(element);
                 } else {
                     throw std::invalid_argument("Unknown element type in JSON: " + type);
@@ -84,20 +103,29 @@ void Template::from_json(const nlohmann::json& j) {
             }
         }
     }
+
     if (j.contains("graphicModules") && j["graphicModules"].is_array()) {
         rightFlag ++;
         for (const auto& moduleJson : j["graphicModules"]) {
-            if (moduleJson.contains("name") && moduleJson["name"].is_string()) {
-                std::string name = moduleJson["name"];
+            if (moduleJson.contains("graphicElementName") && moduleJson["graphicElementName"].is_string()) {
+                std::string graphicElementName = moduleJson["graphicElementName"];
                 ModuleManager moduleManager;
                 std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = moduleManager.getModuleConstructors();
-                auto it = moduleConstructors.find(name);
-                if (it != moduleConstructors.end()) {
+                auto it = moduleConstructors.find(graphicElementName);
+                if (configurationMode) {
+                    // Create a Rectangle based on parameters in the template
+                    Rectangle* rectangle = new Rectangle();
+                    rectangle->from_json(moduleJson,resolution);
+                    elements.push_back(rectangle);
+                }
+                else if (it != moduleConstructors.end()) {
+                    // Create and add the module as usual
                     GraphicModule* module = it->second();
-                    module->from_json(moduleJson);
+                    module->from_json(moduleJson, resolution);
                     graphicModules.push_back(module);
+
                 } else {
-                    throw std::invalid_argument("Unknown module type in JSON: " + name);
+                    throw std::invalid_argument("Unknown module type in JSON:  " + graphicElementName);
                 }
             }
         }
@@ -108,13 +136,30 @@ void Template::from_json(const nlohmann::json& j) {
 }
 
 
-void Template::saveTemplate(const std::filesystem::path& filePath) const {
+void Template::saveTemplate(const std::filesystem::path& filePath, std::string newName) {
     std::ofstream outFile(filePath);
     if (!outFile) {
         throw std::runtime_error("Failed to open file for saving template: " + filePath.string());
     }
 
+    if (!newName.empty()) {
+        std::string fileName = filePath.filename().string();
+        if (fileName.size() > 5 && fileName.substr(fileName.size() - 5) == ".json") {
+            fileName = fileName.substr(0, fileName.size() - 5);  // Remove the ".json" part
+        }
+
+        name = fileName;
+    }
+
     json j = to_json();
+
+    GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* videoMode = glfwGetVideoMode(primaryMonitor);
+
+    int monitorWidth = videoMode->width;
+    int monitorHeight = videoMode->height;
+
+    j["resolution"] = {monitorWidth, monitorHeight};
     outFile << j.dump(4);
 }
 

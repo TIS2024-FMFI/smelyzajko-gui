@@ -2,73 +2,47 @@
     "elements": [],
     "graphicModules": [
         {
-            "graphicModuleId": 0,
-            "graphicsFrequency": 0.0,
-            "graphicsLogEnabled": true,
+            "graphicElementId": 0,
+            "graphicElementName": "Map Graphic Element",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
             "moduleId": 0,
-            "name": "Counter Module",
+            "moduleName": "Map Module",
             "position": [
-                100.0,
+                30.0,
                 50.0
             ],
             "size": [
-                200.0,
-                300.0
+                300.0,
+                200.0
             ],
-            "textFrequency": 0.0,
-            "textLogEnabled": true
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
         },
         {
-            "graphicModuleId": 0,
-            "graphicsFrequency": 0.0,
-            "graphicsLogEnabled": true,
+            "graphicElementId": 1,
+            "graphicElementName": "Counter Graphic Element",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
             "moduleId": 0,
-            "name": "Counter Module",
+            "moduleName": "Map Module",
             "position": [
-                100.0,
-                350.0
+                675.0,
+                77.0
             ],
             "size": [
-                200.0,
-                300.0
+                300.0,
+                200.0
             ],
-            "textFrequency": 0.0,
-            "textLogEnabled": true
-        },
-        {
-            "graphicModuleId": 1,
-            "graphicsFrequency": 0.0,
-            "graphicsLogEnabled": true,
-            "moduleId": 1,
-            "name": "Map Module",
-            "position": [
-                350.0,
-                250.0
-            ],
-            "size": [
-                350.0,
-                350.0
-            ],
-            "textFrequency": 0.0,
-            "textLogEnabled": true
-        },
-        {
-            "graphicModuleId": 1,
-            "graphicsFrequency": 0.0,
-            "graphicsLogEnabled": true,
-            "moduleId": 1,
-            "name": "Map Module",
-            "position": [
-                850.0,
-                250.0
-            ],
-            "size": [
-                350.0,
-                350.0
-            ],
-            "textFrequency": 0.0,
-            "textLogEnabled": true
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
         }
     ],
-    "name": "template5"
+    "name": "template5",
+    "resolution": [
+        1920,
+        1080
+    ]
 }

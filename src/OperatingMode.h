@@ -1,22 +1,36 @@
 #pragma once
 #include "GUI.h"
-#include "TemplateManager.h"
 #include <algorithm>
 #include "Module.h"
 class OperatingMode :  GUI {
 public:
-    OperatingMode() : io(ImGui::GetIO()) {}
-    ModuleManager moduleManager;
 
-    TemplateManager templateManager = TemplateManager();
-    ImGuiIO& io;
+    OperatingMode(YAML::Node configFile) : GUI(configFile) {
+        std::vector<std::string> templateNames;
+
+        if (configFile["templates"]) {
+            for (const auto& templateNode : configFile["templates"]) {
+                std::string templateName = templateNode.as<std::string>();
+                templateNames.push_back(templateName);
+            }
+        } else {
+            std::cerr << "No templates found in config file." << std::endl;
+        }
+
+        if (templateNames.empty()) {
+            templateManager = TemplateManager(false);
+        } else {
+            templateManager = TemplateManager(templateNames, false);
+        }
+    };
+
     int run() override;
     void drawElements();
     void setupMenuBar();
-    void renderSettingsPopup(Module& module, const std::string& part);
+//    void renderSettingsPopup(GraphicModule& module, const std::string& part);
     void addElementToActiveTemplate(Element *element);
     void bringElementToTop(Element *element);
-
+    TemplateManager templateManager = TemplateManager(false);
 
 private:
     float gridSize = 60.0f;
