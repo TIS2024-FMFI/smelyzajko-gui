@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <mutex>
+#include "Scrollbar.h"
 
 class MapModuleGraphics : public GraphicModule {
 public:
@@ -27,6 +28,7 @@ private:
     float scrollOffset;                  // Current scroll offset
     bool autoscrollEnabled;              // Enable or disable autoscroll
     std::mutex logMutex;                 // Mutex for protecting log access during updates
+    Scrollbar scrollbar;
 
     // Private methods
     void loadMap();                      // Load map data from a file
