@@ -20,9 +20,9 @@ class Element {
 protected:
     ImVec2 position;
     std::string label;
-    bool pendingChooseWhatToDo;
-    bool pendingEdit;
-    bool pendingDelete;
+    bool pendingChooseWhatToDo = false;
+    bool pendingEdit = false;
+    bool pendingDelete = false;
     ImVec2 deletePopupPosition;
     int zIndex = 0;
     bool configurationMode;
