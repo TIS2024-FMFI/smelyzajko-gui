@@ -21,7 +21,7 @@ public:
     void removeElementFromActiveTemplate(int index);
     void clearActiveTemplateElements();
     std::string getActiveTemplateName() const;
-    std::vector<Element *> getActiveTemplateElements();
+    std::vector<Element *>& getActiveTemplateElements();
     std::vector<GraphicModule *> getActiveTemplateModules();
     std::vector<Template> getAllTemplates();
     Template getActiveTemplate();

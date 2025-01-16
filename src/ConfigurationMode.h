@@ -36,7 +36,7 @@ public:
     void drawElementsWithSnappingOn();
     void setupMenuBar();
     void drawGrid() const;
-    void bringElementToTop(Element* element);
+    void bringElementToTop(std::vector<Element*>& elements, Element* element);
 //    void renderSettingsPopup(Module& module, const std::string& part);
     void createFloatSliderSettings();
     void createIntSliderSettings();
@@ -45,6 +45,8 @@ public:
     void processShortcuts();
     void initializeWindow(GLFWwindow* window);
     void handleElementClick(Element* element,int i);
+    void handleClicksOnElements(std::vector<Element*>& elements);
+    bool isAnyPendingElement(std::vector<Element*>& elements);
     TemplateManager templateManager = TemplateManager(true);
 
 private:

@@ -25,7 +25,7 @@ public:
     void clear();
 
     std::string getName() const;
-    std::vector<Element *> getElements();
+    std::vector<Element *> &getElements();
 
     void loadTemplate(const std::filesystem::path& filePath);
     void saveTemplate(const std::filesystem::path& filePath, std::string newName = "");
