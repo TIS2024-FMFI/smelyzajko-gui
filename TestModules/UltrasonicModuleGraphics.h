@@ -8,6 +8,7 @@
 #include <string>
 #include <mutex>
 #include <chrono>
+#include "Scrollbar.h"
 
 struct UltrasonicSensorData {
     float angle;    // Angle of the sensor
@@ -46,7 +47,7 @@ private:
     std::mutex logMutex;                 // Protects log updates
     int updateDelayMs = 500;             // Delay in milliseconds
     std::chrono::steady_clock::time_point lastUpdateTime; // Timer for updates
-
+    Scrollbar scrollbar;
     // Sensor update control
     int frameCounter = 0;
     int updateIntervalFrames = 4;
