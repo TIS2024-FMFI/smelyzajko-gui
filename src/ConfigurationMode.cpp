@@ -213,8 +213,9 @@ int ConfigurationMode::run() {
 }
 
 void ConfigurationMode::drawElements() {
+    auto &activeElements = templateManager.getActiveTemplateElements();
+
     // First, draw the rectangles
-    auto activeElements = templateManager.getActiveTemplateElements();
     for (int i = 0; i < activeElements.size(); i++) {
         Element *element = activeElements[i];
         ImGui::PushID(i);
@@ -226,52 +227,11 @@ void ConfigurationMode::drawElements() {
         ImGui::PopID();
     }
 
-    // Check for clicks and move the element to top
-    Element *clickedElement = nullptr;
-    for (int i = activeElements.size() - 1; i >= 0; i--) {
-        Element *element = activeElements[i];
-        ImRect bbox = element->getBoundingBox();
-
-        if (bbox.Contains(ImGui::GetMousePos())) {
-            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-                clickedElement = element;
-                break;
-            }
-        }
-    }
-    // If an element is clicked, bring it to the top
-    if (clickedElement) {
-        bringElementToTop(clickedElement);
-    }
-
-
-    bool clickHandled = false;
-    for (int i = activeElements.size() - 1; i >= 0; i--) {
-        Element *element = activeElements[i];
-        ImGui::PushID(i);
-
-        element->handleClicks(io);
-
-        ImRect bbox = element->getBoundingBox();
-        if (bbox.Contains(ImGui::GetMousePos())) {
-            if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
-                element->detectRightClickDelete();
-                clickHandled = true;
-            }
-        }
-        handleElementClick(element,i);
-
-
-        ImGui::PopID();
-
-        if (clickHandled) {
-            break;
-        }
-    }
+    handleClicksOnElements(activeElements);
 }
 
 void ConfigurationMode::drawElementsWithSnappingOn() {
-    auto activeElements = templateManager.getActiveTemplateElements();
+    auto &activeElements = templateManager.getActiveTemplateElements();
     static Element* draggedElement = nullptr; // Track the currently dragged element
 
     for (int i = 0; i < activeElements.size(); i++) {
@@ -312,54 +272,12 @@ void ConfigurationMode::drawElementsWithSnappingOn() {
         ImGui::PopID();
     }
 
-    // Check for clicks and move the element to top
-    Element *clickedElement = nullptr;
-    for (int i = activeElements.size() - 1; i >= 0; i--) {
-        Element *element = activeElements[i];
-        ImRect bbox = element->getBoundingBox();
-
-        if (bbox.Contains(ImGui::GetMousePos())) {
-            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-                clickedElement = element;
-                break;
-            }
-        }
-    }
-    // If an element is clicked, bring it to the top
-    if (clickedElement) {
-        bringElementToTop(clickedElement);
-    }
-
-
-    bool clickHandled = false;
-    for (int i = activeElements.size() - 1; i >= 0; i--) {
-        Element *element = activeElements[i];
-        ImGui::PushID(i);
-
-        element->handleClicks(io);
-
-        ImRect bbox = element->getBoundingBox();
-        if (bbox.Contains(ImGui::GetMousePos())) {
-            if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
-                element->detectRightClickDelete();
-                clickHandled = true;
-            }
-        }
-
-
-        handleElementClick(element,i);
-
-        ImGui::PopID();
-
-        if (clickHandled) {
-            break;
-        }
-    }
+    handleClicksOnElements(activeElements);
 }
 
 void ConfigurationMode::handleElementClick(Element *element,int i) {
     if (element->getPendingChooseWhatToDo()) {
-        ImGui::SetNextWindowPos(element->getDeletePopupPosition(), ImGuiCond_Always);
+        ImGui::SetNextWindowPos(element->getPopupPosition(), ImGuiCond_Always);
         ImGui::OpenPopup("Element Options");
 
         if (ImGui::BeginPopupModal("Element Options", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
@@ -384,12 +302,11 @@ void ConfigurationMode::handleElementClick(Element *element,int i) {
         }
     }
     else if (element->getPendingDelete()){
-        ImGui::SetNextWindowPos(element->getDeletePopupPosition(), ImGuiCond_Always);
+        ImGui::SetNextWindowPos(element->getPopupPosition(), ImGuiCond_Always);
         ImGui::OpenPopup("Delete Confirmation");
         if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
             ImGui::Text("Delete this element?");
             if (ImGui::Button("Yes")) {
-                //activeElements.erase(activeElements.begin() + i);
                 templateManager.removeElementFromActiveTemplate(i);
                 ImGui::CloseCurrentPopup();
             }
@@ -402,7 +319,7 @@ void ConfigurationMode::handleElementClick(Element *element,int i) {
         }
     }
     else if (element->getPendingEdit()) {
-        ImGui::SetNextWindowPos(element->getDeletePopupPosition(), ImGuiCond_Always);
+        ImGui::SetNextWindowPos(element->getPopupPosition(), ImGuiCond_Always);
         ImGui::OpenPopup("Edit Element Settings");
         if (ImGui::BeginPopupModal("Edit Element Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
             ImGui::Text("Settings for element: %s", element->getLabel().c_str());
@@ -442,7 +359,6 @@ void ConfigurationMode::handleElementClick(Element *element,int i) {
             ImGui::EndPopup();
         }
     }
-
 }
 
 
@@ -559,29 +475,29 @@ void ConfigurationMode::setupMenuBar() {
         if (ImGui::BeginMenu("Controls")) {
             auto elements = templateManager.getActiveTemplateElements();
 
-            if (ImGui::MenuItem("Add Rectangle")) {
-                ImVec2 elementSize(300.0f, 200.0f);
-                ImVec2 padding(30.0f, 30.0f);
-                float menuBarHeight = 25.0f;
-                ImVec2 position;
-
-                if (isSnapping) {
-                    int widthInSquares = ceil(elementSize.x / gridSize);
-                    int heightInSquares = ceil(elementSize.y / gridSize);
-                    elementSize = ImVec2(widthInSquares * gridSize, heightInSquares * gridSize);
-
-                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
-                } else {
-                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
-                }
-
-                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
-                    playBeep();
-                    position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
-                }
-
-                addElementToActiveTemplate(new class Rectangle("Rectangle", position, elementSize));
-            }
+//            if (ImGui::MenuItem("Add Rectangle")) {
+//                ImVec2 elementSize(300.0f, 200.0f);
+//                ImVec2 padding(30.0f, 30.0f);
+//                float menuBarHeight = 25.0f;
+//                ImVec2 position;
+//
+//                if (isSnapping) {
+//                    int widthInSquares = ceil(elementSize.x / gridSize);
+//                    int heightInSquares = ceil(elementSize.y / gridSize);
+//                    elementSize = ImVec2(widthInSquares * gridSize, heightInSquares * gridSize);
+//
+//                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
+//                } else {
+//                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
+//                }
+//
+//                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+//                    playBeep();
+//                    position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+//                }
+//
+//                addElementToActiveTemplate(new class Rectangle("Rectangle", position, elementSize));
+//            }
 
 
             if (ImGui::MenuItem("Add Checkbox")) {
@@ -657,9 +573,6 @@ void ConfigurationMode::setupMenuBar() {
         }
 
         ImGui::EndMenu();
-
-
-
 
     }
     if (ImGui::BeginMenu("Add Modules")) {
@@ -781,19 +694,27 @@ void ConfigurationMode::drawGrid() const {
     }
 }
 
-void ConfigurationMode::bringElementToTop(Element* element) {
-    // Remove the clicked element and add it to the end of the list
-    auto activeElements = templateManager.getActiveTemplateElements();
-    auto it = std::find(activeElements.begin(), activeElements.end(), element);
-    if (it != activeElements.end()) {
-        activeElements.erase(it);
-        activeElements.push_back(element);
+void ConfigurationMode::bringElementToTop(std::vector<Element*>& elements, Element* element) {
+    if (isAnyPendingElement(elements)) {
+        return;
     }
 
-    for (int i = 0; i < activeElements.size(); ++i) {
-        activeElements[i]->setZIndex(i);
+    auto it = std::find(elements.begin(), elements.end(), element);
+
+    if (it != elements.end()) {
+        // Remove the element from its current position
+        elements.erase(it);
+
+        // Add the element to the end (top of the z-index)
+        elements.push_back(element);
+    }
+
+    // Update z-indices for all elements
+    for (int i = 0; i < elements.size(); ++i) {
+        elements[i]->setZIndex(i);
     }
 }
+
 
 void ConfigurationMode::createLabelSettings() {
     if (ImGui::Button("Add Label")) {
@@ -998,3 +919,61 @@ void ConfigurationMode::addModuleToActiveTemplate(GraphicModule* graphicModule) 
     templateManager.addModuleToActiveTemplate(graphicModule);
 }
 
+bool ConfigurationMode::isAnyPendingElement(std::vector<Element *> &elements) {
+    for (const auto& elem : elements) {
+        if (elem->getPendingChooseWhatToDo() || elem->getPendingDelete() || elem->getPendingEdit()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void ConfigurationMode::handleClicksOnElements(std::vector<Element*>& elements) {
+    // Check for clicks and move the element to top
+    Element *clickedElement = nullptr;
+    for (int i = elements.size() - 1; i >= 0; i--) {
+        Element *element = elements[i];
+        ImRect bbox = element->getBoundingBox();
+
+        if (bbox.Contains(ImGui::GetMousePos())) {
+            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                clickedElement = element;
+                break;
+            }
+        }
+    }
+
+    bool pendingPopupForAnyElement = isAnyPendingElement(elements);
+    // If an element is clicked, bring it to the top
+    if (clickedElement) {
+        bringElementToTop(elements, clickedElement);
+    }
+
+
+    bool clickHandled = false;
+    for (int i = elements.size() - 1; i >= 0; i--) {
+        Element *element = elements[i];
+        ImGui::PushID(i);
+
+        element->handleClicks(io);
+
+        ImRect bbox = element->getBoundingBox();
+        // Detect right click on element
+        if (!pendingPopupForAnyElement) {
+            if (bbox.Contains(ImGui::GetMousePos())) {
+                if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
+                    element->detectRightClick();
+                    clickHandled = true;
+                }
+            }
+        }
+
+        handleElementClick(element,i);
+
+        ImGui::PopID();
+
+        if (clickHandled) {
+            break;
+        }
+    }
+}
