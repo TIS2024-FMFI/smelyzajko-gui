@@ -6,6 +6,8 @@
 #include "string"
 #include "imgui_internal.h"
 #include <GLFW/glfw3.h>
+#include "variant"
+
 // Typ alias pre variant
 using SettingValue = std::variant<bool, int, float, std::string>;
 // Struct pre nastavenie

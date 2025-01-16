@@ -31,8 +31,8 @@ public:
 
 private:
     std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
-            {"Map Module", []() { return new MapModuleGraphics(); }},
-             {"Counter Module", []() { return new CounterModuleGraphics(); }},
+            {"Map Graphic Element", []() { return new MapModuleGraphics(); }},
+             {"Counter Graphic Element", []() { return new CounterModuleGraphics(); }},
             {"Ultrasonic Module", []() { return new UltrasonicModuleGraphics(); }},
     };
 

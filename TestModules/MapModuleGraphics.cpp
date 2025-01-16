@@ -1,6 +1,5 @@
 #include "MapModuleGraphics.h"
 #include <fstream>
-#include <nlohmann/json.hpp>
 #include <iostream>
 
 MapModuleGraphics::MapModuleGraphics()
@@ -158,13 +157,4 @@ void MapModuleGraphics::updateValueOfModule(std::vector<int> value) {
 
 
 
-void MapModuleGraphics::updateValueOfModule(std::vector<int> value) {
-    if (value.size() == 2) {
-        ballRow = value[0];
-        ballCol = value[1];
-    }
-    else {
-        std::cerr << "Invalid value for MapModuleGraphics." << std::endl;
-    }
-}
 

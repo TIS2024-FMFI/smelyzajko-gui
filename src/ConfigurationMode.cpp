@@ -690,7 +690,7 @@ void ConfigurationMode::setupMenuBar() {
                         }
 
                         //addElementToActiveTemplate(new class Rectangle("Rectangle", position, elementSize));
-                        Rectangle* tempt = new Rectangle(graphicElement, position, elementSize);
+                        class Rectangle* tempt = new class Rectangle(graphicElement, position, elementSize);
                         tempt->setModuleID(module->getModuleID());
                         tempt->setGraphicElementId(enumerateGraphic);
                         tempt->setModuleName(module->getModuleName());

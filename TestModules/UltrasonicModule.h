@@ -15,17 +15,13 @@ class UltrasonicModule : public Module{
 private:
     std::mutex logMutex;
     std::thread generatorThread;
-    ImVec2 position;
-    ImVec2 size;
     std::vector<UltrasonicSensorData> sensors;
-    std::string name = "Ultrasonic Module";
-    int graphicModuleId;
+    int graphicElementId;
     float deltaTime;
     std::atomic<bool> running;
     ModuleManager* moduleManager;
     void logSensorDataToJson();
     void run() override; // Implementation required
-    std::string getName() const override; // Implementation required
 
 public:
     UltrasonicModule(ModuleManager *moduleManager);

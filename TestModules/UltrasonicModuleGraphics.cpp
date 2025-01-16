@@ -1,11 +1,11 @@
 #include "UltrasonicModuleGraphics.h"
-#include <nlohmann/json.hpp>
 #include <iostream>
 #include <iomanip>
 #include <cmath>
 
 UltrasonicModuleGraphics::UltrasonicModuleGraphics()
         : scrollOffset(0.0f), autoscrollEnabled(true) {
+    setGraphicElementName("Ultrasonic Module");
     // Initialize previous distances to match initial sensor values
     for (const auto& sensor : sensors) {
         previousDistances.push_back(sensor.distance);
@@ -152,60 +152,9 @@ void UltrasonicModuleGraphics::updateValueOfModule(std::vector<int> value) {
     }
 }
 
-void UltrasonicModuleGraphics::updateValueOfModule(std::string value) {
-    std::cout << "Updating Ultrasonic Module with string value: " << value << std::endl;
-}
 
 void UltrasonicModuleGraphics::updateValueOfModule(int value) {
     updateIntervalFrames = value;
     std::cout << "Update interval set to: " << updateIntervalFrames << " frames." << std::endl;
 }
-
-
-void UltrasonicModuleGraphics::from_json(const nlohmann::json &j) {
-    if (j.contains("graphicModuleId") && j["graphicModuleId"].is_number_integer()) {
-        graphicModuleId = j["graphicModuleId"];
-    }
-    if (j.contains("moduleId") && j["moduleId"].is_number_integer()) {
-        moduleId = j["moduleId"];
-    }
-    if (j.contains("position") && j["position"].is_array() && j["position"].size() == 2) {
-        position.x = j["position"][0];
-        position.y = j["position"][1];
-        setPos({j["position"][0], j["position"][1]});
-    }
-    if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
-        size.x = j["size"][0];
-        size.y = j["size"][1];
-        setSize({j["size"][0], j["size"][1]});
-    }
-    if (j.contains("graphicsFrequency") && j["graphicsFrequency"].is_number_float()) {
-        graphicsFrequency = j["graphicsFrequency"];
-    }
-    if (j.contains("graphicsLogEnabled") && j["graphicsLogEnabled"].is_boolean()) {
-        graphicsLogEnabled = j["graphicsLogEnabled"];
-    }
-    if (j.contains("textFrequency") && j["textFrequency"].is_number_float()) {
-        textFrequency = j["textFrequency"];
-    }
-    if (j.contains("textLogEnabled") && j["textLogEnabled"].is_boolean()) {
-        textLogEnabled = j["textLogEnabled"];
-    }
-}
-
-void UltrasonicModuleGraphics::to_json(nlohmann::json &j) const {
-    j["graphicModuleId"] = graphicModuleId;
-    j["moduleId"] = moduleId;
-    j["name"] = moduleName;
-    j["position"] = {position.x, position.y};
-    j["size"] = {size.x, size.y};
-    j["graphicsFrequency"] = graphicsFrequency;
-    j["graphicsLogEnabled"] = graphicsLogEnabled;
-    j["textFrequency"] = textFrequency;
-    j["textLogEnabled"] = textLogEnabled;
-}
-
-
-
-
 

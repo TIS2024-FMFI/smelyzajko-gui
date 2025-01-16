@@ -20,28 +20,11 @@ public:
 
     // Overridden methods
     void draw(ImGuiIO& io) override;
-    void to_json(nlohmann::json& j) const override;
-    void from_json(const nlohmann::json& j) override;
-    void updateValueOfModule(std::string value) override;
-    void updateValueOfModule(int value) override;
     void updateValueOfModule(std::vector<int> value) override;
+    void updateValueOfModule(int value) override;
 
-    // Getter and Setter methods
-    ImVec2 getPos() override { return position; }
-    ImVec2 getSize() override { return size; }
-    std::string getName() const override { return moduleName; }
-    int getGraphicModuleID() override { return graphicModuleId; }
-    void setPos(ImVec2 pos_) override { position = pos_; }
-    void setSize(ImVec2 size_) override { size = size_; }
-    void setGraphicModuleID(int id) override { graphicModuleId = id; }
 
 private:
-    // Graphics properties
-    ImVec2 position;       // Position of the module
-    ImVec2 size;           // Size of the module
-    std::string moduleName = "Ultrasonic Module";
-    int graphicModuleId;
-    int moduleId;
 
     // Sensor data
     std::vector<UltrasonicSensorData> sensors = {

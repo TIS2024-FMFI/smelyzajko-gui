@@ -5,12 +5,12 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
-#include "nlohmann/json.hpp"
 
 UltrasonicModule::UltrasonicModule(ModuleManager* moduleManager)
-        : position(ImVec2(0, 0)), size(ImVec2(300, 300)), moduleManager(moduleManager), running(true), deltaTime(0.0f) {
-    moduleId = moduleManager->gegisterModule("Ultrasonic Module", this);
-    graphicModuleId = moduleManager->registerGraphicModule("Ultrasonic Module", moduleId);
+        : moduleManager(moduleManager), running(true), deltaTime(0.0f) {
+    setModuleName("Ultrasonic Module");
+    moduleId = moduleManager->registerModule("Ultrasonic Module", this);
+    graphicElementId = moduleManager->registerGraphicModule("Ultrasonic Module", "Ultrasonic Module", moduleId);
 
     sensors = {
             {0, 5}, {45, 7}, {90, 4}, {135, 8},
@@ -81,6 +81,4 @@ void UltrasonicModule::run() {
     }
 }
 
-std::string UltrasonicModule::getName() const {
-    return name;
-}
+
