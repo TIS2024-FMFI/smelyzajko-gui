@@ -1,7 +1,7 @@
 #include "CounterModuleGraphics.h"
 
 CounterModuleGraphics::CounterModuleGraphics()
-        : counter(0), textArea(size.x, 100.0f) { // Dynamically initialize TextArea with width equal to module width
+        : counter(0), textArea(size.x, 100.f, "CounterModule") { // Dynamically initialize TextArea with width equal to module width
     setGraphicElementName("Counter Graphic Element");
 }
 
@@ -21,7 +21,7 @@ void CounterModuleGraphics::draw(ImGuiIO &io) {
                              (rect_min.y + rect_max.y) / 2.0f - text_size.y / 2.0f);
     draw_list->AddText(text_pos, text_color, text.c_str());
 
-    // Dynamically set TextArea width to match module width
+    // Dynamically update TextArea width
     textArea.setWidth(size.x);
 
     // Draw the text area
