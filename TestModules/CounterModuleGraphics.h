@@ -1,8 +1,10 @@
 #ifndef SMELYZAJKO_GUI_COUNTERMODULEGRAPHICS_H
 #define SMELYZAJKO_GUI_COUNTERMODULEGRAPHICS_H
+
 #include "imgui.h"
 #include "../src/Module.h"
 #include "../src/GraphicModule.h"
+#include "src/TextArea.h" // Include TextArea
 #include <vector>
 #include <string>
 #include <atomic>
@@ -13,19 +15,15 @@ class CounterModuleGraphics : public GraphicModule {
 public:
     CounterModuleGraphics();
     void draw(ImGuiIO &io) override;
-    void updateValueOfModule( int value) override;
+    void updateValueOfModule(int value) override;
 
 private:
     int counter;
     std::atomic<bool> stopGeneration;
-    std::vector<std::string> logValues;
     std::mutex logMutex;
     std::thread generatorThread;
-    bool autoscrollEnabled;
-    float scrollOffset;
 
-
+    TextArea textArea; // Replace Scrollbar with TextArea
 };
-
 
 #endif //SMELYZAJKO_GUI_COUNTERMODULEGRAPHICS_H

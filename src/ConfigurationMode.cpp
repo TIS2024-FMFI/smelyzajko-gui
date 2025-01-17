@@ -124,43 +124,20 @@ ImVec2 findNearestFreeGridCorner(const std::vector<Element*>& elements, const Im
     return ImVec2(-1.0f, menuBarHeight);
 }
 
-void ConfigurationMode::setupShortcuts() {
-
-    shortcutsManager.registerShortcut("Ctrl+Q", [this]() {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    });
-
-}
-
-void ConfigurationMode::processShortcuts() {
-    shortcutsManager.processShortcuts();
-}
-
-void ConfigurationMode::initializeWindow(GLFWwindow* window) {
-    this->window = window;
-    shortcutsManager.setWindow(window);
-}
-
-
 int ConfigurationMode::run() {
     MapModule mapModule = MapModule(&moduleManager);
     CounterModule counterModule = CounterModule(&moduleManager);
 
-
-    initializeWindow(window);
-    shortcutsManager.setWindow(window);
-    setupShortcuts();
-
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        processShortcuts();
-        templateManager.setConfigMode(true);
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        shortcutsManager.processShortcuts();
         setupMenuBar();
+        processFileDialog();
 
         ImGui::SetNextWindowPos(ImVec2(0, 0)); // Top-left corner of the screen
         ImGui::SetNextWindowSize(io.DisplaySize); // Fullscreen size
@@ -383,46 +360,9 @@ void ConfigurationMode::setupMenuBar() {
                 ImGui::EndMenu();
             }
             if (ImGui::Button("Save current template")) {
-                IGFD::FileDialogConfig config;
-                config.path = "../templates"; // default path for the file dialog
-                if (!templateManager.getActiveTemplateName().empty()) {
-                    config.fileName = templateManager.getActiveTemplateName() + ".json";
-                }
-                ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".json", config);
+                saveTemplate();
             }
-            // display the dialog and handle the file selection
-            if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
-                if (ImGuiFileDialog::Instance()->IsOk()) {
-                    std::filesystem::path filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-                    try {
-                        bool isNew = false;
-                        std::string templateName = templateManager.getActiveTemplate().getName();
-                        std::string fileName = filePathName.filename().string();
-                        if (fileName.size() > 5 && fileName.substr(fileName.size() - 5) == ".json") {
-                            fileName = fileName.substr(0, fileName.size() - 5);  // Remove the ".json" part
-                        }
 
-                        if (templateName.empty() || templateName != fileName ) {
-                            isNew = true;
-                        }
-
-                        if (isNew) {
-                            templateManager.getActiveTemplate().saveTemplate(filePathName, fileName);
-                            Template newTemplate = Template("../templates/" + filePathName.filename().string(), true);
-                            templateManager.allTemplates.push_back(newTemplate);
-                            templateManager.setActiveTemplate(newTemplate);
-                            std::string windowTitle = std::string("GUI") + " - " + newTemplate.getName();
-                            glfwSetWindowTitle(window, windowTitle.c_str());
-                        } else {
-                            templateManager.getActiveTemplate().saveTemplate(filePathName);
-                        }
-                    } catch (const std::exception& e) {
-                        std::cerr << "Error saving template: " << e.what() << std::endl;
-                    }
-                }
-
-                ImGuiFileDialog::Instance()->Close();
-            }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Options")) {
@@ -475,30 +415,26 @@ void ConfigurationMode::setupMenuBar() {
         if (ImGui::BeginMenu("Controls")) {
             auto elements = templateManager.getActiveTemplateElements();
 
-//            if (ImGui::MenuItem("Add Rectangle")) {
-//                ImVec2 elementSize(300.0f, 200.0f);
-//                ImVec2 padding(30.0f, 30.0f);
-//                float menuBarHeight = 25.0f;
-//                ImVec2 position;
-//
-//                if (isSnapping) {
-//                    int widthInSquares = ceil(elementSize.x / gridSize);
-//                    int heightInSquares = ceil(elementSize.y / gridSize);
-//                    elementSize = ImVec2(widthInSquares * gridSize, heightInSquares * gridSize);
-//
-//                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
-//                } else {
-//                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
-//                }
-//
-//                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
-//                    playBeep();
-//                    position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
-//                }
-//
-//                addElementToActiveTemplate(new class Rectangle("Rectangle", position, elementSize));
-//            }
+            if (ImGui::MenuItem("Add TextInput")) {
+                ImVec2 elementSize(200.0f, 20.0f);
+                ImVec2 padding(10.0f, 10.0f);
+                float menuBarHeight = 25.0f;
+                ImVec2 position;
 
+                if (isSnapping) {
+                    elementSize = ImVec2(gridSize, gridSize); // Snap to grid size
+                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
+                } else {
+                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
+                }
+
+                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+                    playBeep();
+                    position = ImVec2(0.0f, menuBarHeight);
+                }
+
+                addElementToActiveTemplate(new TextInput("TextInput", position)); // Add new TextInput element
+            }
 
             if (ImGui::MenuItem("Add Checkbox")) {
                 ImVec2 elementSize(30.0f, 30.0f);
@@ -1032,5 +968,73 @@ void ConfigurationMode::handleClicksOnElements(std::vector<Element*>& elements) 
         if (clickHandled) {
             break;
         }
+    }
+}
+
+void ConfigurationMode::setupShortcuts() {
+    shortcutsManager.setWindow(window);
+
+    shortcutsManager.registerShortcut("Ctrl+Q", [this]() {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    });
+
+    shortcutsManager.registerShortcut("Ctrl+S", [this]() {
+        saveTemplate();
+    });
+}
+
+void ConfigurationMode::saveTemplate() {
+    // Check if a file dialog is already open
+    if (ImGuiFileDialog::Instance()->IsOpened("ChooseFileDlgKey")) {
+        return; // If it's already open, return and avoid opening it again
+    }
+
+    IGFD::FileDialogConfig config;
+    config.path = "../templates"; // Default path for the file dialog
+    if (!templateManager.getActiveTemplateName().empty()) {
+        config.fileName = templateManager.getActiveTemplateName() + ".json";
+    }
+
+    // Open the file dialog
+    ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".json", config);
+}
+
+void ConfigurationMode::processFileDialog() {
+    // Display the file dialog and handle the file selection
+    if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
+        if (ImGuiFileDialog::Instance()->IsOk()) {
+            std::filesystem::path filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+            try {
+                bool isNew = false;
+                std::string templateName = templateManager.getActiveTemplate().getName();
+                std::string fileName = filePathName.filename().string();
+
+                // Remove ".json" extension if present
+                if (fileName.size() > 5 && fileName.substr(fileName.size() - 5) == ".json") {
+                    fileName = fileName.substr(0, fileName.size() - 5);
+                }
+
+                // Check if it's a new template or if the name doesn't match
+                if (templateName.empty() || templateName != fileName) {
+                    isNew = true;
+                }
+
+                if (isNew) {
+                    templateManager.getActiveTemplate().saveTemplate(filePathName, fileName);
+                    Template newTemplate = Template("../templates/" + filePathName.filename().string(), true);
+                    templateManager.allTemplates.push_back(newTemplate);
+                    templateManager.setActiveTemplate(newTemplate);
+                    std::string windowTitle = std::string("GUI") + " - " + newTemplate.getName();
+                    glfwSetWindowTitle(window, windowTitle.c_str());
+                } else {
+                    templateManager.getActiveTemplate().saveTemplate(filePathName);
+                }
+            } catch (const std::exception& e) {
+                std::cerr << "Error saving template: " << e.what() << std::endl;
+            }
+        }
+
+        // Close the file dialog after file is selected or canceled
+        ImGuiFileDialog::Instance()->Close();
     }
 }
