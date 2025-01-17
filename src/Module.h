@@ -14,6 +14,7 @@ public:
     virtual void setValueFromInputElements(std::string elementName, std::string value);
     virtual void setValueFromInputElements(std::string elementName, int value);
     virtual void setValueFromInputElements(std::string elementName, float value);
+    virtual void setValueFromInputElements(std::string elementName, bool value);
     virtual void setValueFromInputElements(std::string elementName, std::vector<int> value);
 
 

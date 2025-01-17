@@ -19,3 +19,6 @@ void Module::setValueFromInputElements(std::string elementName, std::vector<int>
 void Module::setValueFromInputElements(std::string elementName, float value) {
     std::cerr << "Not implemented value type: " << typeid(value).name() << std::endl;
 }
+void Module::setValueFromInputElements(std::string elementName, bool value) {
+    std::cerr << "Not implemented value type: " << typeid(value).name() << std::endl;
+}

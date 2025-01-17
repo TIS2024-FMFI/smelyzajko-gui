@@ -100,20 +100,16 @@ void OperatingMode::drawElements() {
         element->draw(io);
 
         if (auto value = element->getBoolValue()){
-            std::cout << "Value: " << *value <<" "<<element->getModuleName()<< std::endl;
             moduleManager.setValueFromInputElements(element->getModuleName(),element->getLabel(),*value);
         }
 
         if (auto value = element->getStringValue()){
-            std::cout << "Value: " << *value << " "<<element->getModuleName()<<"  <---"<<std::endl;
             moduleManager.setValueFromInputElements(element->getModuleName(),element->getLabel(),*value);
         }
         if (auto value = element->getIntValue()){
-            std::cout << "Value: " << *value << " "<<element->getModuleName()<<std::endl;
             moduleManager.setValueFromInputElements(element->getModuleName(),element->getLabel(),*value);
         }
         if (auto value = element->getFloatValue()){
-            std::cout << "Value: " << *value <<" "<<element->getModuleName()<< std::endl;
             moduleManager.setValueFromInputElements(element->getModuleName(),element->getLabel(),*value);
         }
 

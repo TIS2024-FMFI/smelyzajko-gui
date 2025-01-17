@@ -585,6 +585,7 @@ if (ImGui::BeginMenu("Add Element to Module")) {
                                     {"checkbox", []() { return new Checkbox(); }},
                                     {"slider-int", []() { return new Slider<int>; }},
                                     {"slider-float", []() { return new Slider<float>; }},
+                                    {"text-input", []() { return  new TextInput(); }}
                             };
                             if (elementCreators.find(elementType) != elementCreators.end()) {
                                 Element* newElement = elementCreators.at(elementType)();

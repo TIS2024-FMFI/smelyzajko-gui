@@ -1,5 +1,5 @@
 #include "Element.h"
-
+#include "iostream"
 class Checkbox : public Element {
 private:
     bool checked;
@@ -14,6 +14,7 @@ public:
     std::optional<bool> getBoolValue() override {
         return checked;
     }
+
     ImRect getBoundingBox() const override;
 
     void draw(ImGuiIO &io) override;

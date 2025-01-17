@@ -2,10 +2,10 @@
     "elements": [
         {
             "label": "Button1",
-            "moduleName": "Counter Module",
+            "moduleName": "Map Module",
             "position": [
-                616.0,
-                78.0
+                87.0,
+                60.0
             ],
             "size": [
                 100.0,
@@ -14,23 +14,65 @@
             "type": "button"
         },
         {
+            "checked": false,
+            "label": "Checkbox1",
+            "moduleName": "Counter Module",
+            "position": [
+                653.0,
+                157.0
+            ],
+            "type": "checkbox"
+        },
+        {
             "label": "Slider-int1",
             "maxValue": 35,
             "minValue": 0,
             "moduleName": "Counter Module",
             "position": [
-                478.0,
-                258.0
+                655.0,
+                116.0
             ],
             "size": [
-                314.0,
+                167.0,
                 25.0
             ],
             "type": "slider-int",
             "value": 0
+        },
+        {
+            "label": "Text1",
+            "moduleName": "Counter Module",
+            "position": [
+                762.0,
+                160.0
+            ],
+            "size": [
+                100.0,
+                25.0
+            ],
+            "type": "text-input"
         }
     ],
     "graphicModules": [
+        {
+            "graphicElementId": 0,
+            "graphicElementName": "Map Graphic Element",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "moduleId": 0,
+            "moduleName": "Map Module",
+            "position": [
+                18.0,
+                105.0
+            ],
+            "size": [
+                300.0,
+                200.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        },
         {
             "graphicElementId": 0,
             "graphicElementName": "Counter Graphic Element",
@@ -39,12 +81,12 @@
             "moduleId": 1,
             "moduleName": "Counter Module",
             "position": [
-                526.0,
-                112.0
+                653.0,
+                189.0
             ],
             "size": [
-                299.0,
-                127.0
+                300.0,
+                200.0
             ],
             "textFrequency": 0,
             "textLogEnabled": false,

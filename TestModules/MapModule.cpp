@@ -261,6 +261,20 @@ void MapModule::saveMapToJson() {
     }
 }
 
+void MapModule::setValueFromInputElements(std::string elementName, std::string value) {
+    if (elementName == "Button1") {
+        if (running) {
+            running = false;
+            if (mapThread.joinable()) {
+                mapThread.join();
+            }
+        } else {
+            running = true;
+            mapThread = std::thread(&MapModule::run, this);
+        }
+    }
+}
+
 
 
 

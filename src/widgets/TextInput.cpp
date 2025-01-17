@@ -1,13 +1,22 @@
 #include "TextInput.h"
 #include <algorithm>
+#include "iostream"
 
 void TextInput::draw(ImGuiIO& io) {
     ImGui::SetCursorScreenPos(position);
     ImGui::SetNextItemAllowOverlap();
     ImGui::SetNextItemWidth(size.x);
 
-    // Always disabled
-    ImGui::InputText(label.c_str(), "", 0, ImGuiInputTextFlags_ReadOnly);
+    if (configurationMode){
+        ImGui::InputText(label.c_str(),"",0,ImGuiInputTextFlags_ReadOnly);
+    }else{
+        char buffer[256];
+        strncpy(buffer, value.c_str(), sizeof(buffer));
+        if (ImGui::InputText(label.c_str(), buffer, sizeof(buffer))) {
+            value = buffer;
+        }
+    }
+
 
     ImRect bbox = getBoundingBox();
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -59,15 +68,15 @@ void TextInput::to_json(nlohmann::json& j) const {
             {"label", label},
             {"position", {position.x, position.y}},
             {"size", {size.x, size.y}},
-            {"moduleId", moduleId}
+            {"moduleName", moduleName}
     };
 }
 
 void TextInput::from_json(const nlohmann::json& j, ImVec2 resolution) {
     Element::from_json(j, resolution);
-
-    if (j.contains("moduleId")) {
-        moduleId = j["moduleId"].get<int>();
+    std::cout<<j<<std::endl;
+    if (j.contains("moduleName")) {
+        moduleName = j["moduleName"].get<std::string>();
     }
 
     ImVec2 scale = Element::getScaleFactors(resolution);
@@ -77,7 +86,11 @@ void TextInput::from_json(const nlohmann::json& j, ImVec2 resolution) {
 
 std::vector<Setting> TextInput::getSettings() {
     return {
-            {"moduleId", moduleId, [this](const SettingValue& val) { moduleId = std::get<int>(val); }},
+            {"moduleName", moduleName, [this](const SettingValue& val) { moduleName = std::get<std::string>(val); }},
             {"label", label, [this](const SettingValue& val) { label = std::get<std::string>(val); }}
     };
+}
+
+std::optional<std::string> TextInput::getStringValue() {
+    return value;
 }
