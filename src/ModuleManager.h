@@ -22,6 +22,7 @@ public:
     void updateValueOfModule(int moduleID,int graphicModuleID, std::string value);
     void updateValueOfModule(int moduleID,int graphicModuleID, int value);
     void updateValueOfModule(int moduleID,int graphicModuleID, std::vector<int> value);
+    void updateValueOfModule(int moduleID,int graphicModuleID, std::vector<float> value);
 
 
     void setValueFromInputElements(std::string moduleName, std::string elementName, std::string value);
@@ -40,7 +41,8 @@ private:
     std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
             {"Map Graphic Element", []() { return new MapModuleGraphics(); }},
              {"Counter Graphic Element", []() { return new CounterModuleGraphics(); }},
-            {"Ultrasonic Module", []() { return new UltrasonicModuleGraphics(); }},
+            {"Ultrasonic Graphic Element", []() { return new UltrasonicModuleGraphics(); }},
+            {"Text Area", []() { return new TextArea(); }},
     };
 
 

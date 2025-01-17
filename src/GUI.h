@@ -21,9 +21,11 @@
 #include "widgets/SingleLineLabel.h"
 #include "widgets/MultiLineLabel.h"
 #include "widgets/TextInput.h"
+#include "TextArea.h"
 
 #include "../TestModules/MapModule.h"
 #include "../TestModules/CounterModule.h"
+#include "../TestModules/UltrasonicModule.h"
 
 class GUI {
 protected:

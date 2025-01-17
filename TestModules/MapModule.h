@@ -29,12 +29,17 @@ public:
 
 
     void setValueFromInputElements(std::string elementName, std::string value) override ;
+    void setValueFromInputElements(std::string elementName, bool value) override ;
+    void setValueFromInputElements(std::string elementName, float value) override ;
 //    void drawButtons();
     std::vector<std::string> getPossibleGraphicsElement() override {
-        return {"Map Graphic Element","Counter Graphic Element"};
+        return {"Map Graphic Element","Text Area","Counter Graphic Element"};
     }
     std::unordered_map<std::string,std::vector<std::string>> getPossibleInputElements() override {
-        return {{"button", {"Button1", "Button2"}}};
+        return {{"button", {"Reset"}},
+                {"checkbox", {"Running"}},
+                {"vertical-slider-float", {"Speed"}}
+                };
     }
 
 
@@ -45,6 +50,7 @@ private:
     bool isStopped = false;
     int currentStep = 0;
     bool mapInitialized = false;
+    float speed = 1.0f;
     std::pair<int, int> startPosition;
     int rows = 20;
     int cols = 20;

@@ -1,0 +1,129 @@
+{
+    "elements": [
+        {
+            "label": "Start",
+            "moduleName": "Ultrasonic Module",
+            "position": [
+                600.0,
+                679.0
+            ],
+            "size": [
+                300.0,
+                57.0
+            ],
+            "type": "button"
+        },
+        {
+            "label": "Stop",
+            "moduleName": "Ultrasonic Module",
+            "position": [
+                0.0,
+                679.0
+            ],
+            "size": [
+                361.0,
+                57.0
+            ],
+            "type": "button"
+        },
+        {
+            "label": "Interval",
+            "maxValue": 10000,
+            "minValue": 1,
+            "moduleName": "Ultrasonic Module",
+            "position": [
+                15.0,
+                745.0
+            ],
+            "size": [
+                817.0,
+                60.0
+            ],
+            "type": "horizontal-slider-int",
+            "value": 0
+        }
+    ],
+    "graphicModules": [
+        {
+            "graphicElementId": 0,
+            "graphicElementName": "Map Graphic Element",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "moduleId": 0,
+            "moduleName": "Map Module",
+            "position": [
+                960.0,
+                19.0
+            ],
+            "size": [
+                889.0,
+                662.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        },
+        {
+            "graphicElementId": 1,
+            "graphicElementName": "Text Area",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "moduleId": 0,
+            "moduleName": "Map Module",
+            "position": [
+                963.0,
+                684.0
+            ],
+            "size": [
+                857.0,
+                202.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        },
+        {
+            "graphicElementId": 2,
+            "graphicElementName": "Counter Graphic Element",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "moduleId": 2,
+            "moduleName": "Ultrasonic Module",
+            "position": [
+                48.0,
+                790.0
+            ],
+            "size": [
+                810.0,
+                101.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        },
+        {
+            "graphicElementId": 0,
+            "graphicElementName": "Ultrasonic Graphic Element",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "moduleId": 2,
+            "moduleName": "Ultrasonic Module",
+            "position": [
+                -0.0,
+                19.0
+            ],
+            "size": [
+                901.0,
+                659.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        }
+    ],
+    "name": "template2",
+    "resolution": [
+        1920,
+        1080
+    ]
+}

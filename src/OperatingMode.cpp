@@ -7,7 +7,8 @@
 int OperatingMode::run() {
     MapModule mapModule = MapModule(&moduleManager);
     CounterModule counterModule = CounterModule(&moduleManager);
-    //UltrasonicModule ultrasonicModule = UltrasonicModule(&moduleManager);
+    UltrasonicModule ultrasonicModule = UltrasonicModule(&moduleManager);
+
 
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -127,6 +128,14 @@ void OperatingMode::setupShortcuts() {
     });
 
     shortcutsManager.registerShortcut("Ctrl+Right", [this]() {
+        switchTemplate(1);
+    });
+
+    shortcutsManager.registerShortcut("Cmd+Left", [this]() {
+        switchTemplate(-1);
+    });
+
+    shortcutsManager.registerShortcut("Cmd+Right", [this]() {
         switchTemplate(1);
     });
 }

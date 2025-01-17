@@ -2,23 +2,22 @@
 #define SMELYZAJKO_GUI_TEXTAREA_H
 
 #include "imgui.h"
-#include "Scrollbar.h"
+#include "../src/Module.h"
+#include "../src/GraphicModule.h"
 #include <vector>
 #include <string>
 #include <mutex>
+#include "Scrollbar.h"
 
-class TextArea {
+class TextArea : public GraphicModule  {
 public:
-    TextArea(float width, float height, const std::string& id); // Constructor
-
-    // Set a new width dynamically
-    void setWidth(float newWidth);
+    TextArea();
 
     // Draw the text area and handle interactions
-    void drawTextArea(ImVec2 position, ImGuiIO& io);
+    void draw (ImGuiIO& io) override;
 
     // Manage logs
-    void addLog(const std::string& log);
+    void updateValueOfModule(std::string value ) override;
     void clearLogs();
 
     // Autoscroll control
@@ -26,12 +25,9 @@ public:
     bool isAutoscrollEnabled() const;
 
 private:
-    float width;                      // Width of the text area
-    float height;                     // Height of the text area
-    std::string id;                   // Unique identifier for the text area
     Scrollbar scrollbar;              // Scrollbar instance
     std::vector<std::string> logs;    // Logs displayed in the text area
-    bool autoscrollEnabled;           // Autoscroll toggle
+    bool autoscrollEnabled = true;           // Autoscroll toggle
     std::mutex logMutex;              // Mutex for thread-safe log updates
 };
 

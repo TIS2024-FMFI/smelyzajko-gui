@@ -1,0 +1,88 @@
+{
+    "elements": [
+        {
+            "label": "Reset",
+            "moduleName": "Map Module",
+            "position": [
+                120.0,
+                19.0
+            ],
+            "size": [
+                234.0,
+                205.0
+            ],
+            "type": "button"
+        },
+        {
+            "checked": true,
+            "label": "Running",
+            "moduleName": "Map Module",
+            "position": [
+                1260.0,
+                19.0
+            ],
+            "type": "checkbox"
+        },
+        {
+            "label": "Speed",
+            "maxValue": 10.0,
+            "minValue": 0.10000000149011612,
+            "moduleName": "Map Module",
+            "position": [
+                1260.0,
+                79.0
+            ],
+            "size": [
+                60.0,
+                627.0
+            ],
+            "type": "vertical-slider-float",
+            "value": 0.0
+        }
+    ],
+    "graphicModules": [
+        {
+            "graphicElementId": 0,
+            "graphicElementName": "Map Graphic Element",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "moduleId": 0,
+            "moduleName": "Map Module",
+            "position": [
+                360.0,
+                19.0
+            ],
+            "size": [
+                895.0,
+                710.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        },
+        {
+            "graphicElementId": 1,
+            "graphicElementName": "Text Area",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "moduleId": 0,
+            "moduleName": "Map Module",
+            "position": [
+                1380.0,
+                19.0
+            ],
+            "size": [
+                458.0,
+                293.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        }
+    ],
+    "name": "template3",
+    "resolution": [
+        1920,
+        1080
+    ]
+}

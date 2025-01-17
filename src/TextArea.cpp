@@ -1,25 +1,17 @@
 #include "TextArea.h"
 
-TextArea::TextArea(float width, float height, const std::string& id)
-        : width(width),          // Initialize the width of the text area
-          height(height),        // Initialize the height of the text area
-          id(id),                // Set the unique identifier for the text area
-          scrollbar(height, 0.0f), // Initialize the scrollbar with height
-          autoscrollEnabled(true) // Enable autoscroll by default
-{
+TextArea::TextArea()
+        : scrollbar(0.0f, 0.0f) {
+    setGraphicElementName("Text Area");
 }
 
-void TextArea::setWidth(float newWidth) {
-    width = newWidth; // Dynamically adjust the width
-}
-
-void TextArea::drawTextArea(ImVec2 position, ImGuiIO& io) {
+void TextArea::draw(ImGuiIO& io) {
     ImDrawList* draw_list = ImGui::GetForegroundDrawList();
 
     // Define text area boundaries
     float inner_padding = 5.0f;
     ImVec2 text_area_min = position;
-    ImVec2 text_area_max = ImVec2(position.x + width, position.y + height - 15.0f); // Reduced padding
+    ImVec2 text_area_max = ImVec2(position.x + size.x, position.y + size.y ); // Reduced padding
 
     // Draw text area boundary
     draw_list->AddRect(text_area_min, text_area_max, IM_COL32(255, 255, 255, 255));
@@ -35,7 +27,7 @@ void TextArea::drawTextArea(ImVec2 position, ImGuiIO& io) {
     }
 
     // Update scrollbar dimensions
-    float visible_height = height - 2 * inner_padding - 1.0f;
+    float visible_height = size.x - 2 * inner_padding - 1.0f;
     scrollbar.updateTotalHeight(total_log_height);
     scrollbar.updateVisibleHeight(visible_height);
 
@@ -65,18 +57,18 @@ void TextArea::drawTextArea(ImVec2 position, ImGuiIO& io) {
     }
 
     // Unique checkbox id using the text area's id
-    std::string checkbox_id = "##AutoscrollCheckbox_" + id;
+    std::string checkbox_id = "##AutoscrollCheckbox_" + moduleName;
     ImVec2 checkbox_position = ImVec2(text_area_max.x - 20.0f, text_area_min.y); // Adjust checkbox position
     ImGui::SetCursorScreenPos(checkbox_position);
     ImGui::Checkbox(checkbox_id.c_str(), &autoscrollEnabled);
     scrollbar.enableAutoscroll(autoscrollEnabled);
 }
 
-void TextArea::addLog(const std::string& log) {
-    std::lock_guard<std::mutex> lock(logMutex);
-    logs.push_back(log);
-}
 
+void TextArea::updateValueOfModule(std::string value) {
+    std::lock_guard<std::mutex> lock(logMutex);
+    logs.push_back(value);
+}
 void TextArea::clearLogs() {
     std::lock_guard<std::mutex> lock(logMutex);
     logs.clear();
@@ -90,3 +82,7 @@ void TextArea::setAutoscrollEnabled(bool enabled) {
 bool TextArea::isAutoscrollEnabled() const {
     return autoscrollEnabled;
 }
+
+
+
+
