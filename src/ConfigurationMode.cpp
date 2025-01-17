@@ -1,10 +1,5 @@
 #include <iostream>
 #include "ConfigurationMode.h"
-#include "../TestModules/MapModule.h"
-#include "../TestModules/CounterModule.h"
-//#include "TemplateManager.h"
-#include "../ImGuiFileDialog/ImGuiFileDialog.h"
-#include "../ImGuiFileDialog/ImGuiFileDialogConfig.h"
 #include "Template.h"
 
 #include <iostream> // For std::cerr (debugging)
