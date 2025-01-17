@@ -1,4 +1,5 @@
 #include "Element.h"
+#include "iostream"
 
 ImVec2 Element::getPosition() const {
     return position;
@@ -50,6 +51,7 @@ void Element::setPopupPosition(ImVec2 newPopupPosition) {
 }
 
 void Element::detectRightClick() {
+
     popupPosition = ImGui::GetMousePos();
     pendingChooseWhatToDo = true; // Mark that the element is pending deletion
 }
@@ -69,7 +71,22 @@ void Element::setWasDragged(bool value) {
 bool Element::getWasDragged() const {
     return wasDragged;
 }
+void Element::setModuleName(const std::string &name) {
+    moduleName = name;
 
+}
+void Element::setModuleID(int id) {
+    moduleID = id;
+}
+std::string Element::getModuleName() const {
+    return moduleName;
+}
+void Element::setSize(const ImVec2 &newSize) {
+    size = newSize;
+}
+ImVec2 Element::getSize() const {
+    return size;
+}
 
 void Element::to_json(nlohmann::json &j) const {
     j["label"] = label;

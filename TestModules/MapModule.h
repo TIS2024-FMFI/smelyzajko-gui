@@ -27,9 +27,14 @@ public:
     ModuleManager& moduleManager;
     std::vector<int> graphicModuleId;
 
+
+    void setValueFromInputElements(std::string elementName, std::string value) override ;
 //    void drawButtons();
     std::vector<std::string> getPossibleGraphicsElement() override {
         return {"Map Graphic Element","Counter Graphic Element"};
+    }
+    std::unordered_map<std::string,std::vector<std::string>> getPossibleInputElements() override {
+        return {{"button", {"Button1", "Button2"}}};
     }
 
 

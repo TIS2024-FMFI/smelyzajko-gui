@@ -22,6 +22,13 @@ public:
     void updateValueOfModule(int moduleID,int graphicModuleID, std::string value);
     void updateValueOfModule(int moduleID,int graphicModuleID, int value);
     void updateValueOfModule(int moduleID,int graphicModuleID, std::vector<int> value);
+
+
+    void setValueFromInputElements(std::string moduleName, std::string elementName, std::string value);
+    void setValueFromInputElements(std::string moduleName, std::string elementName, bool value);
+    void setValueFromInputElements(std::string moduleName, std::string elementname, int value);
+    void setValueFromInputElements(std::string moduleName, std::string elementName, float value);
+
     void setActiveModuleAndDraw(std::vector<GraphicModule *> graphicModules_, ImGuiIO &io);
     std::vector<Module*> getModules() const;
     const std::unordered_map<std::string, std::function<GraphicModule*()>> &getModuleConstructors() const;

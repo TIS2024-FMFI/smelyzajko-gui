@@ -1,55 +1,59 @@
 {
     "elements": [
         {
-            "label": "Slider-int1",
-            "maxValue": 35,
-            "minValue": 0,
-            "moduleName": "Counter Module",
-            "position": [
-                480.0,
-                69.0
-            ],
-            "size": [
-                100.0,
-                25.0
-            ],
-            "type": "horizontal-slider-int",
-            "value": 0
-        },
-        {
             "label": "Button1",
             "moduleName": "Map Module",
             "position": [
-                65.0,
-                63.0
+                87.0,
+                60.0
             ],
             "size": [
                 100.0,
                 25.0
             ],
             "type": "button"
+        },
+        {
+            "checked": false,
+            "label": "Checkbox1",
+            "moduleName": "Counter Module",
+            "position": [
+                653.0,
+                157.0
+            ],
+            "type": "checkbox"
+        },
+        {
+            "label": "Slider-int1",
+            "maxValue": 35,
+            "minValue": 0,
+            "moduleName": "Counter Module",
+            "position": [
+                655.0,
+                116.0
+            ],
+            "size": [
+                167.0,
+                25.0
+            ],
+            "type": "horizontal-slider-int",
+            "value": 0
+        },
+        {
+            "label": "Text1",
+            "moduleName": "Counter Module",
+            "position": [
+                762.0,
+                160.0
+            ],
+            "size": [
+                100.0,
+                25.0
+            ],
+            "type": "text-input"
         }
     ],
     "graphicModules": [
-        {
-            "graphicElementId": 0,
-            "graphicElementName": "Counter Graphic Element",
-            "graphicsFrequency": 0,
-            "graphicsLogEnabled": false,
-            "moduleId": 1,
-            "moduleName": "Counter Module",
-            "position": [
-                454.0,
-                104.0
-            ],
-            "size": [
-                300.0,
-                200.0
-            ],
-            "textFrequency": 0,
-            "textLogEnabled": false,
-            "type": "rectangle"
-        },
         {
             "graphicElementId": 0,
             "graphicElementName": "Map Graphic Element",
@@ -58,8 +62,27 @@
             "moduleId": 0,
             "moduleName": "Map Module",
             "position": [
-                25.0,
-                106.0
+                18.0,
+                105.0
+            ],
+            "size": [
+                300.0,
+                200.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        },
+        {
+            "graphicElementId": 0,
+            "graphicElementName": "Counter Graphic Element",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "moduleId": 1,
+            "moduleName": "Counter Module",
+            "position": [
+                653.0,
+                189.0
             ],
             "size": [
                 300.0,
@@ -70,9 +93,9 @@
             "type": "rectangle"
         }
     ],
-    "name": "template1",
+    "name": "template6",
     "resolution": [
-        1920,
-        1080
+        1440,
+        900
     ]
 }

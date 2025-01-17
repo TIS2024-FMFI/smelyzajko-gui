@@ -23,7 +23,8 @@ ImRect Checkbox::getBoundingBox() const {
 void Checkbox::draw(ImGuiIO &io) {
     ImGui::SetCursorScreenPos(position);
     ImGui::SetNextItemAllowOverlap();
-    if (ImGui::Checkbox(label.c_str(), &checked)) {}
+    if (ImGui::Checkbox(label.c_str(), &checked)) {
+    }
 }
 
 void Checkbox::handleClicks(ImGuiIO &io) {
@@ -46,7 +47,7 @@ void Checkbox::to_json(nlohmann::json &j) const {
             {"label", label},
             {"position", {position.x, position.y}},
             {"checked", checked},
-            {"moduleID", moduleID}
+            {"moduleName", moduleName}
     };
 }
 
@@ -62,10 +63,10 @@ void Checkbox::from_json(const nlohmann::json &j, ImVec2 resolution) {
     } else {
         checked = false;
     }
-    if (j.contains("moduleID") && j["moduleID"].is_number_integer()) {
-        moduleID = j["moduleID"];
+    if (j.contains("moduleName") && j["moduleName"].is_string()) {
+        moduleName = j["moduleName"];
     } else {
-        moduleID = -1;
+        moduleName = "";
     }
     ImVec2 scale = Element::getScaleFactors(resolution);
 
@@ -73,7 +74,7 @@ void Checkbox::from_json(const nlohmann::json &j, ImVec2 resolution) {
 }
 std::vector<Setting> Checkbox::getSettings() {
     return {
-            {"moduleID",moduleID, [this](const SettingValue& val) { moduleID = std::get<int>(val); }},
+            {"moduleName",moduleName, [this](const SettingValue& val) { moduleName = std::get<std::string>(val); }},
             {"label", label, [this](const SettingValue& val) { label = std::get<std::string>(val); }}
     };
 

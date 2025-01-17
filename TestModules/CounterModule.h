@@ -9,8 +9,6 @@
 #include "imgui.h"
 #include "../src/Module.h"
 #include "../src/ModuleManager.h"
-
-
 class CounterModule : public Module {
 public:
     ImFont* largeFont;
@@ -22,7 +20,22 @@ public:
     void saveLogToJson(const std::vector<int> &values);
     ModuleManager& moduleManager;
     int graphicModuleId;
-    std::vector<std::string> getPossibleGraphicsElement() override ;
+    std::vector<std::string> getPossibleGraphicsElement() override{
+        return {"Counter Graphic Element"};
+    }
+    std::unordered_map<std::string,std::vector<std::string>> getPossibleInputElements() override {
+        return {
+            {"button", {"Button1", "Button2"}},
+            {"horizontal-slider-int", {"Slider-int1", "Slider-int2"}},
+            {"vertical-slider-int", {"Slider-int3", }},
+            {"checkbox", {"Checkbox1"}},
+            {"text-input", {"Text1"}}
+
+        };
+    }
+    void setValueFromInputElements(std::string elementName, std::string value) override ;
+    void setValueFromInputElements(std::string elementName, int value) override ;
+    void setValueFromInputElements(std::string elementName, bool value) override ;
 
 
 
@@ -33,6 +46,7 @@ private:
     std::mutex logMutex;
     std::thread generatorThread;
 
+    bool checkbox = false;
 };
 
 #endif // COUNTERMODULE_H

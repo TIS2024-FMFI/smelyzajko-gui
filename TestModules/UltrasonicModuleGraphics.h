@@ -24,6 +24,7 @@ public:
     void updateValueOfModule(std::vector<int> value) override; // Update sensor values
     void updateValueOfModule(int value) override;             // Update other properties (e.g., update interval)
 
+
 private:
     // Sensor data
     std::vector<UltrasonicSensorData> sensors = {

@@ -4,12 +4,13 @@
 class Label : public Element {
 protected:
     // the text is in the 'label' attribute of Element
-    ImVec2 size;
     float font_size = 13.0f;
 
 public:
     Label(const std::string& lbl, const ImVec2& pos, const ImVec2& sz)
-            : Element(pos, lbl), size(sz) {}
+            : Element(pos, lbl) {
+        setSize(sz);
+    }
 
     void setText(const std::string& newText);
 

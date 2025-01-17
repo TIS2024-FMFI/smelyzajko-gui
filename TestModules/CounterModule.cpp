@@ -80,7 +80,34 @@ void CounterModule::saveLogToJson(const std::vector<int>& values) {
     }
 }
 
-
-std::vector<std::string> CounterModule::getPossibleGraphicsElement() {
-    return {"Counter Graphic Element"};
+void CounterModule::setValueFromInputElements(std::string elementName, std::string value) {
+    if (elementName == "Button1") {
+        counter.store(0);
+    }
+    else if (elementName == "Text1") {
+        if (value == "stop") {
+            if (!stopGeneration.load()) {
+                stopGeneration.store(true);
+                if (generatorThread.joinable()) {
+                    generatorThread.join();
+                }
+            }
+        }
+    }
 }
+void CounterModule::setValueFromInputElements(std::string elementName, int value) {
+    //std::cout<<elementName<<std::endl;
+    if (elementName == "Slider-int1" && checkbox) {
+        counter.store(value);
+    }
+    //counter.store(value);
+}
+
+void CounterModule::setValueFromInputElements(std::string elementName, bool value) {
+
+    if (elementName == "Checkbox1") {
+        checkbox = value;
+    }
+}
+
+

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <sstream>
 
 UltrasonicModuleGraphics::UltrasonicModuleGraphics()
         : textArea(size.x, 100.0f, "UltrasonicModule") { // Initialize TextArea with default dimensions

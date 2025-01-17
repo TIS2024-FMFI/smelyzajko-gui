@@ -20,7 +20,12 @@ struct Setting {
 
 class Element {
 protected:
+    // Position and size of the element
     ImVec2 position;
+    ImVec2 size;
+
+    std::string moduleName;
+    int moduleID;
     std::string label;
     bool pendingChooseWhatToDo = false;
     bool pendingEdit = false;
@@ -45,7 +50,8 @@ public:
     ImVec2 getPopupPosition();
     int getZIndex() const;
     bool getWasDragged() const;
-
+    std::string getModuleName() const;
+    ImVec2 getSize() const;
 // Setters
     void setPosition(const ImVec2& newPos);
     void setLabel(const std::string& newLabel);
@@ -56,8 +62,14 @@ public:
     void setZIndex(int z);
     void setConfigurationMode(bool newBool);
     void setWasDragged(bool value);
+    virtual void setModuleName(const std::string& name);
+    void setModuleID(int id);
+    void setSize(const ImVec2& newSize);
 
-
+    virtual std::optional<int> getIntValue()  { return std::nullopt; }
+    virtual std::optional<float> getFloatValue()  { return std::nullopt; }
+    virtual std::optional<bool> getBoolValue()  { return std::nullopt; }
+    virtual std::optional<std::string> getStringValue()  { return std::nullopt; }
     // Utility
     void move(const ImVec2& delta);
     virtual void draw(ImGuiIO& io) = 0;
