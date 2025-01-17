@@ -46,13 +46,6 @@ template<typename E>
 void Slider<E>::from_json(const nlohmann::json& j, ImVec2 resolution) {
     Element::from_json(j, resolution);
 
-    if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
-        size.x = j["size"][0];
-        size.y = j["size"][1];
-    } else {
-        size = ImVec2(100.0f, 25.0f);
-    }
-
     if (j.contains("minValue")) {
         minValue = j["minValue"].get<E>();
     }
@@ -62,15 +55,6 @@ void Slider<E>::from_json(const nlohmann::json& j, ImVec2 resolution) {
     if (j.contains("value")) {
         value = std::clamp(j["value"].get<E>(), minValue, maxValue);
     }
-
-    if (j.contains("moduleName")) {
-        moduleName = j["moduleName"].get<std::string>();
-    }
-
-    ImVec2 scale = Element::getScaleFactors(resolution);
-
-    position = ImVec2(position.x * scale.x, position.y * scale.y);
-    size = ImVec2(size.x * scale.x, size.y * scale.y);
 }
 
 template<typename E>

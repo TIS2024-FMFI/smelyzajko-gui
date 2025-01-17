@@ -114,15 +114,6 @@ void Rectangle::from_json(const nlohmann::json& j, ImVec2 resolution) {
         moduleName = j["moduleName"];
         label += "\n" + moduleName;
     }
-    if (j.contains("position") && j["position"].is_array() && j["position"].size() == 2) {
-        position.x = j["position"][0];
-        position.y = j["position"][1];
-    }
-    if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
-        size.x = j["size"][0];
-        size.y = j["size"][1];
-        setSize({j["size"][0], j["size"][1]});
-    }
     if (j.contains("graphicsFrequency") && j["graphicsFrequency"].is_number_float()) {
         graphicsFrequency = j["graphicsFrequency"];
     }
@@ -135,10 +126,6 @@ void Rectangle::from_json(const nlohmann::json& j, ImVec2 resolution) {
     if (j.contains("textLogEnabled") && j["textLogEnabled"].is_boolean()) {
         textLogEnabled = j["textLogEnabled"];
     }
-
-    ImVec2 scale = Element::getScaleFactors(resolution);
-    position = ImVec2(position.x * scale.x, position.y * scale.y);
-    size = ImVec2(size.x * scale.x, size.y * scale.y);
 }
 
 

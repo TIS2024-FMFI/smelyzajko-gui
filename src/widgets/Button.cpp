@@ -72,20 +72,6 @@ void Button::from_json(const nlohmann::json &j, ImVec2 resolution) {
 
     Element::from_json(j, resolution);
 
-    if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
-        size.x = j["size"][0];
-        size.y = j["size"][1];
-    }
-    if (j.contains("moduleName") && j["moduleName"].is_string()) {
-        moduleName = j["moduleName"];
-    } else {
-        moduleName = "";
-    }
-
-    ImVec2 scale = Element::getScaleFactors(resolution);
-
-    position = ImVec2(position.x * scale.x, position.y * scale.y);
-    size = ImVec2(size.x * scale.x, size.y * scale.y);
 }
 
 void Button::setStyles() {
