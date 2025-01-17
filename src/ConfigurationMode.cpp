@@ -733,23 +733,25 @@ void ConfigurationMode::createIntSliderSettings(std::string elementName, std::st
             if (isHorizontal) {
                 auto *element = new HorizontalSlider<int>(
                         label,
+                        moduleName,
                         position,
                         sliderSize,
                         minValue,
                         maxValue,
                         initialValue
                 );
-                setNewElementAndAddToActiveTemplate(element, label, moduleName, position, sliderSize);
+                addElementToActiveTemplate(element);
             } else {
                 auto *element = new VerticalSlider<int>(
                         label,
+                        moduleName,
                         position,
                         sliderSize,
                         minValue,
                         maxValue,
                         initialValue
                 );
-                setNewElementAndAddToActiveTemplate(element, label, moduleName, position, sliderSize);
+                addElementToActiveTemplate(element);
             }
             ImGui::CloseCurrentPopup();
         }
@@ -813,23 +815,25 @@ void ConfigurationMode::createFloatSliderSettings(std::string elementName, std::
             if (isHorizontal) {
                 auto *element = new HorizontalSlider<float>(
                         label,
+                        moduleName,
                         position,
                         sliderSize,
                         minValue,
                         maxValue,
                         initialValue
                 );
-                setNewElementAndAddToActiveTemplate(element, label, moduleName, position, sliderSize);
+                addElementToActiveTemplate(element);
             } else {
                 auto *element = new VerticalSlider<float>(
                         label,
+                        moduleName,
                         position,
                         sliderSize,
                         minValue,
                         maxValue,
                         initialValue
                 );
-                setNewElementAndAddToActiveTemplate(element, label, moduleName, position, sliderSize);
+                addElementToActiveTemplate(element);
             }
             ImGui::CloseCurrentPopup();
         }
@@ -996,8 +1000,8 @@ void ConfigurationMode::createButton(std::string elementName, std::string module
 
         ImVec2 position = getPosition(elementSize);
 
-        auto element = new Button();
-        setNewElementAndAddToActiveTemplate(element, elementName, moduleName, position, elementSize);
+        auto element = new Button(elementName, moduleName, position, elementSize);
+        addElementToActiveTemplate(element);
     }
 }
 
@@ -1010,8 +1014,8 @@ void ConfigurationMode::createCheckbox(std::string elementName, std::string modu
 
         ImVec2 position = getPosition(elementSize);
 
-        auto element = new Checkbox();
-        setNewElementAndAddToActiveTemplate(element, elementName, moduleName, position, elementSize);
+        auto element = new Checkbox(elementName, moduleName, position);
+        addElementToActiveTemplate(element);
     }
 }
 
