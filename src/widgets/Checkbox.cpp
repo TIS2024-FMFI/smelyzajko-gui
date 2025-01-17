@@ -23,8 +23,7 @@ ImRect Checkbox::getBoundingBox() const {
 void Checkbox::draw(ImGuiIO &io) {
     ImGui::SetCursorScreenPos(position);
     ImGui::SetNextItemAllowOverlap();
-    if (ImGui::Checkbox(label.c_str(), &checked)) {
-    }
+    if (ImGui::Checkbox(label.c_str(), &checked)) {}
 }
 
 void Checkbox::handleClicks(ImGuiIO &io) {

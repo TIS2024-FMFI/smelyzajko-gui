@@ -25,7 +25,9 @@ void MultiLineLabel::draw(ImGuiIO &io) {
     size = ImVec2(text_size.x * font_size / defaultFont->FontSize,
                   text_size.y * font_size / defaultFont->FontSize);
 
-    createTextSizeButton();
+    if (configurationMode) {
+        createTextSizeButton();
+    }
 }
 
 void MultiLineLabel::to_json(nlohmann::json& j) const {
