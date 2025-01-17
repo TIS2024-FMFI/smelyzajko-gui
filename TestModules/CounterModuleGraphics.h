@@ -4,7 +4,6 @@
 #include "imgui.h"
 #include "../src/Module.h"
 #include "../src/GraphicModule.h"
-#include "src/TextArea.h" // Include TextArea
 #include <vector>
 #include <string>
 #include <atomic>
@@ -23,7 +22,6 @@ private:
     std::mutex logMutex;
     std::thread generatorThread;
 
-    TextArea textArea; // Replace Scrollbar with TextArea
 };
 
 #endif //SMELYZAJKO_GUI_COUNTERMODULEGRAPHICS_H

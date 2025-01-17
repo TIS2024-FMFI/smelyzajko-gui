@@ -1,7 +1,4 @@
 #pragma once
-#ifndef ULTRASONIC_MODULE_H
-#define ULTRASONIC_MODULE_H
-
 #include "imgui.h"
 #include <vector>
 #include <thread>
@@ -16,16 +13,34 @@ private:
     std::mutex logMutex;
     std::thread generatorThread;
     std::vector<UltrasonicSensorData> sensors;
-    int graphicElementId;
+    std::vector<int> graphicElementIds;
+    int  textAreaId;
     float deltaTime;
     std::atomic<bool> running;
     ModuleManager* moduleManager;
-    void logSensorDataToJson();
-    void run() override; // Implementation required
+
+    int updateDelayMs = 500;
+    std::chrono::steady_clock::time_point lastUpdateTime;
+    std::vector<float> previousDistances;
+    int frameCounter = 0;
+    int updateIntervalFrames = 4;
+
+    void run() override;
+    void updateDynamicSensors();
+
+    void setValueFromInputElements(std::string elementName, std::string value) override;
+    void setValueFromInputElements(std::string elementName, int value ) override;
+    std::unordered_map<std::string,std::vector<std::string>> getPossibleInputElements() override {
+        return {{"button", {"Stop","Start"}},
+                {"horizontal-slider-int", {"Interval"}}
+                };
+    }
+    std::vector<std::string> getPossibleGraphicsElement() override {
+        return {"Ultrasonic Graphic Element","Text Area","Counter Graphic Element"};
+    }
 
 public:
     UltrasonicModule(ModuleManager *moduleManager);
     ~UltrasonicModule();
 };
 
-#endif // ULTRASONIC_MODULE_H

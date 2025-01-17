@@ -1,20 +1,22 @@
-// UltrasonicModule.cpp
-
 #include "UltrasonicModule.h"
-#include "imgui.h"
-#include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
+
 
 UltrasonicModule::UltrasonicModule(ModuleManager* moduleManager)
         : moduleManager(moduleManager), running(true), deltaTime(0.0f) {
     setModuleName("Ultrasonic Module");
-    moduleId = moduleManager->registerModule("Ultrasonic Module", this);
-    graphicElementId = moduleManager->registerGraphicModule("Ultrasonic Module", "Ultrasonic Module", moduleId);
-
+    moduleId = this->moduleManager->registerModule(moduleName, this);
+    for (const std::string& element : this->getPossibleGraphicsElement()) {
+        graphicElementIds.push_back(this->moduleManager->registerGraphicModule(element, moduleName, moduleId));
+    }
     sensors = {
             {0, 5}, {45, 7}, {90, 4}, {135, 8},
             {180, 6}, {225, 3}, {270, 2}, {315, 5}};
+    for (const auto& sensor : sensors) {
+        previousDistances.push_back(sensor.distance);
+    }
     std::string filename = "../TestModules/logs/ultrasonic_module_log.json";
     std::ofstream outFile(filename, std::ios::trunc);
 
@@ -27,7 +29,6 @@ UltrasonicModule::UltrasonicModule(ModuleManager* moduleManager)
         std::cerr << "[ERROR] Could not initialize log file at: " << filename << std::endl;
     }
 
-    // Start the logging thread
     generatorThread = std::thread(&UltrasonicModule::run, this);
 }
 
@@ -38,47 +39,63 @@ UltrasonicModule::~UltrasonicModule() {
     }
 }
 
-void UltrasonicModule::logSensorDataToJson() {
-    std::lock_guard<std::mutex> lock(logMutex);
 
-    std::string filename = "../TestModules/logs/ultrasonic_module_log.json";
-    nlohmann::json j;
-    std::ifstream inFile(filename);
-
-    if (inFile.is_open()) {
-        try {
-            inFile >> j;
-        } catch (const std::exception& e) {
-            std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
-        }
-        inFile.close();
-    }
-
-    if (!j.contains("sensor_data") || !j["sensor_data"].is_array()) {
-        j["sensor_data"] = nlohmann::json::array();
-    }
-
-    for (const auto& sensor : sensors) {
-        nlohmann::json sensorEntry;
-        sensorEntry["angle"] = sensor.angle;
-        sensorEntry["distance"] = sensor.distance;
-        j["sensor_data"].push_back(sensorEntry);
-    }
-
-    std::ofstream outFile(filename, std::ios::trunc);
-    if (outFile.is_open()) {
-        outFile << std::setw(4) << j << std::endl;
-        outFile.close();
-    } else {
-        std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
-    }
-}
 
 void UltrasonicModule::run() {
     while (running) {
-        logSensorDataToJson();
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        updateDynamicSensors();
     }
 }
 
+void UltrasonicModule::updateDynamicSensors() {
+    auto now = std::chrono::steady_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUpdateTime);
+
+    if (elapsed.count() < updateDelayMs) {
+        return; // Skip update if delay has not passed
+    }
+
+    lastUpdateTime = now; // Reset the timer
+
+    for (size_t i = 0; i < sensors.size(); ++i) {
+        auto& sensor = sensors[i];
+        float distanceVariation = static_cast<float>(std::rand() % 21 - 10) / 10.0f;
+        sensor.distance = std::clamp(sensor.distance + distanceVariation, 0.0f, 10.0f);
+
+        // Log only if the distance has changed
+        if (sensor.distance != previousDistances[i]) {
+            std::vector<float> value = {sensor.distance, sensor.angle};
+            moduleManager->updateValueOfModule(moduleId, graphicElementIds[0],i);
+            moduleManager->updateValueOfModule(moduleId, graphicElementIds[0], value);
+            moduleManager->updateValueOfModule(moduleId, graphicElementIds[2], sensor.distance);
+            previousDistances[i] = sensor.distance;
+        }
+    }
+}
+
+void UltrasonicModule::setValueFromInputElements(std::string elementName, std::string value) {
+    if (elementName =="Stop"){
+        running = false;
+        if (generatorThread.joinable()) {
+            generatorThread.join();
+        }
+        moduleManager->updateValueOfModule(moduleId,graphicElementIds[1] , "Stopped");
+    }else if (elementName == "Start"){
+        if (!running) {
+            running = true;
+            generatorThread = std::thread(&UltrasonicModule::run, this);
+        }
+        moduleManager->updateValueOfModule(moduleId,graphicElementIds[1] , "Running");
+    }
+}
+
+void UltrasonicModule::setValueFromInputElements(std::string elementName, int value) {
+    if (elementName == "Interval" && value != updateDelayMs) {
+        updateDelayMs = value+1;
+        std::string message = "Interval set to " + std::to_string(updateIntervalFrames) + " ms";
+        moduleManager->updateValueOfModule(moduleId, graphicElementIds[1], message);
+
+    }
+
+}
 

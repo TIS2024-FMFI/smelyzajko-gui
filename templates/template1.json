@@ -1,36 +1,119 @@
 {
     "elements": [
         {
-            "label": "Slider-int1",
-            "maxValue": 35,
+            "label": "Hodnota 2",
+            "maxValue": 7,
             "minValue": 0,
             "moduleName": "Counter Module",
             "position": [
-                480.0,
-                69.0
+                1016.0,
+                520.0
             ],
             "size": [
-                100.0,
+                316.0,
                 25.0
             ],
             "type": "horizontal-slider-int",
             "value": 0
         },
         {
-            "label": "Button1",
-            "moduleName": "Map Module",
+            "label": "Hodnota 1",
+            "maxValue": 10,
+            "minValue": 0,
+            "moduleName": "Counter Module",
             "position": [
-                65.0,
-                63.0
+                1019.0,
+                147.0
+            ],
+            "size": [
+                310.0,
+                25.0
+            ],
+            "type": "horizontal-slider-int",
+            "value": 0
+        },
+        {
+            "label": "Speed",
+            "maxValue": 10000,
+            "minValue": 0,
+            "moduleName": "Counter Module",
+            "position": [
+                769.0,
+                38.0
             ],
             "size": [
                 100.0,
-                25.0
+                678.0
+            ],
+            "type": "vertical-slider-int",
+            "value": 0
+        },
+        {
+            "label": "Start",
+            "moduleName": "Counter Module",
+            "position": [
+                446.0,
+                737.0
+            ],
+            "size": [
+                291.0,
+                144.0
+            ],
+            "type": "button"
+        },
+        {
+            "label": "Stop",
+            "moduleName": "Counter Module",
+            "position": [
+                145.0,
+                737.0
+            ],
+            "size": [
+                283.0,
+                149.0
             ],
             "type": "button"
         }
     ],
     "graphicModules": [
+        {
+            "graphicElementId": 2,
+            "graphicElementName": "Ultrasonic Graphic Element",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "moduleId": 1,
+            "moduleName": "Counter Module",
+            "position": [
+                1010.0,
+                195.0
+            ],
+            "size": [
+                408.0,
+                306.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        },
+        {
+            "graphicElementId": 1,
+            "graphicElementName": "Text Area",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "moduleId": 1,
+            "moduleName": "Counter Module",
+            "position": [
+                130.0,
+                547.0
+            ],
+            "size": [
+                616.0,
+                189.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        },
         {
             "graphicElementId": 0,
             "graphicElementName": "Counter Graphic Element",
@@ -39,31 +122,12 @@
             "moduleId": 1,
             "moduleName": "Counter Module",
             "position": [
-                454.0,
-                104.0
+                132.0,
+                35.0
             ],
             "size": [
-                300.0,
-                200.0
-            ],
-            "textFrequency": 0,
-            "textLogEnabled": false,
-            "type": "rectangle"
-        },
-        {
-            "graphicElementId": 0,
-            "graphicElementName": "Map Graphic Element",
-            "graphicsFrequency": 0,
-            "graphicsLogEnabled": false,
-            "moduleId": 0,
-            "moduleName": "Map Module",
-            "position": [
-                25.0,
-                106.0
-            ],
-            "size": [
-                300.0,
-                200.0
+                612.0,
+                506.0
             ],
             "textFrequency": 0,
             "textLogEnabled": false,

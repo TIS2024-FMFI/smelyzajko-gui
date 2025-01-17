@@ -5,7 +5,7 @@
 #include <cmath>
 
 MapModuleGraphics::MapModuleGraphics()
-        :textArea(size.x, 100.f, "MapModule") { // Initialize TextArea with default dimensions
+         { // Initialize TextArea with default dimensions
     setGraphicElementName("Map Graphic Element");
     loadMap();
 }
@@ -62,25 +62,17 @@ void MapModuleGraphics::draw(ImGuiIO &io) {
         }
     }
 
-    // Draw ball
     draw_list->AddCircleFilled(
             ImVec2(position.x + ballCol * cellSize + cellSize / 2, position.y + ballRow * cellSize + cellSize / 2),
             cellSize / 4, IM_COL32(255, 0, 0, 255)
     );
-
-    // Update TextArea width dynamically to match module width
-    textArea.setWidth(std::min(size.x, cols * cellSize));
-
-    // Draw the text area below the map
-    ImVec2 textAreaPosition = ImVec2(position.x, position.y + rows * cellSize + 10.0f);
-    textArea.drawTextArea(textAreaPosition, io);
 }
 
 void MapModuleGraphics::updateValueOfModule(std::vector<int> value) {
     if (value.size() == 2) {
         ballRow = value[0];
         ballCol = value[1];
-        textArea.addLog("Moved to: (" + std::to_string(ballRow) + ", " + std::to_string(ballCol) + ")");
+        //textArea.addLog("Moved to: (" + std::to_string(ballRow) + ", " + std::to_string(ballCol) + ")");
     } else {
         std::cerr << "Invalid value for MapModuleGraphics." << std::endl;
     }
