@@ -31,6 +31,7 @@ public:
 
         templateManager.setConfigMode(true);
         menuBarHeight = ImGui::GetFrameHeight();
+
     };
 
     int run() override;
@@ -43,16 +44,21 @@ public:
     void drawGrid() const;
     void bringElementToTop(std::vector<Element*>& elements, Element* element);
 //    void renderSettingsPopup(Module& module, const std::string& part);
-    void createFloatSliderSettings();
-    void createIntSliderSettings();
+    void createFloatSliderSettings(std::string elementName, std::string moduleName);
+    void createIntSliderSettings(std::string elementName, std::string moduleName);
     void createLabelSettings();
-    void initializeWindow(GLFWwindow* window);
+    void createButton(std::string elementName, std::string moduleName);
+    void createCheckbox(std::string elementName, std::string moduleName);
+    void createTextInput(std::string elementName, std::string moduleName);
+    void setNewElementAndAddToActiveTemplate(Element *element, std::string elementName, std::string moduleName, ImVec2 position, ImVec2 elementSize);
     void handleElementClick(Element* element,int i);
     void handleClicksOnElements(std::vector<Element*>& elements);
     bool isAnyPendingElement(std::vector<Element*>& elements);
     void setupShortcuts() override;
     void saveTemplate();
     void processFileDialog();
+    ImVec2 getPosition(ImVec2 elementSize);
+
     TemplateManager templateManager = TemplateManager(true);
 
 private:
