@@ -8,6 +8,7 @@
 #include <string>
 #include <mutex>
 #include <chrono>
+#include "src/TextArea.h"
 
 struct UltrasonicSensorData {
     float angle;    // Angle of the sensor
@@ -19,19 +20,17 @@ public:
     UltrasonicModuleGraphics();
 
     // Overridden methods
-    void draw(ImGuiIO& io) override;
-    void updateValueOfModule(std::vector<int> value) override;
-    void updateValueOfModule(int value) override;
-
+    void draw(ImGuiIO& io) override;                          // Render the module
+    void updateValueOfModule(std::vector<int> value) override; // Update sensor values
+    void updateValueOfModule(int value) override;             // Update other properties (e.g., update interval)
 
 private:
-
     // Sensor data
     std::vector<UltrasonicSensorData> sensors = {
             {0, 5}, {45, 7}, {90, 4}, {135, 8},
             {180, 6}, {225, 3}, {270, 2}, {315, 5}
     };
-    std::vector<float> previousDistances; // Previous distances for comparison
+    std::vector<float> previousDistances; // Track previous distances for logging changes
 
     // Graphics settings
     float graphicsFrequency = 0.0f;
@@ -39,13 +38,12 @@ private:
     float textFrequency = 0.0f;
     bool textLogEnabled = false;
 
-    // Scrollable log properties
-    std::vector<std::string> logValues;  // Logs for displaying updates
-    float scrollOffset = 0.0f;           // Current scroll position
-    bool autoscrollEnabled = true;       // Enable or disable autoscroll
-    std::mutex logMutex;                 // Protects log updates
-    int updateDelayMs = 500;             // Delay in milliseconds
-    std::chrono::steady_clock::time_point lastUpdateTime; // Timer for updates
+    // Scrollable log using TextArea
+    TextArea textArea;                     // Instance of TextArea for log rendering
+
+    // Sensor update control
+    int updateDelayMs = 500;               // Delay between updates in milliseconds
+    std::chrono::steady_clock::time_point lastUpdateTime; // Timestamp of last update
 
     // Sensor update control
     int frameCounter = 0;
