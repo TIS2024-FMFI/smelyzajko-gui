@@ -5,7 +5,8 @@
 
 #include "libs/json.hpp"
 #include "widgets/Button.h"
-#include "widgets/Slider.h"
+#include "widgets/HorizontalSlider.h"
+#include "widgets/VerticalSlider.h"
 #include "widgets/Checkbox.h"
 #include "widgets/Rectangle.h"
 #include "widgets/SingleLineLabel.h"
@@ -86,8 +87,10 @@ void Template::from_json(const nlohmann::json& j) {
                 static const std::unordered_map<std::string, std::function<Element*()>> elementCreators = {
                         {"button", []() { return new Button(); }},
                         {"checkbox", []() { return new Checkbox(); }},
-                        {"slider-int", []() { return new Slider<int>; }},
-                        {"slider-float", []() { return new Slider<float>; }},
+                        {"horizontal-slider-int", []() { return new HorizontalSlider<int>(); }},
+                        {"horizontal-slider-float", []() { return new HorizontalSlider<float>(); }},
+                        {"vertical-slider-int", []() { return new VerticalSlider<int>(); }},
+                        {"vertical-slider-float", []() { return new VerticalSlider<float>(); }},
                         {"rectangle", []() { return new Rectangle(); }},
                         {"single-line-label", []() { return new SingleLineLabel(); }},
                         {"multi-line-label", []() { return new MultiLineLabel(); }},
