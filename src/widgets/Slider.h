@@ -10,10 +10,8 @@ protected:
     E maxValue;
 
 public:
-    Slider(const std::string& lbl = "", const ImVec2& pos = ImVec2(0.0f, 0.0f), const ImVec2& sz = ImVec2(200.0f, 20.0f), E minVal = 0, E maxVal = 1, E initialValue = 0)
-            : Element(pos, lbl),  minValue(minVal), maxValue(maxVal), value(initialValue) {
-        setSize(sz);
-    }
+    Slider(const std::string& lbl = "", const std::string& moduleName = "",  const ImVec2& pos = ImVec2(0.0f, 0.0f), const ImVec2& sz = ImVec2(200.0f, 20.0f), E minVal = 0, E maxVal = 1, E initialValue = 0)
+            : Element(lbl, moduleName, pos, sz),  minValue(minVal), maxValue(maxVal), value(initialValue) {}
 
     E getValue() const ;
 

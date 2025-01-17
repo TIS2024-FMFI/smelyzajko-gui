@@ -4,9 +4,8 @@ class Button : public Element {
 private:
     bool clicked = false;
 public:
-    Button(const std::string& lbl = "", const ImVec2& pos = ImVec2(0.0f, 0.0f), const ImVec2& sz = ImVec2(100.0f, 25.0f))
-            : Element(pos, lbl) {
-        setSize(sz);
+    Button(const std::string& lbl = "", const std::string& moduleName = "", const ImVec2& pos = ImVec2(0.0f, 0.0f), const ImVec2& sz = ImVec2(100.0f, 25.0f))
+            : Element(lbl, moduleName, pos, sz) {
 }
     std::optional<std::string > getStringValue()  override;
 
