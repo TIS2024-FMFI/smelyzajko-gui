@@ -5,7 +5,7 @@ template class Slider<float>;
 template class Slider<int>;
 
 template <typename E>
-E Slider<E>::getValue() const  {
+E Slider<E>::getValue() const {
     return value;
 }
 
@@ -78,37 +78,25 @@ ImRect Slider<E>::getBoundingBox() const {
 
 template<typename E>
 void Slider<E>::to_json(nlohmann::json& j) const {
-    std::string type;
-    if constexpr (std::is_same_v<E, int>) {
-        type = "slider-int";
-    } else {
-        type = "slider-float";
-    }
-    j = nlohmann::json{
-            {"type", type},
-            {"label", label},
-            {"position", {position.x, position.y}},
-            {"size", {size.x, size.y}},
-            {"minValue", minValue},
-            {"maxValue", maxValue},
-            {"value", value},
-            {"moduleName", moduleName}
-    };
+    j["label"] = label;
+    j["position"] = {position.x, position.y};
+    j["size"] = {size.x, size.y};
+    j["minValue"] = minValue;
+    j["maxValue"] = maxValue;
+    j["value"] = value;
+    j["moduleName"] = moduleName;
 }
 
 template<typename E>
 void Slider<E>::from_json(const nlohmann::json& j, ImVec2 resolution) {
-    std::string type;
-    if constexpr (std::is_same_v<E, int>) {
-        type = "slider-int";
-    } else {
-        type = "slider-float";
-    }
-    if (j.contains("type") && j["type"] != type) {
-        throw std::invalid_argument("Invalid type for Slider: expected either slider-int or slider-float");
-    }
-
     Element::from_json(j, resolution);
+
+    if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
+        size.x = j["size"][0];
+        size.y = j["size"][1];
+    } else {
+        size = ImVec2(100.0f, 25.0f);
+    }
 
     if (j.contains("minValue")) {
         minValue = j["minValue"].get<E>();
@@ -119,8 +107,9 @@ void Slider<E>::from_json(const nlohmann::json& j, ImVec2 resolution) {
     if (j.contains("value")) {
         value = std::clamp(j["value"].get<E>(), minValue, maxValue);
     }
+
     if (j.contains("moduleName")) {
-        moduleName = j["moduleName"].get<std::string>();
+        moduleName = j["moduleName"].get<int>();
     }
 
     ImVec2 scale = Element::getScaleFactors(resolution);
@@ -128,10 +117,11 @@ void Slider<E>::from_json(const nlohmann::json& j, ImVec2 resolution) {
     position = ImVec2(position.x * scale.x, position.y * scale.y);
     size = ImVec2(size.x * scale.x, size.y * scale.y);
 }
+
 template<typename E>
 std::vector<Setting> Slider<E>::getSettings() {
     return {
-            {"moduleName",moduleName, [this](const SettingValue& val) { moduleName = std::get<std::string>(val); }},
+            {"moduleName",moduleName, [this](const SettingValue& val) { moduleId = std::get<int>(val); }},
             {"label", label, [this](const SettingValue& val) { label = std::get<std::string>(val); }},
             {"minValue", minValue, [this](const SettingValue& val) { minValue = std::get<E>(val); }},
             {"maxValue", maxValue, [this](const SettingValue& val) { maxValue = std::get<E>(val); }}

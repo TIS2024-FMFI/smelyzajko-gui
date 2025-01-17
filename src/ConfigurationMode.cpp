@@ -791,6 +791,7 @@ void ConfigurationMode::createIntSliderSettings() {
         static int minValue = 0;
         static int maxValue = 10;
         static int initialValue = 5;
+        static bool isHorizontal = true;
 
         ImGui::InputText("Label", label, IM_ARRAYSIZE(label));
         ImGui::InputInt("Min Value", &minValue);
@@ -800,10 +801,11 @@ void ConfigurationMode::createIntSliderSettings() {
         if (initialValue < minValue) initialValue = minValue;
         if (initialValue > maxValue) initialValue = maxValue;
 
-        // Calculate free position for the int slider
+        ImGui::Checkbox("Horizontal Slider", &isHorizontal);
+
         auto elements = templateManager.getActiveTemplateElements();
-        ImVec2 sliderSize(200.0f, 20.0f); // Fixed size for the slider
-        ImVec2 padding(10.0f, 10.0f); // Define padding to maintain space between elements
+        ImVec2 sliderSize = isHorizontal ? ImVec2(200.0f, 20.0f) : ImVec2(20.0f, 200.0f);
+        ImVec2 padding(10.0f, 10.0f);
 
         if (isSnapping) {
             int widthInSquares = ceil(sliderSize.x / gridSize);
@@ -815,22 +817,31 @@ void ConfigurationMode::createIntSliderSettings() {
             position = findFreePosition(elements, sliderSize, padding, 10.0f, 10.0f, 25.0f);
         }
 
-        if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+        if (position.x == -1.0f && position.y == -1.0f) {
             playBeep();
-            position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+            position = ImVec2(0.0f, menuBarHeight);
         }
 
-        sliderSize = ImVec2(200.0f, 20.0f); // Fixed size for the slider
-
         if (ImGui::Button("Add")) {
-            addElementToActiveTemplate(new Slider<int>(
-                    label,
-                    position,
-                    sliderSize,
-                    minValue,
-                    maxValue,
-                    initialValue
-            ));
+            if (isHorizontal) {
+                addElementToActiveTemplate(new HorizontalSlider<int>(
+                        label,
+                        position,
+                        sliderSize,
+                        minValue,
+                        maxValue,
+                        initialValue
+                ));
+            } else {
+                addElementToActiveTemplate(new VerticalSlider<int>(
+                        label,
+                        position,
+                        sliderSize,
+                        minValue,
+                        maxValue,
+                        initialValue
+                ));
+            }
             ImGui::CloseCurrentPopup();
         }
 
@@ -854,6 +865,7 @@ void ConfigurationMode::createFloatSliderSettings() {
         static float minValue = 0.0f;
         static float maxValue = 1.0f;
         static float initialValue = 0.0f;
+        static bool isHorizontal = true;
 
         ImGui::InputText("Label", label, IM_ARRAYSIZE(label));
         ImGui::InputFloat("Min Value", &minValue);
@@ -863,10 +875,11 @@ void ConfigurationMode::createFloatSliderSettings() {
         if (initialValue < minValue) initialValue = minValue;
         if (initialValue > maxValue) initialValue = maxValue;
 
-        // Calculate free position for the float slider
+        ImGui::Checkbox("Horizontal Slider", &isHorizontal);
+
         auto elements = templateManager.getActiveTemplateElements();
-        ImVec2 sliderSize(200.0f, 20.0f); // Fixed size for the float slider
-        ImVec2 padding(10.0f, 10.0f); // Define padding to maintain space between elements
+        ImVec2 sliderSize = isHorizontal ? ImVec2(200.0f, 20.0f) : ImVec2(20.0f, 200.0f);
+        ImVec2 padding(10.0f, 10.0f);
 
         if (isSnapping) {
             int widthInSquares = ceil(sliderSize.x / gridSize);
@@ -878,22 +891,31 @@ void ConfigurationMode::createFloatSliderSettings() {
             position = findFreePosition(elements, sliderSize, padding, 10.0f, 10.0f, 25.0f);
         }
 
-        if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+        if (position.x == -1.0f && position.y == -1.0f) {
             playBeep();
-            position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+            position = ImVec2(0.0f, menuBarHeight);
         }
 
-        sliderSize = ImVec2(200.0f, 20.0f); // Fixed size for the slider
-
         if (ImGui::Button("Add")) {
-            addElementToActiveTemplate(new Slider<float>(
-                    label,
-                    position,
-                    sliderSize,
-                    minValue,
-                    maxValue,
-                    initialValue
-            ));
+            if (isHorizontal) {
+                addElementToActiveTemplate(new HorizontalSlider<float>(
+                        label,
+                        position,
+                        sliderSize,
+                        minValue,
+                        maxValue,
+                        initialValue
+                ));
+            } else {
+                addElementToActiveTemplate(new VerticalSlider<float>(
+                        label,
+                        position,
+                        sliderSize,
+                        minValue,
+                        maxValue,
+                        initialValue
+                ));
+            }
             ImGui::CloseCurrentPopup();
         }
 
@@ -905,6 +927,7 @@ void ConfigurationMode::createFloatSliderSettings() {
         ImGui::EndPopup();
     }
 }
+
 
 void ConfigurationMode::addElementToActiveTemplate(Element* element) {
     templateManager.addElementToActiveTemplate(element);
