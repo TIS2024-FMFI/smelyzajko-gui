@@ -30,6 +30,7 @@ public:
         setupShortcuts();
 
         templateManager.setConfigMode(true);
+        menuBarHeight = ImGui::GetFrameHeight();
     };
 
     int run() override;
@@ -58,7 +59,7 @@ private:
     float gridSize = 60.0f;
     bool isSnapping = false;
     bool showGrid = false;
-    float menuBarHeight;
+    float menuBarHeight = 25.0f;
 
     void addModuleToActiveTemplate(GraphicModule *graphicModule);
 

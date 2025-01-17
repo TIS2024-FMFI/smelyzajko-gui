@@ -375,7 +375,7 @@ void ConfigurationMode::setupMenuBar() {
             // Minimum value to avoid dividing by 0
             if (gridSize < minGridValue) {
                 gridSize = minGridValue;
-            }else if (gridSize > maxGridValue){
+            } else if (gridSize > maxGridValue) {
                 gridSize = maxGridValue;
             }
 
@@ -412,88 +412,92 @@ void ConfigurationMode::setupMenuBar() {
             ImGui::EndMenu();
         }
 
-        if (ImGui::BeginMenu("Controls")) {
-            auto elements = templateManager.getActiveTemplateElements();
+//        if (ImGui::BeginMenu("Controls")) {
+//            auto elements = templateManager.getActiveTemplateElements();
+//
+//            if (ImGui::MenuItem("Add TextInput")) {
+//                ImVec2 elementSize(200.0f, 20.0f);
+//                ImVec2 padding(10.0f, 10.0f);
+//                float menuBarHeight = 25.0f;
+//                ImVec2 position;
+//
+//                if (isSnapping) {
+//                    elementSize = ImVec2(gridSize, gridSize); // Snap to grid size
+//                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
+//                } else {
+//                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
+//                }
+//
+//                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+//                    playBeep();
+//                    position = ImVec2(0.0f, menuBarHeight);
+//                }
+//
+//                addElementToActiveTemplate(new TextInput("TextInput", position)); // Add new TextInput element
+//            }
+//
+//            if (ImGui::MenuItem("Add Checkbox")) {
+//                ImVec2 elementSize(30.0f, 30.0f);
+//                ImVec2 padding(10.0f, 10.0f);
+//                float menuBarHeight = 25.0f;
+//                ImVec2 position;
+//
+//                if (isSnapping) {
+//                    elementSize = ImVec2(gridSize, gridSize);
+//                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
+//                } else {
+//                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
+//                }
+//
+//                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+//                    playBeep();
+//                    position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+//                }
+//
+//                addElementToActiveTemplate(new Checkbox("Checkbox", position, false));
+//            }
+//
+//            if (ImGui::MenuItem("Add Button")) {
+//                ImVec2 elementSize(100.0f, 25.0f);
+//                ImVec2 padding(20.0f, 20.0f);
+//                float menuBarHeight = 25.0f;
+//                ImVec2 position;
+//
+//                if (isSnapping) {
+//                    elementSize = ImVec2(gridSize, gridSize);
+//                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
+//                } else {
+//                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
+//                }
+//
+//                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+//                    playBeep();
+//                    position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+//                }
+//
+//                addElementToActiveTemplate(new Button("Button", position, elementSize));
+//            }
+//
+//
+//            if (ImGui::BeginMenu("Create Slider")) {
+//                createIntSliderSettings();
+//                createFloatSliderSettings();
+//                ImGui::EndMenu();
+//            }
+//
+//            if (ImGui::BeginMenu("Create Label")) {
+//                createLabelSettings();
+//                ImGui::EndMenu();
+//            }
+//
+//            ImGui::EndMenu();
+//        }
+    }
 
-            if (ImGui::MenuItem("Add TextInput")) {
-                ImVec2 elementSize(200.0f, 20.0f);
-                ImVec2 padding(10.0f, 10.0f);
-                float menuBarHeight = 25.0f;
-                ImVec2 position;
 
-                if (isSnapping) {
-                    elementSize = ImVec2(gridSize, gridSize); // Snap to grid size
-                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
-                } else {
-                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
-                }
-
-                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
-                    playBeep();
-                    position = ImVec2(0.0f, menuBarHeight);
-                }
-
-                addElementToActiveTemplate(new TextInput("TextInput", position)); // Add new TextInput element
-            }
-
-            if (ImGui::MenuItem("Add Checkbox")) {
-                ImVec2 elementSize(30.0f, 30.0f);
-                ImVec2 padding(10.0f, 10.0f);
-                float menuBarHeight = 25.0f;
-                ImVec2 position;
-
-                if (isSnapping) {
-                    elementSize = ImVec2(gridSize, gridSize);
-                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
-                } else {
-                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
-                }
-
-                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
-                    playBeep();
-                    position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
-                }
-
-                addElementToActiveTemplate(new Checkbox("Checkbox", position, false));
-            }
-
-            if (ImGui::MenuItem("Add Button")) {
-                ImVec2 elementSize(100.0f, 25.0f);
-                ImVec2 padding(20.0f, 20.0f);
-                float menuBarHeight = 25.0f;
-                ImVec2 position;
-
-                if (isSnapping) {
-                    elementSize = ImVec2(gridSize, gridSize);
-                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
-                } else {
-                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
-                }
-
-                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
-                    playBeep();
-                    position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
-                }
-
-                addElementToActiveTemplate(new Button("Button", position, elementSize));
-            }
-
-
-            if (ImGui::BeginMenu("Create Slider")) {
-                createIntSliderSettings();
-                createFloatSliderSettings();
-                ImGui::EndMenu();
-            }
-
-            if (ImGui::BeginMenu("Create Label")) {
-                createLabelSettings();
-                ImGui::EndMenu();
-            }
-
-            ImGui::EndMenu();
-        }
-
-
+    if (ImGui::BeginMenu("Add Text Label")) {
+        createLabelSettings();
+        ImGui::EndMenu();
     }
 
     static char toastInputBuffer[256] = "";
@@ -511,6 +515,7 @@ void ConfigurationMode::setupMenuBar() {
         ImGui::EndMenu();
 
     }
+
     if (ImGui::BeginMenu("Add Modules")) {
         auto elements = templateManager.getActiveTemplateElements();
         for (Module* module : moduleManager.getModules()) {
@@ -520,7 +525,6 @@ void ConfigurationMode::setupMenuBar() {
                     if (ImGui::MenuItem(graphicElement.c_str())) {
                         ImVec2 elementSize(300.0f, 200.0f);
                         ImVec2 padding(30.0f, 30.0f);
-                        float menuBarHeight = 25.0f;
                         ImVec2 position;
                         if (isSnapping) {
                             int widthInSquares = ceil(elementSize.x / gridSize);
@@ -550,67 +554,64 @@ void ConfigurationMode::setupMenuBar() {
         }
         ImGui::EndMenu();
     }
-if (ImGui::BeginMenu("Add Input Elements")) {
-    auto elements = templateManager.getActiveTemplateElements();
-    for (Module* module : moduleManager.getModules()) {
-        if (ImGui::BeginMenu(module->getModuleName().c_str())) {
-            std::unordered_map<std::string, std::vector<std::string>> groupedElements;
-            for (const auto& inputElement : module->getPossibleInputElements()) {
-                for (const auto& elementName : inputElement.second) {
-                    groupedElements[inputElement.first].push_back(elementName);
-                }
-            }
-            for (const auto& group : groupedElements) {
-                if (ImGui::BeginMenu(group.first.c_str())) {
-                    std::string elementType = group.first;
-                    for (const auto& elementName : group.second) {
-                        if (ImGui::MenuItem(elementName.c_str())) {
-                            ImVec2 elementSize(100.0f, 25.0f);
-                            ImVec2 padding(20.0f, 20.0f);
-                            float menuBarHeight = 25.0f;
-                            ImVec2 position;
-                            if (isSnapping) {
-                                elementSize = ImVec2(gridSize, gridSize);
-                                position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
-                            } else {
-                                position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
-                            }
 
-                            if (position.x == -1.0f && position.y == -1.0f) { // No free position found
-                                playBeep();
-                                position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
-                            }
-                            static const std::unordered_map<std::string, std::function<Element*()>> elementCreators = {
-                                    {"button", []() { return new Button(); }},
-                                    {"checkbox", []() { return new Checkbox(); }},
-                                    {"horizontal-slider-int", []() { return new HorizontalSlider<int>(); }},
-                                    {"horizontal-slider-float", []() { return new HorizontalSlider<float>(); }},
-                                    {"vertical-slider-int", []() { return new VerticalSlider<int>(); }},
-                                    {"vertical-slider-float", []() { return new VerticalSlider<float>(); }},
-                                    {"text-input", []() { return  new TextInput(); }}
-                            };
-                            if (elementCreators.find(elementType) != elementCreators.end()) {
-                                Element* newElement = elementCreators.at(elementType)();
-                                newElement->setConfigurationMode(true);
-                                newElement->setLabel(elementName);
-                                newElement->setModuleName(module->getModuleName());
-                                newElement->setPosition(position);
-                                newElement->setSize(elementSize);
-                                addElementToActiveTemplate(newElement);
-                            } else {
-                                // Handle the case where the element name is not found
-                                std::cerr << "Unknown element type: " << elementType << std::endl;
+    if (ImGui::BeginMenu("Add Input Elements")) {
+        auto elements = templateManager.getActiveTemplateElements();
+        for (Module* module : moduleManager.getModules()) {
+            if (ImGui::BeginMenu(module->getModuleName().c_str())) {
+                for (const auto& group : module->getPossibleInputElements()) {
+                    if (ImGui::BeginMenu(group.first.c_str())) {
+                        std::string elementType = group.first;
+                        for (const auto& elementName : group.second) {
+                            if (ImGui::MenuItem(elementName.c_str())) {
+                                ImVec2 elementSize(100.0f, 25.0f);
+                                ImVec2 padding(20.0f, 20.0f);
+                                ImVec2 position;
+
+                                if (isSnapping) {
+                                    elementSize = ImVec2(gridSize, gridSize);
+                                    position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
+                                } else {
+                                    position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
+                                }
+
+                                if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+                                    playBeep();
+                                    position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+                                }
+
+                                static const std::unordered_map<std::string, std::function<Element*()>> elementCreators = {
+                                        {"button", []() { return new Button(); }},
+                                        {"checkbox", []() { return new Checkbox(); }},
+                                        {"horizontal-slider-int", []() { return new HorizontalSlider<int>(); }},
+                                        {"horizontal-slider-float", []() { return new HorizontalSlider<float>(); }},
+                                        {"vertical-slider-int", []() { return new VerticalSlider<int>(); }},
+                                        {"vertical-slider-float", []() { return new VerticalSlider<float>(); }},
+                                        {"text-input", []() { return  new TextInput(); }}
+                                };
+
+                                if (elementCreators.find(elementType) != elementCreators.end()) {
+                                    Element* newElement = elementCreators.at(elementType)();
+                                    newElement->setConfigurationMode(true);
+                                    newElement->setLabel(elementName);
+                                    newElement->setModuleName(module->getModuleName());
+                                    newElement->setPosition(position);
+                                    newElement->setSize(elementSize);
+                                    addElementToActiveTemplate(newElement);
+                                } else {
+                                    // Handle the case where the element name is not found
+                                    std::cerr << "Unknown element type: " << elementType << std::endl;
+                                }
                             }
                         }
+                        ImGui::EndMenu();
                     }
-                    ImGui::EndMenu();
                 }
+                ImGui::EndMenu();
             }
-            ImGui::EndMenu();
         }
+        ImGui::EndMenu();
     }
-    ImGui::EndMenu();
-}
 
 
     ImGui::EndMainMenuBar();
@@ -676,7 +677,6 @@ if (ImGui::BeginMenu("Add Input Elements")) {
 
 void ConfigurationMode::drawGrid() const {
     ImVec2 displaySize = io.DisplaySize;
-    float menuBarHeight = ImGui::GetFrameHeight();
     ImDrawList *drawList = ImGui::GetBackgroundDrawList();
 
     ImU32 whiteColor = IM_COL32_WHITE;
