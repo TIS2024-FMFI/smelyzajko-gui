@@ -1,10 +1,11 @@
-// src/ShortcutsManager.h
 #ifndef SHORTCUTS_MANAGER_H
 #define SHORTCUTS_MANAGER_H
 
 #include <unordered_map>
 #include <functional>
 #include <string>
+#include <vector>
+#include <chrono>
 #include <GLFW/glfw3.h>
 
 class ShortcutsManager {
@@ -24,6 +25,14 @@ private:
     GLFWwindow* window;
 
     bool isShortcutPressed(const std::string& shortcut);
+
+    int getGlfwKey(const std::string &key);
+
+    std::vector<std::string> parseShortcut(const std::string &shortcut);
+
+    std::unordered_map<std::string, std::chrono::steady_clock::time_point> lastActivationTimes;
+
+    static const int DEBOUNCE_MS = 200; // Debounce delay in milliseconds
 };
 
 #endif // SHORTCUTS_MANAGER_H

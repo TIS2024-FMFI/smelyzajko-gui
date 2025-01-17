@@ -22,22 +22,25 @@ public:
         } else {
             templateManager = TemplateManager(templateNames, false);
         }
+
+        setupShortcuts();
+
+        templateManager.setActiveTemplate(templateManager.getAllTemplates().front());
+        std::string activeTemplateName = templateManager.getActiveTemplateName();
+        std::string windowTitle = std::string("GUI") + " - " + activeTemplateName;
+        glfwSetWindowTitle(window, windowTitle.c_str());
     };
 
     int run() override;
     void drawElements();
     void setupMenuBar();
-//    void renderSettingsPopup(GraphicModule& module, const std::string& part);
-    void addElementToActiveTemplate(Element *element);
-    void bringElementToTop(Element *element);
+    void setupShortcuts() override;
     TemplateManager templateManager = TemplateManager(false);
 
 private:
-    float gridSize = 60.0f;
-    bool isSnapping = false;
-    bool showGrid = false;
+    int currentTemplateIndex = 0;
 
-
+    void switchTemplate(int direction);
 };
 
 
