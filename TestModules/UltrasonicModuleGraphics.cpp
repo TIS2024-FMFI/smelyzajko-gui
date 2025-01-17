@@ -4,9 +4,9 @@
 #include <cmath>
 
 UltrasonicModuleGraphics::UltrasonicModuleGraphics()
-        : autoscrollEnabled(true),
-          scrollbar(100.0f, 0.0f) { // Initialize Scrollbar
+        : textArea(size.x, 100.0f, "UltrasonicModule") { // Initialize TextArea with default dimensions
     setGraphicElementName("Ultrasonic Module");
+
     // Initialize previous distances to match initial sensor values
     for (const auto& sensor : sensors) {
         previousDistances.push_back(sensor.distance);
@@ -44,56 +44,13 @@ void UltrasonicModuleGraphics::draw(ImGuiIO& io) {
         draw_list->AddCircleFilled(ImVec2(x, y), 4.0f, IM_COL32(0, 255, 0, 255)); // Green dot
     }
 
-    // Log area
-    float log_area_height = 100.0f;
-    float inner_padding = 5.0f;
-    ImVec2 log_area_min = ImVec2(position.x, position.y + size.y + 10.0f);
-    ImVec2 log_area_max = ImVec2(position.x + size.x, position.y + size.y + log_area_height);
+    // Update TextArea width dynamically to match module width
+    textArea.setWidth(size.x);
 
-    draw_list->AddRect(log_area_min, log_area_max, IM_COL32(255, 255, 255, 255));
-
-    // Calculate total log height dynamically
-    float total_log_height = 0.0f;
-    for (const std::string& log : logValues) {
-        ImVec2 log_text_size = ImGui::CalcTextSize(log.c_str());
-        total_log_height += log_text_size.y + inner_padding;
-    }
-
-    // Update scrollbar dimensions
-    float visible_height = log_area_height - 2 * inner_padding;
-    scrollbar.updateTotalHeight(total_log_height);
-    scrollbar.updateVisibleHeight(visible_height);
-
-    // Render logs using the updated scrollOffset
-    float log_y_offset = log_area_min.y - scrollbar.getScrollOffset();
-    draw_list->PushClipRect(log_area_min, log_area_max, true);
-    for (const std::string& log : logValues) {
-        ImVec2 log_text_size = ImGui::CalcTextSize(log.c_str());
-        if (log_y_offset + log_text_size.y >= log_area_min.y &&
-            log_y_offset <= log_area_max.y) {
-            ImVec2 log_pos = ImVec2(log_area_min.x + inner_padding, log_y_offset);
-            draw_list->AddText(log_pos, IM_COL32(255, 255, 255, 255), log.c_str());
-        }
-        log_y_offset += log_text_size.y + inner_padding;
-    }
-    draw_list->PopClipRect();
-
-    // Draw and update the scrollbar
-    if (total_log_height > visible_height) {
-        scrollbar.drawScrollbar(log_area_min, log_area_max, io);
-        scrollbar.updateScrollOffset(io);
-    }
-
-    // Checkbox for autoscroll
-    ImVec2 checkbox_position = ImVec2(log_area_max.x - 20.0f, log_area_min.y + 5.0f);
-    ImGui::SetCursorScreenPos(checkbox_position);
-    ImGui::Checkbox("##AutoscrollCheckbox", &autoscrollEnabled);
-    scrollbar.enableAutoscroll(autoscrollEnabled);
+    // Draw the TextArea below the ultrasonic graphics
+    ImVec2 textAreaPosition = ImVec2(position.x, position.y + size.y + 10.0f);
+    textArea.drawTextArea(textAreaPosition, io);
 }
-
-
-
-
 
 void UltrasonicModuleGraphics::updateDynamicSensors() {
     auto now = std::chrono::steady_clock::now();
@@ -105,8 +62,6 @@ void UltrasonicModuleGraphics::updateDynamicSensors() {
 
     lastUpdateTime = now; // Reset the timer
 
-    std::lock_guard<std::mutex> lock(logMutex); // Ensure thread safety
-
     for (size_t i = 0; i < sensors.size(); ++i) {
         auto& sensor = sensors[i];
         float distanceVariation = static_cast<float>(std::rand() % 21 - 10) / 10.0f;
@@ -116,12 +71,11 @@ void UltrasonicModuleGraphics::updateDynamicSensors() {
         if (sensor.distance != previousDistances[i]) {
             std::ostringstream logStream;
             logStream << "A: " << sensor.angle << ", D: " << std::fixed << std::setprecision(1) << sensor.distance;
-            logValues.push_back(logStream.str());
+            textArea.addLog(logStream.str()); // Add log to TextArea
             previousDistances[i] = sensor.distance;
         }
     }
 }
-
 
 void UltrasonicModuleGraphics::updateValueOfModule(std::vector<int> value) {
     if (value.size() == sensors.size()) {
@@ -129,14 +83,13 @@ void UltrasonicModuleGraphics::updateValueOfModule(std::vector<int> value) {
             sensors[i].distance = value[i];
         }
 
-        std::lock_guard<std::mutex> lock(logMutex);
-        logValues.push_back("Sensor data updated.");
+        textArea.addLog("Sensor data updated.");
     }
 }
 
-
 void UltrasonicModuleGraphics::updateValueOfModule(int value) {
     updateIntervalFrames = value;
-    std::cout << "Update interval set to: " << updateIntervalFrames << " frames." << std::endl;
+    std::ostringstream logStream;
+    logStream << "Update interval set to: " << updateIntervalFrames << " frames.";
+    textArea.addLog(logStream.str());
 }
-
