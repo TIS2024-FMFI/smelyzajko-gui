@@ -1,10 +1,11 @@
 #include "MapModuleGraphics.h"
 #include <fstream>
 #include <iostream>
+#include <iomanip>
+#include <cmath>
 
 MapModuleGraphics::MapModuleGraphics()
-        : autoscrollEnabled(true),
-          scrollbar(100.0f, 0.0f) { // Initialize scrollbar
+        :textArea(size.x, 100.f, "MapModule") { // Initialize TextArea with default dimensions
     setGraphicElementName("Map Graphic Element");
     loadMap();
 }
@@ -67,61 +68,19 @@ void MapModuleGraphics::draw(ImGuiIO &io) {
             cellSize / 4, IM_COL32(255, 0, 0, 255)
     );
 
-    // Log area
-    float log_area_height = 100.0f;
-    float inner_padding = 5.0f;
-    ImVec2 log_area_min = ImVec2(position.x, position.y + rows * cellSize + 10.0f);
-    ImVec2 log_area_max = ImVec2(position.x + cols * cellSize, position.y + rows * cellSize + log_area_height);
+    // Update TextArea width dynamically to match module width
+    textArea.setWidth(std::min(size.x, cols * cellSize));
 
-    draw_list->AddRect(log_area_min, log_area_max, IM_COL32(255, 255, 255, 255));
-
-    // Calculate total log height dynamically
-    float total_log_height = 0.0f;
-    for (const std::string& log : logValues) {
-        ImVec2 log_text_size = ImGui::CalcTextSize(log.c_str());
-        total_log_height += log_text_size.y + inner_padding;
-    }
-
-    // Update scrollbar dimensions
-    float visible_height = log_area_height - 2 * inner_padding;
-    scrollbar.updateTotalHeight(total_log_height);
-    scrollbar.updateVisibleHeight(visible_height);
-
-    // Render logs using the updated scrollOffset
-    float log_y_offset = log_area_min.y - scrollbar.getScrollOffset();
-    draw_list->PushClipRect(log_area_min, log_area_max, true);
-    for (const std::string& log : logValues) {
-        ImVec2 log_text_size = ImGui::CalcTextSize(log.c_str());
-        if (log_y_offset + log_text_size.y >= log_area_min.y &&
-            log_y_offset <= log_area_max.y) {
-            ImVec2 log_pos = ImVec2(log_area_min.x + inner_padding, log_y_offset);
-            draw_list->AddText(log_pos, IM_COL32(255, 255, 255, 255), log.c_str());
-        }
-        log_y_offset += log_text_size.y + inner_padding;
-    }
-    draw_list->PopClipRect();
-
-    // Conditionally draw scrollbar if needed
-    if (total_log_height > visible_height) {
-        scrollbar.drawScrollbar(log_area_min, log_area_max, io);
-        scrollbar.updateScrollOffset(io);
-    }
-
-    ImVec2 checkbox_position = ImVec2(log_area_max.x - 20.0f, log_area_min.y);
-    ImGui::SetCursorScreenPos(checkbox_position);
-    ImGui::Checkbox("##AutoscrollCheckbox3", &autoscrollEnabled);
-    scrollbar.enableAutoscroll(autoscrollEnabled);
+    // Draw the text area below the map
+    ImVec2 textAreaPosition = ImVec2(position.x, position.y + rows * cellSize + 10.0f);
+    textArea.drawTextArea(textAreaPosition, io);
 }
 
 void MapModuleGraphics::updateValueOfModule(std::vector<int> value) {
     if (value.size() == 2) {
         ballRow = value[0];
         ballCol = value[1];
-        std::lock_guard<std::mutex> lock(logMutex);
-        logValues.push_back("Moved to: (" + std::to_string(ballRow) + ", " + std::to_string(ballCol) + ")");
-        if (logValues.size() > 100) {
-            logValues.erase(logValues.begin());
-        }
+        textArea.addLog("Moved to: (" + std::to_string(ballRow) + ", " + std::to_string(ballCol) + ")");
     } else {
         std::cerr << "Invalid value for MapModuleGraphics." << std::endl;
     }
