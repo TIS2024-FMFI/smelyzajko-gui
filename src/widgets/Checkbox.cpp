@@ -44,7 +44,7 @@ void Checkbox::to_json(nlohmann::json &j) const {
     j = nlohmann::json{
             {"type", "checkbox"},
             {"label", label},
-            {"position", {position.x, position.y}},
+            {"position", {roundToOneDecimal(position.x), roundToOneDecimal(position.y)}},
             {"checked", checked}
     };
 }

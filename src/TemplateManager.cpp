@@ -7,6 +7,8 @@
 
 namespace fs = std::filesystem;
 
+
+
 TemplateManager::TemplateManager() {
     loadAllTemplates();
 }

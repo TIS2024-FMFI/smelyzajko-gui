@@ -7,6 +7,8 @@
 #include "imgui_internal.h"
 #include <GLFW/glfw3.h>
 
+
+
 class Element {
 protected:
     ImVec2 position;
@@ -51,4 +53,10 @@ public:
     virtual void from_json(const nlohmann::json& j, ImVec2 resolution);
 
     static ImVec2 getScaleFactors(ImVec2 templateResolution);
+
+    float roundToOneDecimal(float value) const;
+
+
 };
+
+

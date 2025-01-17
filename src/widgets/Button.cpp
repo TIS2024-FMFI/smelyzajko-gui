@@ -66,8 +66,8 @@ void Button::to_json(nlohmann::json &j) const {
     j = nlohmann::json{
             {"type", "button"},
             {"label", label},
-            {"position", {position.x, position.y}},
-            {"size", {size.x, size.y}}
+            {"position", {roundToOneDecimal(position.x), roundToOneDecimal(position.y)}},
+            {"size", {roundToOneDecimal(size.x), roundToOneDecimal(size.y)}}
     };
 }
 

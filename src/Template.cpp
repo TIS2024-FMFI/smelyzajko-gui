@@ -12,6 +12,9 @@
 #include "widgets/MultiLineLabel.h"
 #include "TemplateManager.h"
 #include "ModuleManager.h"
+#include <cmath>
+
+
 
 using json = nlohmann::json;
 

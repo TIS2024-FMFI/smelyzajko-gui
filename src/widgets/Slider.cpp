@@ -87,8 +87,8 @@ void Slider<E>::to_json(nlohmann::json& j) const {
     j = nlohmann::json{
             {"type", type},
             {"label", label},
-            {"position", {position.x, position.y}},
-            {"size", {size.x, size.y}},
+            {"position", {roundToOneDecimal(position.x), roundToOneDecimal(position.y)}},
+            {"size", {roundToOneDecimal(size.x), roundToOneDecimal(size.y)}},
             {"minValue", minValue},
             {"maxValue", maxValue},
             {"value", value},

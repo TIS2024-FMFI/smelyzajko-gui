@@ -1,5 +1,9 @@
 #include "Element.h"
 
+float Element::roundToOneDecimal(float value) const {
+    return std::round(value * 10) / 10.0f; // Multiply, round, then divide
+}
+
 ImVec2 Element::getPosition() const {
     return position;
 }
@@ -60,7 +64,8 @@ bool Element::getWasDragged() const {
 
 void Element::to_json(nlohmann::json &j) const {
     j["label"] = label;
-    j["position"] = {position.x, position.y};
+
+    j["position"] = {roundToOneDecimal(position.x), roundToOneDecimal(position.y)};
 }
 
 void Element::from_json(const nlohmann::json &j, ImVec2 resolution) {

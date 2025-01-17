@@ -1,0 +1,34 @@
+{
+    "elements": [
+        {
+            "label": "Rectangle",
+            "position": [
+                500.0,
+                313.0
+            ],
+            "size": [
+                437.0,
+                418.0
+            ],
+            "type": "rectangle"
+        },
+        {
+            "label": "Rectangle",
+            "position": [
+                695.0,
+                131.0
+            ],
+            "size": [
+                313.0,
+                210.0
+            ],
+            "type": "rectangle"
+        }
+    ],
+    "graphicModules": [],
+    "name": "novy",
+    "resolution": [
+        2560,
+        1600
+    ]
+}

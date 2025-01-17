@@ -26,16 +26,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(smelyzajko-gui)
 
-#set(CMAKE_CXX_STANDARD 17)
-
-
-#FetchContent_Declare(
-#        yaml-cpp
-#        GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
-#        GIT_TAG        master # Use a specific tag or branch if needed
-#)
-#
-#FetchContent_MakeAvailable(yaml-cpp)
 
 
 file(GLOB IMGUI_SRC libs/imgui/*.cpp libs/imgui/backends/imgui_impl_glfw.cpp libs/imgui/backends/imgui_impl_opengl3.cpp)
