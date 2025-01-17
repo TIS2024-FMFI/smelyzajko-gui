@@ -550,7 +550,7 @@ void ConfigurationMode::setupMenuBar() {
         }
         ImGui::EndMenu();
     }
-if (ImGui::BeginMenu("Add Element to Module")) {
+if (ImGui::BeginMenu("Add Input Elements")) {
     auto elements = templateManager.getActiveTemplateElements();
     for (Module* module : moduleManager.getModules()) {
         if (ImGui::BeginMenu(module->getModuleName().c_str())) {
@@ -583,8 +583,10 @@ if (ImGui::BeginMenu("Add Element to Module")) {
                             static const std::unordered_map<std::string, std::function<Element*()>> elementCreators = {
                                     {"button", []() { return new Button(); }},
                                     {"checkbox", []() { return new Checkbox(); }},
-                                    {"slider-int", []() { return new Slider<int>; }},
-                                    {"slider-float", []() { return new Slider<float>; }},
+                                    {"horizontal-slider-int", []() { return new HorizontalSlider<int>(); }},
+                                    {"horizontal-slider-float", []() { return new HorizontalSlider<float>(); }},
+                                    {"vertical-slider-int", []() { return new VerticalSlider<int>(); }},
+                                    {"vertical-slider-float", []() { return new VerticalSlider<float>(); }},
                                     {"text-input", []() { return  new TextInput(); }}
                             };
                             if (elementCreators.find(elementType) != elementCreators.end()) {

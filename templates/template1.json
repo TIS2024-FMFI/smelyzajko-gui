@@ -13,7 +13,7 @@
                 100.0,
                 25.0
             ],
-            "type": "slider-int",
+            "type": "horizontal-slider-int",
             "value": 0
         },
         {

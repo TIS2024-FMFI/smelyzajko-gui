@@ -26,7 +26,8 @@ public:
     std::unordered_map<std::string,std::vector<std::string>> getPossibleInputElements() override {
         return {
             {"button", {"Button1", "Button2"}},
-            {"slider-int", {"Slider-int1", "Slider-int2"}},
+            {"horizontal-slider-int", {"Slider-int1", "Slider-int2"}},
+            {"vertical-slider-int", {"Slider-int3", }},
             {"checkbox", {"Checkbox1"}},
             {"text-input", {"Text1"}}
 

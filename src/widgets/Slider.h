@@ -1,3 +1,4 @@
+#pragma once
 #include "Element.h"
 #include <algorithm>
 
@@ -40,7 +41,7 @@ public:
     float getNormalizedValue() const;
 
     virtual void from_json(const nlohmann::json &j, ImVec2 resolution) override;
-    virtual void to_json(nlohmann::json &j) const override = 0;
+    virtual void to_json(nlohmann::json &j) const override ;
 
     std::vector<Setting> getSettings() override;
 
