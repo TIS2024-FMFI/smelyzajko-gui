@@ -1,12 +1,13 @@
 #pragma once
 
 #include <utility>
-#include "../../json.hpp"
+#include "optional"
 #include "imgui.h"
 #include "string"
 #include "imgui_internal.h"
 #include <GLFW/glfw3.h>
 #include "variant"
+#include "libs/json.hpp"
 
 // Typ alias pre variant
 using SettingValue = std::variant<bool, int, float, std::string>;
