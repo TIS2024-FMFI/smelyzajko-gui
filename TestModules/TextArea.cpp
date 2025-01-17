@@ -1,7 +1,13 @@
 #include "TextArea.h"
 
-TextArea::TextArea(float width, float height)
-        : width(width), height(height), scrollbar(height, 0.0f), autoscrollEnabled(true) {}
+TextArea::TextArea(float width, float height, const std::string& id)
+        : width(width),          // Initialize the width of the text area
+          height(height),        // Initialize the height of the text area
+          id(id),                // Set the unique identifier for the text area
+          scrollbar(height, 0.0f), // Initialize the scrollbar with height
+          autoscrollEnabled(true) // Enable autoscroll by default
+{
+}
 
 void TextArea::setWidth(float newWidth) {
     width = newWidth; // Dynamically adjust the width
@@ -58,15 +64,13 @@ void TextArea::drawTextArea(ImVec2 position, ImGuiIO& io) {
         scrollbar.updateScrollOffset(io);
     }
 
-    // Checkbox for autoscroll
-    ImVec2 checkbox_position = ImVec2(text_area_max.x - 20.0f, text_area_min.y);
+    // Unique checkbox id using the text area's id
+    std::string checkbox_id = "##AutoscrollCheckbox_" + id;
+    ImVec2 checkbox_position = ImVec2(text_area_max.x - 20.0f, text_area_min.y); // Adjust checkbox position
     ImGui::SetCursorScreenPos(checkbox_position);
-    ImGui::Checkbox("##AutoscrollCheckbox", &autoscrollEnabled);
+    ImGui::Checkbox(checkbox_id.c_str(), &autoscrollEnabled);
     scrollbar.enableAutoscroll(autoscrollEnabled);
 }
-
-
-
 
 void TextArea::addLog(const std::string& log) {
     std::lock_guard<std::mutex> lock(logMutex);

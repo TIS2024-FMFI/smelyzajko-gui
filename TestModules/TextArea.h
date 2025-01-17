@@ -9,7 +9,7 @@
 
 class TextArea {
 public:
-    TextArea(float width, float height);
+    TextArea(float width, float height, const std::string& id); // Constructor
 
     // Set a new width dynamically
     void setWidth(float newWidth);
@@ -28,6 +28,7 @@ public:
 private:
     float width;                      // Width of the text area
     float height;                     // Height of the text area
+    std::string id;                   // Unique identifier for the text area
     Scrollbar scrollbar;              // Scrollbar instance
     std::vector<std::string> logs;    // Logs displayed in the text area
     bool autoscrollEnabled;           // Autoscroll toggle
