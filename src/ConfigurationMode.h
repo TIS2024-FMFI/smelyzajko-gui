@@ -44,8 +44,8 @@ public:
     void drawGrid() const;
     void bringElementToTop(std::vector<Element*>& elements, Element* element);
 //    void renderSettingsPopup(Module& module, const std::string& part);
-    void createFloatSliderSettings(std::string elementName, std::string moduleName);
-    void createIntSliderSettings(std::string elementName, std::string moduleName);
+    void createFloatSliderSettings(std::string elementName, std::string moduleName, bool isHorizontal);
+    void createIntSliderSettings(std::string elementName, std::string moduleName, bool isHorizontal);
     void createLabelSettings();
     void createButton(std::string elementName, std::string moduleName);
     void createCheckbox(std::string elementName, std::string moduleName);

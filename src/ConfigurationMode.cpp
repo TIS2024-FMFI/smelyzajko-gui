@@ -479,10 +479,10 @@ void ConfigurationMode::setupMenuBar() {
         auto elements = templateManager.getActiveTemplateElements();
 
         static const std::unordered_map<std::string, std::function<void(std::string, std::string)>> elementCreators = {
-                {"horizontal-slider-int", [&](std::string elementName, std::string moduleName) { createIntSliderSettings(elementName, moduleName); }},
-                {"horizontal-slider-float", [&](std::string elementName, std::string moduleName) { createFloatSliderSettings(elementName, moduleName); }},
-                {"vertical-slider-int", [&](std::string elementName, std::string moduleName) { createIntSliderSettings(elementName, moduleName); }},
-                {"vertical-slider-float", [&](std::string elementName, std::string moduleName) { createFloatSliderSettings(elementName, moduleName); }},
+                {"horizontal-slider-int", [&](std::string elementName, std::string moduleName) { createIntSliderSettings(elementName, moduleName, true); }},
+                {"horizontal-slider-float", [&](std::string elementName, std::string moduleName) { createFloatSliderSettings(elementName, moduleName, true); }},
+                {"vertical-slider-int", [&](std::string elementName, std::string moduleName) { createIntSliderSettings(elementName, moduleName, false); }},
+                {"vertical-slider-float", [&](std::string elementName, std::string moduleName) { createFloatSliderSettings(elementName, moduleName, false); }},
                 {"button", [&](std::string elementName, std::string moduleName) { createButton(elementName, moduleName); }},
                 {"checkbox", [&](std::string elementName, std::string moduleName) { createCheckbox(elementName, moduleName); }},
                 {"text-input", [&](std::string elementName, std::string moduleName) { createTextInput(elementName, moduleName); }},
@@ -683,7 +683,7 @@ void ConfigurationMode::createLabelSettings() {
 }
 
 
-void ConfigurationMode::createIntSliderSettings(std::string elementName, std::string moduleName) {
+void ConfigurationMode::createIntSliderSettings(std::string elementName, std::string moduleName, bool horizontal) {
     std::string popupName = elementName + "-" + moduleName;
 
     if (ImGui::Button(elementName.c_str())) {
@@ -692,13 +692,18 @@ void ConfigurationMode::createIntSliderSettings(std::string elementName, std::st
 
     if (ImGui::BeginPopup(popupName.c_str())) {
         static char label[128];
-        std::strncpy(label, elementName.c_str(), sizeof(label) - 1);
-        label[sizeof(label) - 1] = '\0';
-        static ImVec2 position;
         static int minValue = 0;
         static int maxValue = 10;
         static int initialValue = 5;
-        static bool isHorizontal = true;
+        static bool isHorizontal;
+
+        static bool initialized = false;
+        if (!initialized) {
+            std::strncpy(label, elementName.c_str(), sizeof(label) - 1);
+            label[sizeof(label) - 1] = '\0';
+            isHorizontal = horizontal;
+            initialized = true;
+        }
 
         ImGui::InputText("Label", label, IM_ARRAYSIZE(label));
         ImGui::InputInt("Min Value", &minValue);
@@ -713,6 +718,8 @@ void ConfigurationMode::createIntSliderSettings(std::string elementName, std::st
         auto elements = templateManager.getActiveTemplateElements();
         ImVec2 sliderSize = isHorizontal ? ImVec2(200.0f, 20.0f) : ImVec2(20.0f, 200.0f);
         ImVec2 padding(10.0f, 10.0f);
+
+        ImVec2 position;
 
         if (isSnapping) {
             int widthInSquares = ceil(sliderSize.x / gridSize);
@@ -765,7 +772,7 @@ void ConfigurationMode::createIntSliderSettings(std::string elementName, std::st
     }
 }
 
-void ConfigurationMode::createFloatSliderSettings(std::string elementName, std::string moduleName) {
+void ConfigurationMode::createFloatSliderSettings(std::string elementName, std::string moduleName, bool horizontal) {
     std::string popupName = elementName + "-" + moduleName;
 
     if (ImGui::Button(elementName.c_str())) {
@@ -780,7 +787,7 @@ void ConfigurationMode::createFloatSliderSettings(std::string elementName, std::
         static float minValue = 0.0f;
         static float maxValue = 1.0f;
         static float initialValue = 0.0f;
-        static bool isHorizontal = true;
+        static bool isHorizontal = horizontal;
 
         ImGui::InputText("Label", label, IM_ARRAYSIZE(label));
         ImGui::InputFloat("Min Value", &minValue);
