@@ -4,7 +4,7 @@
 #include "imgui.h"
 #include "../src/Module.h"
 #include "../src/GraphicModule.h"
-#include "TextArea.h" // Include TextArea class
+#include "src/TextArea.h" // Include TextArea class
 #include <vector>
 #include <string>
 #include <mutex>

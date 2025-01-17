@@ -8,7 +8,7 @@
 #include <string>
 #include <mutex>
 #include <chrono>
-#include "TextArea.h"
+#include "src/TextArea.h"
 
 struct UltrasonicSensorData {
     float angle;    // Angle of the sensor
