@@ -37,8 +37,8 @@ protected:
     bool wasDragged = false;
 
 public:
-    Element(const ImVec2& pos = ImVec2(0.0f, 0.0f), std::string lbl = "")
-            : position(pos), label(std::move(lbl)), pendingDelete(false) {}
+    Element(std::string lbl = "", std::string moduleName = "", const ImVec2& pos = ImVec2(0.0f, 0.0f), const ImVec2& size = ImVec2(0.0f, 0.0f))
+            : label(std::move(lbl)), moduleName(std::move(moduleName)), position(pos), size(size) {}
 
     virtual ~Element() = default;
 
