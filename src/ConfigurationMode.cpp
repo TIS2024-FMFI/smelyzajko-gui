@@ -586,7 +586,6 @@ void ConfigurationMode::setupMenuBar() {
                         ImVec2 padding(30.0f, 30.0f);
                         float menuBarHeight = 25.0f;
                         ImVec2 position;
-
                         if (isSnapping) {
                             int widthInSquares = ceil(elementSize.x / gridSize);
                             int heightInSquares = ceil(elementSize.y / gridSize);
@@ -596,12 +595,10 @@ void ConfigurationMode::setupMenuBar() {
                         } else {
                             position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
                         }
-
                         if (position.x == -1.0f && position.y == -1.0f) { // No free position found
                             playBeep();
                             position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
                         }
-
                         //addElementToActiveTemplate(new class Rectangle("Rectangle", position, elementSize));
                         class Rectangle* tempt = new class Rectangle(graphicElement, position, elementSize);
                         tempt->setModuleID(module->getModuleID());
@@ -617,6 +614,66 @@ void ConfigurationMode::setupMenuBar() {
         }
         ImGui::EndMenu();
     }
+if (ImGui::BeginMenu("Add Element to Module")) {
+    auto elements = templateManager.getActiveTemplateElements();
+    for (Module* module : moduleManager.getModules()) {
+        if (ImGui::BeginMenu(module->getModuleName().c_str())) {
+            std::unordered_map<std::string, std::vector<std::string>> groupedElements;
+            for (const auto& inputElement : module->getPossibleInputElements()) {
+                for (const auto& elementName : inputElement.second) {
+                    groupedElements[inputElement.first].push_back(elementName);
+                }
+            }
+            for (const auto& group : groupedElements) {
+                if (ImGui::BeginMenu(group.first.c_str())) {
+                    std::string elementType = group.first;
+                    for (const auto& elementName : group.second) {
+                        if (ImGui::MenuItem(elementName.c_str())) {
+                            ImVec2 elementSize(100.0f, 25.0f);
+                            ImVec2 padding(20.0f, 20.0f);
+                            float menuBarHeight = 25.0f;
+                            ImVec2 position;
+                            if (isSnapping) {
+                                elementSize = ImVec2(gridSize, gridSize);
+                                position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
+                            } else {
+                                position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
+                            }
+
+                            if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+                                playBeep();
+                                position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+                            }
+                            static const std::unordered_map<std::string, std::function<Element*()>> elementCreators = {
+                                    {"button", []() { return new Button(); }},
+                                    {"checkbox", []() { return new Checkbox(); }},
+                                    {"slider-int", []() { return new Slider<int>; }},
+                                    {"slider-float", []() { return new Slider<float>; }},
+                            };
+                            if (elementCreators.find(elementType) != elementCreators.end()) {
+                                Element* newElement = elementCreators.at(elementType)();
+                                newElement->setConfigurationMode(true);
+                                newElement->setLabel(elementName);
+                                newElement->setModuleName(module->getModuleName());
+                                newElement->setPosition(position);
+                                newElement->setSize(elementSize);
+                                addElementToActiveTemplate(newElement);
+                            } else {
+                                // Handle the case where the element name is not found
+                                std::cerr << "Unknown element type: " << elementType << std::endl;
+                            }
+                        }
+                    }
+                    ImGui::EndMenu();
+                }
+            }
+            ImGui::EndMenu();
+        }
+    }
+    ImGui::EndMenu();
+}
+
+
     ImGui::EndMainMenuBar();
 }
 

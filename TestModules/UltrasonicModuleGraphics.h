@@ -24,6 +24,7 @@ public:
     void updateValueOfModule(int value) override;
 
 
+
 private:
 
     // Sensor data

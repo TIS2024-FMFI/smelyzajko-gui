@@ -5,7 +5,7 @@ template class Slider<float>;
 template class Slider<int>;
 
 template <typename E>
-E Slider<E>::getValue() const {
+E Slider<E>::getValue() const  {
     return value;
 }
 
@@ -92,7 +92,7 @@ void Slider<E>::to_json(nlohmann::json& j) const {
             {"minValue", minValue},
             {"maxValue", maxValue},
             {"value", value},
-            {"moduleId", moduleId}
+            {"moduleName", moduleName}
     };
 }
 
@@ -119,8 +119,8 @@ void Slider<E>::from_json(const nlohmann::json& j, ImVec2 resolution) {
     if (j.contains("value")) {
         value = std::clamp(j["value"].get<E>(), minValue, maxValue);
     }
-    if (j.contains("moduleId")) {
-        moduleId = j["moduleId"].get<int>();
+    if (j.contains("moduleName")) {
+        moduleName = j["moduleName"].get<std::string>();
     }
 
     ImVec2 scale = Element::getScaleFactors(resolution);
@@ -131,7 +131,7 @@ void Slider<E>::from_json(const nlohmann::json& j, ImVec2 resolution) {
 template<typename E>
 std::vector<Setting> Slider<E>::getSettings() {
     return {
-            {"moduleId",moduleId, [this](const SettingValue& val) { moduleId = std::get<int>(val); }},
+            {"moduleName",moduleName, [this](const SettingValue& val) { moduleName = std::get<std::string>(val); }},
             {"label", label, [this](const SettingValue& val) { label = std::get<std::string>(val); }},
             {"minValue", minValue, [this](const SettingValue& val) { minValue = std::get<E>(val); }},
             {"maxValue", maxValue, [this](const SettingValue& val) { maxValue = std::get<E>(val); }}

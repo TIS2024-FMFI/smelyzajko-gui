@@ -1,8 +1,6 @@
 #include "Rectangle.h"
 #include <iostream>
-ImVec2 Rectangle::getSize() const {
-    return size;
-}
+
 
 float Rectangle::getWidth() const {
     return size.x;
@@ -12,9 +10,7 @@ float Rectangle::getHeight() const {
     return size.y;
 }
 
-void Rectangle::setSize(const ImVec2 &newSize) {
-    size = newSize;
-}
+
 
 void Rectangle::setWidth(float newWidth) {
     size.x = newWidth;
@@ -166,7 +162,7 @@ void Rectangle::setModuleID(int id) {
 void Rectangle::setGraphicElementId(int id) {
     graphicElementId = id;
 }
-void Rectangle::setModuleName(std::string name) {
+void Rectangle:: setModuleName(const std::string& name) {
     moduleName = name;
     label = graphicElementName + "\n" + moduleName;
 }

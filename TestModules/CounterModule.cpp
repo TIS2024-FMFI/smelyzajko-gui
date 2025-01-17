@@ -80,7 +80,11 @@ void CounterModule::saveLogToJson(const std::vector<int>& values) {
     }
 }
 
-
-std::vector<std::string> CounterModule::getPossibleGraphicsElement() {
-    return {"Counter Graphic Element"};
+void CounterModule::setValueFromInputElements(std::string elementName, std::string value) {
+    counter.store(0);
 }
+void CounterModule::setValueFromInputElements(std::string elementName, int value) {
+    //counter.store(value);
+}
+
+

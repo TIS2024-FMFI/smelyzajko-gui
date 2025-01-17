@@ -1,14 +1,6 @@
 #include "Button.h"
 #include "iostream"
 
-ImVec2 Button::getSize() const {
-    return size;
-}
-
-void Button::setSize(const ImVec2& newSize) {
-    size = newSize;
-}
-
 ImRect Button::getBoundingBox() const {
     return ImRect(position, ImVec2(position.x + size.x, position.y + size.y));
 }
@@ -22,7 +14,9 @@ void Button::draw(ImGuiIO& io) {
     // Draw the button outline
     ImGui::SetCursorScreenPos(position);
     ImGui::SetNextItemAllowOverlap();
-    ImGui::Button(label.c_str(), size);
+    if (ImGui::Button(label.c_str(), size)) {
+        clicked = true;
+    }
 
     // removeStyles();
 
@@ -68,7 +62,7 @@ void Button::to_json(nlohmann::json &j) const {
             {"label", label},
             {"position", {position.x, position.y}},
             {"size", {size.x, size.y}},
-            {"moduleID", moduleID}
+            {"moduleName", moduleName}
     };
 }
 
@@ -83,10 +77,10 @@ void Button::from_json(const nlohmann::json &j, ImVec2 resolution) {
         size.x = j["size"][0];
         size.y = j["size"][1];
     }
-    if (j.contains("moduleID") && j["moduleID"].is_number_integer()) {
-        moduleID = j["moduleID"];
+    if (j.contains("moduleName") && j["moduleName"].is_string()) {
+        moduleName = j["moduleName"];
     } else {
-        moduleID = -1;
+        moduleName = "";
     }
 
     ImVec2 scale = Element::getScaleFactors(resolution);
@@ -110,7 +104,15 @@ void Button::removeStyles() {
 
 std::vector<Setting> Button::getSettings() {
     return {
-            {"moduleID",moduleID, [this](const SettingValue& val) { moduleID = std::get<int>(val); }},
+            {"moduleName",moduleName, [this](const SettingValue& val) { moduleName = std::get<std::string>(val); }},
             {"label", label, [this](const SettingValue& val) { label = std::get<std::string>(val); }}
     };
+}
+
+std::optional<std::string> Button::getStringValue()  {
+    if (clicked) {
+        clicked = false;
+        return label;
+    }
+    return std::nullopt;
 }

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <sstream>
 
 UltrasonicModuleGraphics::UltrasonicModuleGraphics()
         : scrollOffset(0.0f), autoscrollEnabled(true) {

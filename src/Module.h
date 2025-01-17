@@ -9,6 +9,12 @@ public:
 
     virtual void run() = 0;
     virtual std::vector<std::string>  getPossibleGraphicsElement() = 0;
+    virtual std::unordered_map<std::string,std::vector<std::string>> getPossibleInputElements() = 0;
+
+    virtual void setValueFromInputElements(std::string elementName, std::string value);
+    virtual void setValueFromInputElements(std::string elementName, int value);
+    virtual void setValueFromInputElements(std::string elementName, float value);
+    virtual void setValueFromInputElements(std::string elementName, std::vector<int> value);
 
 
     // Module settings

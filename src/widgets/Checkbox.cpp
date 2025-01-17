@@ -46,7 +46,7 @@ void Checkbox::to_json(nlohmann::json &j) const {
             {"label", label},
             {"position", {position.x, position.y}},
             {"checked", checked},
-            {"moduleID", moduleID}
+            {"moduleName", moduleName}
     };
 }
 
@@ -63,9 +63,9 @@ void Checkbox::from_json(const nlohmann::json &j, ImVec2 resolution) {
         checked = false;
     }
     if (j.contains("moduleID") && j["moduleID"].is_number_integer()) {
-        moduleID = j["moduleID"];
+        moduleName = j["moduleName"];
     } else {
-        moduleID = -1;
+        moduleName = "";
     }
     ImVec2 scale = Element::getScaleFactors(resolution);
 
@@ -73,7 +73,7 @@ void Checkbox::from_json(const nlohmann::json &j, ImVec2 resolution) {
 }
 std::vector<Setting> Checkbox::getSettings() {
     return {
-            {"moduleID",moduleID, [this](const SettingValue& val) { moduleID = std::get<int>(val); }},
+            {"moduleName",moduleName, [this](const SettingValue& val) { moduleName = std::get<std::string>(val); }},
             {"label", label, [this](const SettingValue& val) { label = std::get<std::string>(val); }}
     };
 

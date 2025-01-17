@@ -2,15 +2,14 @@
 
 class Button : public Element {
 private:
-    ImVec2 size;
-    int moduleID = -1;
+    bool clicked = false;
 public:
     Button(const std::string& lbl = "", const ImVec2& pos = ImVec2(0.0f, 0.0f), const ImVec2& sz = ImVec2(100.0f, 25.0f))
-            : Element(pos, lbl), size(sz) {}
+            : Element(pos, lbl) {
+        setSize(sz);
+}
+    std::optional<std::string > getStringValue()  override;
 
-    ImVec2 getSize() const;
-
-    void setSize(const ImVec2& newSize);
 
     ImRect getBoundingBox() const override;
     void draw(ImGuiIO& io) override;

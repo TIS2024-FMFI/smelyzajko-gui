@@ -7,7 +7,7 @@
 int OperatingMode::run() {
     MapModule mapModule = MapModule(&moduleManager);
     CounterModule counterModule = CounterModule(&moduleManager);
-//    UltrasonicModule ultrasonicModule = UltrasonicModule(&moduleManager);
+    //UltrasonicModule ultrasonicModule = UltrasonicModule(&moduleManager);
 
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -94,9 +94,29 @@ void OperatingMode::drawElements() {
     for (int i = 0; i < activeElements.size(); i++) {
         Element *element = activeElements[i];
         ImGui::PushID(i);
-
+        element->setConfigurationMode(false);
         // Draw the element
         element->draw(io);
+
+        if (auto value = element->getBoolValue()){
+            std::cout << "Value: " << *value <<" "<<element->getModuleName()<< std::endl;
+            moduleManager.setValueFromInputElements(element->getModuleName(),element->getLabel(),*value);
+        }
+
+        if (auto value = element->getStringValue()){
+            std::cout << "Value: " << *value << " "<<element->getModuleName()<<"  <---"<<std::endl;
+            moduleManager.setValueFromInputElements(element->getModuleName(),element->getLabel(),*value);
+        }
+        if (auto value = element->getIntValue()){
+            std::cout << "Value: " << *value << " "<<element->getModuleName()<<std::endl;
+            moduleManager.setValueFromInputElements(element->getModuleName(),element->getLabel(),*value);
+        }
+        if (auto value = element->getFloatValue()){
+            std::cout << "Value: " << *value <<" "<<element->getModuleName()<< std::endl;
+            moduleManager.setValueFromInputElements(element->getModuleName(),element->getLabel(),*value);
+        }
+
+
 
         ImGui::PopID();
     }

@@ -31,6 +31,9 @@ public:
     std::vector<std::string> getPossibleGraphicsElement() override {
         return {"Map Graphic Element","Counter Graphic Element"};
     }
+    std::unordered_map<std::string,std::vector<std::string>> getPossibleInputElements() override {
+        return {{"button", {"Button1", "Button2"}}};
+    }
 
 
 private:

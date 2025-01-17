@@ -66,3 +66,33 @@ void ModuleManager::setActiveModuleAndDraw(std::vector<GraphicModule *> graphicM
 std::vector<Module *> ModuleManager::getModules() const {
     return modules;
 }
+
+void ModuleManager::setValueFromInputElements(std::string moduleName, std::string elementName, std::string value) {
+    for (Module *module : modules) {
+        if (module->getModuleName() == moduleName) {
+            module->setValueFromInputElements(elementName, value);
+        }
+    }
+}
+
+void ModuleManager::setValueFromInputElements(std::string moduleName, std::string elementName, bool value) {
+    for (Module *module : modules) {
+        if (module->getModuleName() == moduleName) {
+            module->setValueFromInputElements(elementName, value);
+        }
+    }
+}
+void ModuleManager::setValueFromInputElements(std::string moduleName, std::string elementName, int value) {
+    for (Module *module : modules) {
+        if (module->getModuleName() == moduleName) {
+            module->setValueFromInputElements(elementName, value);
+        }
+    }
+}
+void ModuleManager::setValueFromInputElements(std::string moduleName, std::string elementName, float value) {
+    for (Module *module : modules) {
+        if (module->getModuleName() == moduleName) {
+            module->setValueFromInputElements(elementName, value);
+        }
+    }
+}

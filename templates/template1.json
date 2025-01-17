@@ -1,48 +1,78 @@
 {
-  "elements": [],
-  "graphicModules": [
-    {
-      "graphicElementId": 0,
-      "graphicElementName": "Map Graphic Element",
-      "graphicsFrequency": 0,
-      "graphicsLogEnabled": false,
-      "moduleId": 0,
-      "moduleName": "Map Module",
-      "position": [
-        30.0,
-        50.0
-      ],
-      "size": [
-        300.0,
-        200.0
-      ],
-      "textFrequency": 0,
-      "textLogEnabled": false,
-      "type": "rectangle"
-    },
-    {
-      "graphicElementId": 0,
-      "graphicElementName": "Counter Graphic Element",
-      "graphicsFrequency": 0,
-      "graphicsLogEnabled": false,
-      "moduleId": 1,
-      "moduleName": "Counter Module",
-      "position": [
-        388.0,
-        56.0
-      ],
-      "size": [
-        300.0,
-        200.0
-      ],
-      "textFrequency": 0,
-      "textLogEnabled": false,
-      "type": "rectangle"
-    }
-  ],
-  "name": "template1",
-  "resolution": [
-    1920,
-    1080
-  ]
+    "elements": [
+        {
+            "label": "Slider-int1",
+            "maxValue": 35,
+            "minValue": 0,
+            "moduleName": "Counter Module",
+            "position": [
+                480.0,
+                69.0
+            ],
+            "size": [
+                100.0,
+                25.0
+            ],
+            "type": "slider-int",
+            "value": 0
+        },
+        {
+            "label": "Button1",
+            "moduleName": "Map Module",
+            "position": [
+                65.0,
+                63.0
+            ],
+            "size": [
+                100.0,
+                25.0
+            ],
+            "type": "button"
+        }
+    ],
+    "graphicModules": [
+        {
+            "graphicElementId": 0,
+            "graphicElementName": "Counter Graphic Element",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "moduleId": 1,
+            "moduleName": "Counter Module",
+            "position": [
+                454.0,
+                104.0
+            ],
+            "size": [
+                300.0,
+                200.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        },
+        {
+            "graphicElementId": 0,
+            "graphicElementName": "Map Graphic Element",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "moduleId": 0,
+            "moduleName": "Map Module",
+            "position": [
+                25.0,
+                106.0
+            ],
+            "size": [
+                300.0,
+                200.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        }
+    ],
+    "name": "template1",
+    "resolution": [
+        1920,
+        1080
+    ]
 }

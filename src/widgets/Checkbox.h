@@ -3,7 +3,6 @@
 class Checkbox : public Element {
 private:
     bool checked;
-    int moduleID= -1;
 
 public:
     Checkbox(const std::string& lbl = "", const ImVec2& pos = ImVec2(0.0f, 0.0f), bool initialState = false)
@@ -12,7 +11,9 @@ public:
     bool isChecked() const;
     void setChecked(bool state);
     void toggle();
-
+    std::optional<bool> getBoolValue() override {
+        return checked;
+    }
     ImRect getBoundingBox() const override;
 
     void draw(ImGuiIO &io) override;
