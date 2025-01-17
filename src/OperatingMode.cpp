@@ -21,7 +21,7 @@ int OperatingMode::run() {
         ImGui::NewFrame();
         shortcutsManager.processShortcuts();
 
-        setupMenuBar();
+        drawMenuBar();
 
         ImGui::SetNextWindowPos(ImVec2(0, 0)); // Top-left corner of the screen
         ImGui::SetNextWindowSize(io.DisplaySize); // Fullscreen size
@@ -68,7 +68,7 @@ int OperatingMode::run() {
 }
 
 
-void OperatingMode::setupMenuBar() {
+void OperatingMode::drawMenuBar() {
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("Templates")) {
             for (const Template& aTemplate : templateManager.getAllTemplates()) {

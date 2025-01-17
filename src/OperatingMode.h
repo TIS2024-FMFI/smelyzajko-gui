@@ -33,7 +33,7 @@ public:
 
     int run() override;
     void drawElements();
-    void setupMenuBar();
+    void drawMenuBar();
     void setupShortcuts() override;
     TemplateManager templateManager = TemplateManager(false);
 

@@ -40,7 +40,7 @@ public:
 
     void drawElements();
     void drawElementsWithSnappingOn();
-    void setupMenuBar();
+    void drawMenuBar();
     void drawGrid() const;
     void bringElementToTop(std::vector<Element*>& elements, Element* element);
 //    void renderSettingsPopup(Module& module, const std::string& part);

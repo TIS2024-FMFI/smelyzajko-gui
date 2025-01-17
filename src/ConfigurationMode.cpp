@@ -131,7 +131,7 @@ int ConfigurationMode::run() {
         ImGui::NewFrame();
 
         shortcutsManager.processShortcuts();
-        setupMenuBar();
+        drawMenuBar();
         processFileDialog();
 
         ImGui::SetNextWindowPos(ImVec2(0, 0)); // Top-left corner of the screen
@@ -154,8 +154,6 @@ int ConfigurationMode::run() {
             }
 
         ImGui::End();
-
-
 
         if (showGrid) drawGrid();
 
@@ -333,8 +331,7 @@ void ConfigurationMode::handleElementClick(Element *element,int i) {
     }
 }
 
-
-void ConfigurationMode::setupMenuBar() {
+void ConfigurationMode::drawMenuBar() {
     if (ImGui::BeginMainMenuBar()) {
         menuBarHeight = ImGui::GetWindowHeight();
         if (ImGui::BeginMenu("Templates")) {
