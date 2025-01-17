@@ -1,7 +1,16 @@
 #include <iostream>
 #include "ConfigurationMode.h"
+
 #include "TestModules/CounterModule.h"
 #include "TestModules/MapModule.h"
+
+#include "../TestModules/MapModule.h"
+#include "../TestModules/CounterModule.h"
+//#include "TemplateManager.h"
+#include "../ImGuiFileDialog/ImGuiFileDialog.h"
+#include "../ImGuiFileDialog/ImGuiFileDialogConfig.h"
+#include "Template.h"
+
 
 #include <iostream> // For std::cerr (debugging)
 #ifdef _WIN32
@@ -134,6 +143,7 @@ ImVec2 findNearestFreeGridCorner(const std::vector<Element*>& elements, const Im
     return ImVec2(-1.0f, menuBarHeight);
 }
 
+
 void renderSettingsPopupForModule(const std::string& moduleName, const std::string& jsonFilePath) {
     static nlohmann::json config;
     static bool isConfigLoaded = false;
@@ -211,14 +221,6 @@ void renderSettingsPopupForModule(const std::string& moduleName, const std::stri
 
 
 
-void ConfigurationMode::setupShortcuts() {
-
-    shortcutsManager.registerShortcut("Ctrl+Q", [this]() {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    });
-
-}
-
 void ConfigurationMode::processShortcuts() {
     shortcutsManager.processShortcuts();
 }
@@ -236,15 +238,17 @@ int ConfigurationMode::run() {
     setupShortcuts();
     initializeModules();
 
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        processShortcuts();
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        shortcutsManager.processShortcuts();
         setupMenuBar();
+        processFileDialog();
 
         ImGui::SetNextWindowPos(ImVec2(0, 0)); // Top-left corner of the screen
         ImGui::SetNextWindowSize(io.DisplaySize); // Fullscreen size
@@ -266,6 +270,8 @@ int ConfigurationMode::run() {
             }
 
         ImGui::End();
+
+
 
         if (showGrid) drawGrid();
 
@@ -295,84 +301,25 @@ int ConfigurationMode::run() {
 }
 
 void ConfigurationMode::drawElements() {
+    auto &activeElements = templateManager.getActiveTemplateElements();
+
     // First, draw the rectangles
-    auto activeElements = templateManager.getActiveTemplateElements();
     for (int i = 0; i < activeElements.size(); i++) {
         Element *element = activeElements[i];
         ImGui::PushID(i);
 
         // Draw the element
+        element->setConfigurationMode(true);
         element->draw(io);
 
         ImGui::PopID();
     }
 
-    // Check for clicks and move the element to top
-    Element *clickedElement = nullptr;
-    for (int i = activeElements.size() - 1; i >= 0; i--) {
-        Element *element = activeElements[i];
-        ImRect bbox = element->getBoundingBox();
-
-        if (bbox.Contains(ImGui::GetMousePos())) {
-            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-                clickedElement = element;
-                break;
-            }
-        }
-    }
-    // If an element is clicked, bring it to the top
-    if (clickedElement) {
-        bringElementToTop(clickedElement);
-    }
-
-
-    bool clickHandled = false;
-    for (int i = activeElements.size() - 1; i >= 0; i--) {
-        Element *element = activeElements[i];
-        ImGui::PushID(i);
-
-        element->handleClicks(io);
-
-        ImRect bbox = element->getBoundingBox();
-        if (bbox.Contains(ImGui::GetMousePos())) {
-            if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
-                element->detectRightClickDelete();
-                clickHandled = true;
-            }
-        }
-
-        if (element->getPendingDelete()) {
-            ImGui::SetNextWindowPos(element->getDeletePopupPosition(), ImGuiCond_Always);
-            ImGui::OpenPopup("Delete Confirmation");
-
-            if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ImGui::Text("Delete this element?");
-                if (ImGui::Button("Yes")) {
-                    templateManager.removeElementFromActiveTemplate(i);
-                    ImGui::CloseCurrentPopup();
-                    ImGui::EndPopup();
-                    ImGui::PopID();
-                    break;
-                }
-                ImGui::SameLine();
-                if (ImGui::Button("No")) {
-                    element->setPendingDelete(false);
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::EndPopup();
-            }
-        }
-
-        ImGui::PopID();
-
-        if (clickHandled) {
-            break;
-        }
-    }
+    handleClicksOnElements(activeElements);
 }
 
 void ConfigurationMode::drawElementsWithSnappingOn() {
-    auto activeElements = templateManager.getActiveTemplateElements();
+    auto &activeElements = templateManager.getActiveTemplateElements();
     static Element* draggedElement = nullptr; // Track the currently dragged element
 
     for (int i = 0; i < activeElements.size(); i++) {
@@ -413,70 +360,94 @@ void ConfigurationMode::drawElementsWithSnappingOn() {
         ImGui::PopID();
     }
 
-    // Check for clicks and move the element to top
-    Element *clickedElement = nullptr;
-    for (int i = activeElements.size() - 1; i >= 0; i--) {
-        Element *element = activeElements[i];
-        ImRect bbox = element->getBoundingBox();
+    handleClicksOnElements(activeElements);
+}
 
-        if (bbox.Contains(ImGui::GetMousePos())) {
-            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-                clickedElement = element;
-                break;
+void ConfigurationMode::handleElementClick(Element *element,int i) {
+    if (element->getPendingChooseWhatToDo()) {
+        ImGui::SetNextWindowPos(element->getPopupPosition(), ImGuiCond_Always);
+        ImGui::OpenPopup("Element Options");
+
+        if (ImGui::BeginPopupModal("Element Options", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+            ImGui::Text("What would you like to do with this element?");
+            if (ImGui::Button("Delete")) {
+                element->setPendingDelete(true);
+                element->setPendingChooseWhatToDo(false);
+                ImGui::CloseCurrentPopup();
             }
+            ImGui::SameLine();
+            if (ImGui::Button("Edit")) {
+                element->setPendingEdit(true);
+                element->setPendingChooseWhatToDo(false);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel")) {
+                element->setPendingChooseWhatToDo(false);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
         }
     }
-    // If an element is clicked, bring it to the top
-    if (clickedElement) {
-        bringElementToTop(clickedElement);
+    else if (element->getPendingDelete()){
+        ImGui::SetNextWindowPos(element->getPopupPosition(), ImGuiCond_Always);
+        ImGui::OpenPopup("Delete Confirmation");
+        if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+            ImGui::Text("Delete this element?");
+            if (ImGui::Button("Yes")) {
+                templateManager.removeElementFromActiveTemplate(i);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("No")) {
+                element->setPendingDelete(false);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
     }
-
-    bool clickHandled = false;
-    for (int i = activeElements.size() - 1; i >= 0; i--) {
-        Element *element = activeElements[i];
-        ImGui::PushID(i);
-
-        element->handleClicks(io);
-
-        ImRect bbox = element->getBoundingBox();
-        if (bbox.Contains(ImGui::GetMousePos())) {
-            if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
-                element->detectRightClickDelete();
-                clickHandled = true;
+    else if (element->getPendingEdit()) {
+        ImGui::SetNextWindowPos(element->getPopupPosition(), ImGuiCond_Always);
+        ImGui::OpenPopup("Edit Element Settings");
+        if (ImGui::BeginPopupModal("Edit Element Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+            ImGui::Text("Settings for element: %s", element->getLabel().c_str());
+            auto settings = element->getSettings();
+            for (auto& setting : settings) {
+                std::visit([&](auto&& value) {
+                    using T = std::decay_t<decltype(value)>;
+                    if constexpr (std::is_same_v<T, bool>) {
+                        bool val = value;
+                        if (ImGui::Checkbox(setting.name.c_str(), &val)) {
+                            setting.setter(val);
+                        }
+                    } else if constexpr (std::is_same_v<T, int>) {
+                        int val = value;
+                        if (ImGui::InputInt(setting.name.c_str(), &val)) {
+                            setting.setter(val);
+                        }
+                    } else if constexpr (std::is_same_v<T, float>) {
+                        float val = value;
+                        if (ImGui::InputFloat(setting.name.c_str(), &val)) {
+                            setting.setter(val);
+                        }
+                    } else if constexpr (std::is_same_v<T, std::string>) {
+                        char buffer[256];
+                        std::strncpy(buffer, value.c_str(), sizeof(buffer));
+                        if (ImGui::InputText(setting.name.c_str(), buffer, sizeof(buffer))) {
+                            setting.setter(std::string(buffer));
+                        }
+                    }
+                }, setting.value);
             }
-        }
+            if (ImGui::Button("Close")) {
+                element->setPendingEdit(false);
+                ImGui::CloseCurrentPopup();
 
-        if (element->getPendingDelete()) {
-            ImGui::SetNextWindowPos(element->getDeletePopupPosition(), ImGuiCond_Always);
-            ImGui::OpenPopup("Delete Confirmation");
-
-            if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ImGui::Text("Delete this element?");
-                if (ImGui::Button("Yes")) {
-                    templateManager.removeElementFromActiveTemplate(i);
-                    ImGui::CloseCurrentPopup();
-                    ImGui::EndPopup();
-                    ImGui::PopID();
-                    break;
-                }
-                ImGui::SameLine();
-                if (ImGui::Button("No")) {
-                    element->setPendingDelete(false);
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::EndPopup();
             }
-        }
-
-        ImGui::PopID();
-
-        if (clickHandled) {
-            break;
+            ImGui::EndPopup();
         }
     }
 }
-
-
 
 
 void ConfigurationMode::setupMenuBar() {
@@ -500,46 +471,9 @@ void ConfigurationMode::setupMenuBar() {
                 ImGui::EndMenu();
             }
             if (ImGui::Button("Save current template")) {
-                IGFD::FileDialogConfig config;
-                config.path = "../templates"; // default path for the file dialog
-                if (!templateManager.getActiveTemplateName().empty()) {
-                    config.fileName = templateManager.getActiveTemplateName() + ".json";
-                }
-                ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".json", config);
+                saveTemplate();
             }
-            // display the dialog and handle the file selection
-            if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
-                if (ImGuiFileDialog::Instance()->IsOk()) {
-                    std::filesystem::path filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-                    try {
-                        bool isNew = false;
-                        std::string templateName = templateManager.getActiveTemplate().getName();
-                        std::string fileName = filePathName.filename().string();
-                        if (fileName.size() > 5 && fileName.substr(fileName.size() - 5) == ".json") {
-                            fileName = fileName.substr(0, fileName.size() - 5);  // Remove the ".json" part
-                        }
 
-                        if (templateName.empty() || templateName != fileName ) {
-                            isNew = true;
-                        }
-
-                        if (isNew) {
-                            templateManager.getActiveTemplate().saveTemplate(filePathName, fileName);
-                            Template newTemplate = Template("../templates/" + filePathName.filename().string());
-                            templateManager.allTemplates.push_back(newTemplate);
-                            templateManager.setActiveTemplate(newTemplate);
-                            std::string windowTitle = std::string("GUI") + " - " + newTemplate.getName();
-                            glfwSetWindowTitle(window, windowTitle.c_str());
-                        } else {
-                            templateManager.getActiveTemplate().saveTemplate(filePathName);
-                        }
-                    } catch (const std::exception& e) {
-                        std::cerr << "Error saving template: " << e.what() << std::endl;
-                    }
-                }
-
-                ImGuiFileDialog::Instance()->Close();
-            }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Options")) {
@@ -618,17 +552,14 @@ void ConfigurationMode::setupMenuBar() {
         if (ImGui::BeginMenu("Controls")) {
             auto elements = templateManager.getActiveTemplateElements();
 
-            if (ImGui::MenuItem("Add Rectangle")) {
-                ImVec2 elementSize(300.0f, 200.0f);
-                ImVec2 padding(30.0f, 30.0f);
+            if (ImGui::MenuItem("Add TextInput")) {
+                ImVec2 elementSize(200.0f, 20.0f);
+                ImVec2 padding(10.0f, 10.0f);
                 float menuBarHeight = 25.0f;
                 ImVec2 position;
 
                 if (isSnapping) {
-                    int widthInSquares = ceil(elementSize.x / gridSize);
-                    int heightInSquares = ceil(elementSize.y / gridSize);
-                    elementSize = ImVec2(widthInSquares * gridSize, heightInSquares * gridSize);
-
+                    elementSize = ImVec2(gridSize, gridSize); // Snap to grid size
                     position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
                 } else {
                     position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
@@ -636,12 +567,11 @@ void ConfigurationMode::setupMenuBar() {
 
                 if (position.x == -1.0f && position.y == -1.0f) { // No free position found
                     playBeep();
-                    position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+                    position = ImVec2(0.0f, menuBarHeight);
                 }
 
-                addElementToActiveTemplate(new class Rectangle("Rectangle", position, elementSize));
+                addElementToActiveTemplate(new TextInput("TextInput", position)); // Add new TextInput element
             }
-
 
             if (ImGui::MenuItem("Add Checkbox")) {
                 ImVec2 elementSize(30.0f, 30.0f);
@@ -716,14 +646,55 @@ void ConfigurationMode::setupMenuBar() {
         }
 
         ImGui::EndMenu();
+
+    }
+    if (ImGui::BeginMenu("Add Modules")) {
+        auto elements = templateManager.getActiveTemplateElements();
+        for (Module* module : moduleManager.getModules()) {
+            if (ImGui::BeginMenu(module->getModuleName().c_str())) {
+                int enumerateGraphic = 0;
+                for (const std::string& graphicElement : module->getPossibleGraphicsElement()) {
+                    if (ImGui::MenuItem(graphicElement.c_str())) {
+                        ImVec2 elementSize(300.0f, 200.0f);
+                        ImVec2 padding(30.0f, 30.0f);
+                        float menuBarHeight = 25.0f;
+                        ImVec2 position;
+
+                        if (isSnapping) {
+                            int widthInSquares = ceil(elementSize.x / gridSize);
+                            int heightInSquares = ceil(elementSize.y / gridSize);
+                            elementSize = ImVec2(widthInSquares * gridSize, heightInSquares * gridSize);
+
+                            position = findNearestFreeGridCorner(elements, elementSize, gridSize, padding, menuBarHeight);
+                        } else {
+                            position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
+                        }
+
+                        if (position.x == -1.0f && position.y == -1.0f) { // No free position found
+                            playBeep();
+                            position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
+                        }
+
+                        //addElementToActiveTemplate(new class Rectangle("Rectangle", position, elementSize));
+                        class Rectangle* tempt = new class Rectangle(graphicElement, position, elementSize);
+                        tempt->setModuleID(module->getModuleID());
+                        tempt->setGraphicElementId(enumerateGraphic);
+                        tempt->setModuleName(module->getModuleName());
+                        tempt->setGraphicElementName(graphicElement);
+                        addElementToActiveTemplate(tempt);
+                    }
+                    enumerateGraphic++;
+                }
+                ImGui::EndMenu();
+            }
+        }
+        ImGui::EndMenu();
     }
 
 
 
     ImGui::EndMainMenuBar();
 }
-
-
 
 
 
@@ -748,19 +719,27 @@ void ConfigurationMode::drawGrid() const {
     }
 }
 
-void ConfigurationMode::bringElementToTop(Element* element) {
-    // Remove the clicked element and add it to the end of the list
-    auto activeElements = templateManager.getActiveTemplateElements();
-    auto it = std::find(activeElements.begin(), activeElements.end(), element);
-    if (it != activeElements.end()) {
-        activeElements.erase(it);
-        activeElements.push_back(element);
+void ConfigurationMode::bringElementToTop(std::vector<Element*>& elements, Element* element) {
+    if (isAnyPendingElement(elements)) {
+        return;
     }
 
-    for (int i = 0; i < activeElements.size(); ++i) {
-        activeElements[i]->setZIndex(i);
+    auto it = std::find(elements.begin(), elements.end(), element);
+
+    if (it != elements.end()) {
+        // Remove the element from its current position
+        elements.erase(it);
+
+        // Add the element to the end (top of the z-index)
+        elements.push_back(element);
+    }
+
+    // Update z-indices for all elements
+    for (int i = 0; i < elements.size(); ++i) {
+        elements[i]->setZIndex(i);
     }
 }
+
 
 void ConfigurationMode::createLabelSettings() {
     if (ImGui::Button("Add Label")) {
@@ -960,4 +939,134 @@ void ConfigurationMode::createFloatSliderSettings() {
 
 void ConfigurationMode::addElementToActiveTemplate(Element* element) {
     templateManager.addElementToActiveTemplate(element);
+}
+void ConfigurationMode::addModuleToActiveTemplate(GraphicModule* graphicModule) {
+    templateManager.addModuleToActiveTemplate(graphicModule);
+}
+
+bool ConfigurationMode::isAnyPendingElement(std::vector<Element *> &elements) {
+    for (const auto& elem : elements) {
+        if (elem->getPendingChooseWhatToDo() || elem->getPendingDelete() || elem->getPendingEdit()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void ConfigurationMode::handleClicksOnElements(std::vector<Element*>& elements) {
+    // Check for clicks and move the element to top
+    Element *clickedElement = nullptr;
+    for (int i = elements.size() - 1; i >= 0; i--) {
+        Element *element = elements[i];
+        ImRect bbox = element->getBoundingBox();
+
+        if (bbox.Contains(ImGui::GetMousePos())) {
+            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                clickedElement = element;
+                break;
+            }
+        }
+    }
+
+    bool pendingPopupForAnyElement = isAnyPendingElement(elements);
+    // If an element is clicked, bring it to the top
+    if (clickedElement) {
+        bringElementToTop(elements, clickedElement);
+    }
+
+
+    bool clickHandled = false;
+    for (int i = elements.size() - 1; i >= 0; i--) {
+        Element *element = elements[i];
+        ImGui::PushID(i);
+
+        element->handleClicks(io);
+
+        ImRect bbox = element->getBoundingBox();
+        // Detect right click on element
+        if (!pendingPopupForAnyElement) {
+            if (bbox.Contains(ImGui::GetMousePos())) {
+                if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
+                    element->detectRightClick();
+                    clickHandled = true;
+                }
+            }
+        }
+
+        handleElementClick(element,i);
+
+        ImGui::PopID();
+
+        if (clickHandled) {
+            break;
+        }
+    }
+}
+
+void ConfigurationMode::setupShortcuts() {
+    shortcutsManager.setWindow(window);
+
+    shortcutsManager.registerShortcut("Ctrl+Q", [this]() {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    });
+
+    shortcutsManager.registerShortcut("Ctrl+S", [this]() {
+        saveTemplate();
+    });
+}
+
+void ConfigurationMode::saveTemplate() {
+    // Check if a file dialog is already open
+    if (ImGuiFileDialog::Instance()->IsOpened("ChooseFileDlgKey")) {
+        return; // If it's already open, return and avoid opening it again
+    }
+
+    IGFD::FileDialogConfig config;
+    config.path = "../templates"; // Default path for the file dialog
+    if (!templateManager.getActiveTemplateName().empty()) {
+        config.fileName = templateManager.getActiveTemplateName() + ".json";
+    }
+
+    // Open the file dialog
+    ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".json", config);
+}
+
+void ConfigurationMode::processFileDialog() {
+    // Display the file dialog and handle the file selection
+    if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
+        if (ImGuiFileDialog::Instance()->IsOk()) {
+            std::filesystem::path filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+            try {
+                bool isNew = false;
+                std::string templateName = templateManager.getActiveTemplate().getName();
+                std::string fileName = filePathName.filename().string();
+
+                // Remove ".json" extension if present
+                if (fileName.size() > 5 && fileName.substr(fileName.size() - 5) == ".json") {
+                    fileName = fileName.substr(0, fileName.size() - 5);
+                }
+
+                // Check if it's a new template or if the name doesn't match
+                if (templateName.empty() || templateName != fileName) {
+                    isNew = true;
+                }
+
+                if (isNew) {
+                    templateManager.getActiveTemplate().saveTemplate(filePathName, fileName);
+                    Template newTemplate = Template("../templates/" + filePathName.filename().string(), true);
+                    templateManager.allTemplates.push_back(newTemplate);
+                    templateManager.setActiveTemplate(newTemplate);
+                    std::string windowTitle = std::string("GUI") + " - " + newTemplate.getName();
+                    glfwSetWindowTitle(window, windowTitle.c_str());
+                } else {
+                    templateManager.getActiveTemplate().saveTemplate(filePathName);
+                }
+            } catch (const std::exception& e) {
+                std::cerr << "Error saving template: " << e.what() << std::endl;
+            }
+        }
+
+        // Close the file dialog after file is selected or canceled
+        ImGuiFileDialog::Instance()->Close();
+    }
 }

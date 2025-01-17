@@ -12,6 +12,18 @@
 #include "ShortcutsManager.h"
 #include "TemplateManager.h"
 
+#include "widgets/Element.h"
+#include "widgets/Rectangle.h"
+#include "widgets/Checkbox.h"
+#include "widgets/Button.h"
+#include "widgets/Slider.h"
+#include "widgets/SingleLineLabel.h"
+#include "widgets/MultiLineLabel.h"
+#include "widgets/TextInput.h"
+
+#include "../TestModules/MapModule.h"
+#include "../TestModules/CounterModule.h"
+
 class GUI {
 protected:
     ImGuiIO& io;
@@ -31,4 +43,5 @@ public:
     void cleanupImGui();
 
     virtual int run() = 0;
+    virtual void setupShortcuts() = 0;
 };

@@ -1,0 +1,14 @@
+//
+// Created by X280 on 15. 1. 2025.
+//
+
+#ifndef SMELYZAJKO_GUI_TEXTMODULEGRAPHICS_H
+#define SMELYZAJKO_GUI_TEXTMODULEGRAPHICS_H
+
+
+class TextModuleGraphics {
+
+};
+
+
+#endif //SMELYZAJKO_GUI_TEXTMODULEGRAPHICS_H

@@ -6,9 +6,10 @@
 class TemplateManager {
 private:
     Template activeTemplate;
+    bool configMode ;
 public:
-    TemplateManager();
-    TemplateManager(const std::vector<std::string>& templateNames);
+    TemplateManager(bool configMode );
+    TemplateManager(const std::vector<std::string>& templateNames,bool configMode);
     std::vector<Template> allTemplates;
     void loadAllTemplates();
     void loadTemplates(const std::vector<std::string>& templateNames);
@@ -20,10 +21,11 @@ public:
     void removeElementFromActiveTemplate(int index);
     void clearActiveTemplateElements();
     std::string getActiveTemplateName() const;
-    std::vector<Element *> getActiveTemplateElements();
+    std::vector<Element *>& getActiveTemplateElements();
     std::vector<GraphicModule *> getActiveTemplateModules();
     std::vector<Template> getAllTemplates();
     Template getActiveTemplate();
+    void setConfigMode(bool mode);
 };
 
 

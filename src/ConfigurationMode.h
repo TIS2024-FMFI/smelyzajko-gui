@@ -3,15 +3,8 @@
 #include <algorithm>
 #include "Module.h"
 #include "ImGuiFileDialog.h"
-#include "ModuleManager.h"
 
-#include "widgets/Element.h"
-#include "widgets/Rectangle.h"
-#include "widgets/Checkbox.h"
-#include "widgets/Button.h"
-#include "widgets/Slider.h"
-#include "widgets/SingleLineLabel.h"
-#include "widgets/MultiLineLabel.h"
+
 
 class ConfigurationMode : GUI {
 public:
@@ -29,13 +22,15 @@ public:
         }
 
         if (templateNames.empty()) {
-            templateManager = TemplateManager();
+            templateManager = TemplateManager(true);
         } else {
-            templateManager = TemplateManager(templateNames);
+            templateManager = TemplateManager(templateNames, true);
         }
-    };
 
-    TemplateManager templateManager;
+        setupShortcuts();
+
+        templateManager.setConfigMode(true);
+    };
 
     int run() override;
 
@@ -45,18 +40,31 @@ public:
     void drawElementsWithSnappingOn();
     void setupMenuBar();
     void drawGrid() const;
+
     void bringElementToTop(Element* element);
     //void renderSettingsPopup(Module& module, const std::string& part);
     //void renderSettingsPopupForModule(const std::string& moduleName, const std::string& jsonFilePath);
     //void renderConfigurationMenu(const std::string& jsonFilePath);
 
+
+    void bringElementToTop(std::vector<Element*>& elements, Element* element);
+//    void renderSettingsPopup(Module& module, const std::string& part);
+
     void createFloatSliderSettings();
     void createIntSliderSettings();
     void createLabelSettings();
-    void setupShortcuts();
-    void processShortcuts();
     void initializeWindow(GLFWwindow* window);
+
     void initializeModules();
+    void handleElementClick(Element* element,int i);
+    void handleClicksOnElements(std::vector<Element*>& elements);
+    bool isAnyPendingElement(std::vector<Element*>& elements);
+    void setupShortcuts() override;
+    void processShortcuts();
+    void saveTemplate();
+    void processFileDialog();
+    TemplateManager templateManager = TemplateManager(true);
+
 
 private:
     float gridSize = 60.0f;
@@ -64,8 +72,15 @@ private:
     bool showGrid = false;
     float menuBarHeight;
 
+    void addModuleToActiveTemplate(GraphicModule *graphicModule);
+
     const float minGridValue = 10.0f;
     const float maxGridValue = 1000.0f;
 
 
+
 };
+
+
+
+

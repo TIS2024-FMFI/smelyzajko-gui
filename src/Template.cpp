@@ -10,6 +10,7 @@
 #include "widgets/Rectangle.h"
 #include "widgets/SingleLineLabel.h"
 #include "widgets/MultiLineLabel.h"
+#include "widgets/TextInput.h"
 #include "TemplateManager.h"
 #include "ModuleManager.h"
 #include <cmath>
@@ -18,7 +19,7 @@
 
 using json = nlohmann::json;
 
-std::vector<Element *> Template::getElements() {
+std::vector<Element *> &Template::getElements() {
     return elements;
 }
 
@@ -42,8 +43,14 @@ nlohmann::json Template::to_json() const {
 
     for (const auto& element : elements) {
         json elementJson;
+
         element->to_json(elementJson);
-        j["elements"].push_back(elementJson);
+        std::cout<<elementJson["type"]<<std::endl;
+        if (elementJson["type"] == "rectangle"){
+            j["graphicModules"].push_back(elementJson);
+        }else {
+            j["elements"].push_back(elementJson);
+        }
     }
 
     for (const auto& module : graphicModules) {
@@ -87,6 +94,7 @@ void Template::from_json(const nlohmann::json& j) {
                         {"rectangle", []() { return new Rectangle(); }},
                         {"single-line-label", []() { return new SingleLineLabel(); }},
                         {"multi-line-label", []() { return new MultiLineLabel(); }},
+                        {"text-input", []() { return  new TextInput(); }}
                 };
 
                 auto it = elementCreators.find(type);
@@ -104,17 +112,25 @@ void Template::from_json(const nlohmann::json& j) {
     if (j.contains("graphicModules") && j["graphicModules"].is_array()) {
         rightFlag ++;
         for (const auto& moduleJson : j["graphicModules"]) {
-            if (moduleJson.contains("name") && moduleJson["name"].is_string()) {
-                std::string name = moduleJson["name"];
+            if (moduleJson.contains("graphicElementName") && moduleJson["graphicElementName"].is_string()) {
+                std::string graphicElementName = moduleJson["graphicElementName"];
                 ModuleManager moduleManager;
                 std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = moduleManager.getModuleConstructors();
-                auto it = moduleConstructors.find(name);
-                if (it != moduleConstructors.end()) {
+                auto it = moduleConstructors.find(graphicElementName);
+                if (configurationMode) {
+                    // Create a Rectangle based on parameters in the template
+                    Rectangle* rectangle = new Rectangle();
+                    rectangle->from_json(moduleJson,resolution);
+                    elements.push_back(rectangle);
+                }
+                else if (it != moduleConstructors.end()) {
+                    // Create and add the module as usual
                     GraphicModule* module = it->second();
                     module->from_json(moduleJson, resolution);
                     graphicModules.push_back(module);
+
                 } else {
-                    throw std::invalid_argument("Unknown module type in JSON: " + name);
+                    throw std::invalid_argument("Unknown module type in JSON:  " + graphicElementName);
                 }
             }
         }

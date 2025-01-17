@@ -68,6 +68,7 @@ void Button::to_json(nlohmann::json &j) const {
             {"label", label},
             {"position", {roundToOneDecimal(position.x), roundToOneDecimal(position.y)}},
             {"size", {roundToOneDecimal(size.x), roundToOneDecimal(size.y)}}
+
     };
 }
 
@@ -81,6 +82,11 @@ void Button::from_json(const nlohmann::json &j, ImVec2 resolution) {
     if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
         size.x = j["size"][0];
         size.y = j["size"][1];
+    }
+    if (j.contains("moduleID") && j["moduleID"].is_number_integer()) {
+        moduleID = j["moduleID"];
+    } else {
+        moduleID = -1;
     }
 
     ImVec2 scale = Element::getScaleFactors(resolution);
@@ -100,4 +106,11 @@ void Button::setStyles() {
 void Button::removeStyles() {
     ImGui::PopStyleVar(1); // Restore the default border size
     ImGui::PopStyleColor(4); // Restore the previous colors (Button, Hovered, Active, Border)
+}
+
+std::vector<Setting> Button::getSettings() {
+    return {
+            {"moduleID",moduleID, [this](const SettingValue& val) { moduleID = std::get<int>(val); }},
+            {"label", label, [this](const SettingValue& val) { label = std::get<std::string>(val); }}
+    };
 }
