@@ -91,8 +91,8 @@ void UltrasonicModule::setValueFromInputElements(std::string elementName, std::s
 
 void UltrasonicModule::setValueFromInputElements(std::string elementName, int value) {
     if (elementName == "Interval" && value != updateDelayMs) {
-        updateDelayMs = value+1;
-        std::string message = "Interval set to " + std::to_string(updateIntervalFrames) + " ms";
+        updateDelayMs = value;
+        std::string message = "Interval set to " + std::to_string(updateDelayMs) + " ms";
         moduleManager->updateValueOfModule(moduleId, graphicElementIds[1], message);
 
     }

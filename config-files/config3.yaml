@@ -1,0 +1,7 @@
+templates:
+  - template3.json
+  - template4.json
+  - template5.json
+modules:
+
+logDirectory:
