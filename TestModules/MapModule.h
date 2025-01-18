@@ -20,7 +20,6 @@ public:
 //    MapModule(int id, const char* name) : Module(id, name) {}
     ~MapModule() ;
     void run() override;
-    void logToJson(const std::pair<int, int>& position);
     void generatePassableMap();
     void saveMapToJson();
     void generatePath();

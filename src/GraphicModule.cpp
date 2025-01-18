@@ -58,10 +58,7 @@ void GraphicModule::to_json(nlohmann::json& j) const {
     j["moduleName"] = moduleName;
     j["position"] = {position.x, position.y};
     j["size"] = {size.x, size.y};
-    j["graphicsFrequency"] = graphicsFrequency;
-    j["graphicsLogEnabled"] = graphicsLogEnabled;
-    j["textFrequency"] = textFrequency;
-    j["textLogEnabled"] = textLogEnabled;
+
 }
 void GraphicModule::from_json(const nlohmann::json& j, ImVec2 resolution) {
     if (j.contains("graphicElementId") && j["graphicElementId"].is_number_integer()) {
@@ -86,17 +83,45 @@ void GraphicModule::from_json(const nlohmann::json& j, ImVec2 resolution) {
         size.y = j["size"][1];
         setSize({j["size"][0], j["size"][1]});
     }
-    if (j.contains("graphicsFrequency") && j["graphicsFrequency"].is_number_float()) {
-        graphicsFrequency = j["graphicsFrequency"];
-    }
-    if (j.contains("graphicsLogEnabled") && j["graphicsLogEnabled"].is_boolean()) {
-        graphicsLogEnabled = j["graphicsLogEnabled"];
-    }
-    if (j.contains("textFrequency") && j["textFrequency"].is_number_float()) {
-        textFrequency = j["textFrequency"];
-    }
-    if (j.contains("textLogEnabled") && j["textLogEnabled"].is_boolean()) {
-        textLogEnabled = j["textLogEnabled"];
-    }
+
     scaleFromResolution(resolution);
+}
+
+float GraphicModule::getGraphicsFrequency() const {
+    return graphicsFrequency;
+}
+
+void GraphicModule::setGraphicsFrequency(float frequency) {
+    graphicsFrequency = frequency;
+}
+
+bool GraphicModule::isGraphicsLogEnabled() const {
+    return graphicsLogEnabled;
+}
+
+void GraphicModule::setGraphicsLogEnabled(bool logEnabled) {
+    graphicsLogEnabled = logEnabled;
+}
+
+float GraphicModule::getTextFrequency() const {
+    return textFrequency;
+}
+
+void GraphicModule::setTextFrequency(float frequency) {
+    textFrequency = frequency;
+}
+
+bool GraphicModule::isTextLogEnabled() const {
+    return textLogEnabled;
+}
+
+void GraphicModule::setTextLogEnabled(bool logEnabled) {
+    textLogEnabled = logEnabled;
+}
+
+void GraphicModule::setLogFileName(std::string name) {
+    logFileDirectory = name;
+}
+std::string GraphicModule::getLogFileName() const {
+    return logFileDirectory;
 }
