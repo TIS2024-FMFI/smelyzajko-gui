@@ -36,6 +36,8 @@ int OperatingMode::run() {
             moduleManager.setActiveModuleAndDraw(templateManager.getActiveTemplateModules(),io);
         }
 
+        toastManager.renderNotifications();
+
         drawElements();
         ImGui::End();
         ImGui::Render();
@@ -110,8 +112,6 @@ void OperatingMode::drawElements() {
             moduleManager.setValueFromInputElements(element->getModuleName(),element->getLabel(),*value);
         }
 
-
-
         ImGui::PopID();
     }
 }
@@ -122,18 +122,21 @@ void OperatingMode::setupShortcuts() {
     shortcutsManager.registerShortcut("Ctrl+Left", [this]() {
         switchTemplate(-1);
     });
-
     shortcutsManager.registerShortcut("Ctrl+Right", [this]() {
         switchTemplate(1);
     });
 
+    // Apple (use CMD)
     shortcutsManager.registerShortcut("Cmd+Left", [this]() {
         switchTemplate(-1);
     });
-
     shortcutsManager.registerShortcut("Cmd+Right", [this]() {
         switchTemplate(1);
     });
+
+    for (Module* module : moduleManager.getModules()) {
+        module->registerShortcuts(shortcutsManager, toastManager);
+    }
 }
 
 void OperatingMode::switchTemplate(int direction) {

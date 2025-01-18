@@ -154,7 +154,6 @@ int ConfigurationMode::run() {
 
         if (showGrid) drawGrid();
 
-        // render all toast notifications
         toastManager.renderNotifications();
 
         ImGui::Render();
