@@ -21,8 +21,6 @@ void Rectangle::setHeight(float newHeight) {
 }
 
 void Rectangle::draw(ImGuiIO& io) {
-    ImVec2 resize_handle_pos = ImVec2(position.x + size.x, position.y + size.y);
-    ImVec2 handle_size = ImVec2(10, 10);
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
     ImVec2 rect_min = ImVec2(position.x, position.y);
@@ -30,8 +28,11 @@ void Rectangle::draw(ImGuiIO& io) {
 
     draw_list->AddRectFilled(rect_min, rect_max, IM_COL32(20, 20, 255, 255));
     draw_list->AddRect(rect_min, rect_max, IM_COL32(255, 255, 255, 255)); // White outline
+
     if (configurationMode) {
         // Draw the resizing handle
+        ImVec2 resize_handle_pos = ImVec2(position.x + size.x, position.y + size.y);
+        ImVec2 handle_size = ImVec2(10, 10);
         ImVec2 handle_screen_pos_min = ImVec2(resize_handle_pos.x + ImGui::GetWindowPos().x - handle_size.x,
                                               resize_handle_pos.y + ImGui::GetWindowPos().y - handle_size.y);
         ImVec2 handle_screen_pos_max = ImVec2(resize_handle_pos.x + ImGui::GetWindowPos().x,
@@ -44,6 +45,7 @@ void Rectangle::draw(ImGuiIO& io) {
         draw_list->AddText(ImVec2(text_pos.x + ImGui::GetWindowPos().x, text_pos.y + ImGui::GetWindowPos().y), IM_COL32(255, 255, 255, 255), label.c_str());
     }
 }
+
 ImRect Rectangle::getBoundingBox() const {
     return ImRect(position, ImVec2(position.x + size.x, position.y + size.y));
 }
@@ -112,15 +114,6 @@ void Rectangle::from_json(const nlohmann::json& j, ImVec2 resolution) {
         moduleName = j["moduleName"];
         label += "\n" + moduleName;
     }
-    if (j.contains("position") && j["position"].is_array() && j["position"].size() == 2) {
-        position.x = j["position"][0];
-        position.y = j["position"][1];
-    }
-    if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
-        size.x = j["size"][0];
-        size.y = j["size"][1];
-        setSize({j["size"][0], j["size"][1]});
-    }
     if (j.contains("graphicsFrequency") && j["graphicsFrequency"].is_number_float()) {
         graphicsFrequency = j["graphicsFrequency"];
     }
@@ -133,10 +126,6 @@ void Rectangle::from_json(const nlohmann::json& j, ImVec2 resolution) {
     if (j.contains("textLogEnabled") && j["textLogEnabled"].is_boolean()) {
         textLogEnabled = j["textLogEnabled"];
     }
-
-    ImVec2 scale = Element::getScaleFactors(resolution);
-    position = ImVec2(position.x * scale.x, position.y * scale.y);
-    size = ImVec2(size.x * scale.x, size.y * scale.y);
 }
 
 

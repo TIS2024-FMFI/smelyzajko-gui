@@ -2,7 +2,7 @@
 
 #include "GUI.h"
 
-GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()) {
+GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()), configFile(configFile) {
     if (!glfwInit()) {
         throw std::runtime_error("GLFW initialization error");
     }
@@ -45,7 +45,6 @@ void GUI::cleanupImGui() {
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
-
 
 
 

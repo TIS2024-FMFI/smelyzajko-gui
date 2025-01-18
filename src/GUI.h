@@ -23,9 +23,11 @@
 #include "widgets/TextInput.h"
 #include "TextArea.h"
 
+
+/* Here include all Modules header files */
+#include "../TestModules/UltrasonicModule.h"
 #include "../TestModules/MapModule.h"
 #include "../TestModules/CounterModule.h"
-#include "../TestModules/UltrasonicModule.h"
 
 class GUI {
 protected:

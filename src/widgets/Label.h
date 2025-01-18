@@ -8,9 +8,7 @@ protected:
 
 public:
     Label(const std::string& lbl, const ImVec2& pos, const ImVec2& sz)
-            : Element(pos, lbl) {
-        setSize(sz);
-    }
+            : Element(lbl, "", pos, sz) {}
 
     void setText(const std::string& newText);
 

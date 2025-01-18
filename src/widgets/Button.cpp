@@ -6,11 +6,6 @@ ImRect Button::getBoundingBox() const {
 }
 
 void Button::draw(ImGuiIO& io) {
-    ImVec2 resize_handle_pos = ImVec2(position.x + size.x, position.y + size.y);
-    ImVec2 handle_size = ImVec2(10.0f, 10.0f);
-
-    // setStyles();
-
     // Draw the button outline
     ImGui::SetCursorScreenPos(position);
     ImGui::SetNextItemAllowOverlap();
@@ -18,13 +13,17 @@ void Button::draw(ImGuiIO& io) {
         clicked = true;
     }
 
-    // removeStyles();
-
-    ImDrawList* draw_list = ImGui::GetWindowDrawList();
     // Draw the resize handle
-    ImVec2 handle_min = ImVec2(resize_handle_pos.x + ImGui::GetWindowPos().x - handle_size.x, resize_handle_pos.y + ImGui::GetWindowPos().y - handle_size.y);
-    ImVec2 handle_max = ImVec2(resize_handle_pos.x + ImGui::GetWindowPos().x, resize_handle_pos.y + ImGui::GetWindowPos().y);
-    draw_list->AddRectFilled(handle_min, handle_max, IM_COL32(255, 0, 0, 255)); // Red handle
+    if (configurationMode) {
+        ImDrawList *draw_list = ImGui::GetWindowDrawList();
+        ImVec2 resize_handle_pos = ImVec2(position.x + size.x, position.y + size.y);
+        ImVec2 handle_size = ImVec2(10.0f, 10.0f);
+        ImVec2 handle_min = ImVec2(resize_handle_pos.x + ImGui::GetWindowPos().x - handle_size.x,
+                                   resize_handle_pos.y + ImGui::GetWindowPos().y - handle_size.y);
+        ImVec2 handle_max = ImVec2(resize_handle_pos.x + ImGui::GetWindowPos().x,
+                                   resize_handle_pos.y + ImGui::GetWindowPos().y);
+        draw_list->AddRectFilled(handle_min, handle_max, IM_COL32(255, 0, 0, 255)); // Red handle
+    }
 }
 
 void Button::handleClicks(ImGuiIO &io) {
@@ -73,20 +72,6 @@ void Button::from_json(const nlohmann::json &j, ImVec2 resolution) {
 
     Element::from_json(j, resolution);
 
-    if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
-        size.x = j["size"][0];
-        size.y = j["size"][1];
-    }
-    if (j.contains("moduleName") && j["moduleName"].is_string()) {
-        moduleName = j["moduleName"];
-    } else {
-        moduleName = "";
-    }
-
-    ImVec2 scale = Element::getScaleFactors(resolution);
-
-    position = ImVec2(position.x * scale.x, position.y * scale.y);
-    size = ImVec2(size.x * scale.x, size.y * scale.y);
 }
 
 void Button::setStyles() {

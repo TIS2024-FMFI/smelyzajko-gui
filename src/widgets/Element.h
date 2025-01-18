@@ -1,12 +1,13 @@
 #pragma once
 
 #include <utility>
-#include "../../json.hpp"
+#include "optional"
 #include "imgui.h"
 #include "string"
 #include "imgui_internal.h"
 #include <GLFW/glfw3.h>
 #include "variant"
+#include "libs/json.hpp"
 
 // Typ alias pre variant
 using SettingValue = std::variant<bool, int, float, std::string>;
@@ -36,8 +37,8 @@ protected:
     bool wasDragged = false;
 
 public:
-    Element(const ImVec2& pos = ImVec2(0.0f, 0.0f), std::string lbl = "")
-            : position(pos), label(std::move(lbl)), pendingDelete(false) {}
+    Element(std::string lbl = "", std::string moduleName = "", const ImVec2& pos = ImVec2(0.0f, 0.0f), const ImVec2& size = ImVec2(0.0f, 0.0f))
+            : label(std::move(lbl)), moduleName(std::move(moduleName)), position(pos), size(size) {}
 
     virtual ~Element() = default;
 
@@ -84,3 +85,4 @@ public:
     static ImVec2 getScaleFactors(ImVec2 templateResolution);
     virtual std::vector<Setting> getSettings()  = 0;
 };
+

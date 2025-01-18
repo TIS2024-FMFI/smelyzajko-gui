@@ -5,9 +5,9 @@ class TextInput : public Element {
 private:
     std::string value = "";
 public:
-    TextInput(const std::string& lbl = "", const ImVec2& pos = ImVec2(0.0f, 0.0f), const ImVec2& sz = ImVec2(200.0f, 20.0f))
-            : Element(pos, lbl) {
-        setSize(sz);
+    TextInput(const std::string& lbl = "", const std::string& moduleName = "", const ImVec2& pos = ImVec2(0.0f, 0.0f), const ImVec2& sz = ImVec2(200.0f, 20.0f))
+            : Element(lbl, moduleName, pos, sz) {
+
     }
 
     void draw(ImGuiIO& io) override;

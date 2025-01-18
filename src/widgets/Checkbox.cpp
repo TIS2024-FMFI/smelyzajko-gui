@@ -23,8 +23,7 @@ ImRect Checkbox::getBoundingBox() const {
 void Checkbox::draw(ImGuiIO &io) {
     ImGui::SetCursorScreenPos(position);
     ImGui::SetNextItemAllowOverlap();
-    if (ImGui::Checkbox(label.c_str(), &checked)) {
-    }
+    if (ImGui::Checkbox(label.c_str(), &checked)) {}
 }
 
 void Checkbox::handleClicks(ImGuiIO &io) {
@@ -63,14 +62,6 @@ void Checkbox::from_json(const nlohmann::json &j, ImVec2 resolution) {
     } else {
         checked = false;
     }
-    if (j.contains("moduleName") && j["moduleName"].is_string()) {
-        moduleName = j["moduleName"];
-    } else {
-        moduleName = "";
-    }
-    ImVec2 scale = Element::getScaleFactors(resolution);
-
-    position = ImVec2(position.x * scale.x, position.y * scale.y);
 }
 std::vector<Setting> Checkbox::getSettings() {
     return {

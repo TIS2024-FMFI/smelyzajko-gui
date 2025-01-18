@@ -44,23 +44,11 @@ void Label::createTextSizeButton() {
 void Label::from_json(const nlohmann::json &j, ImVec2 resolution) {
     Element::from_json(j, resolution);
 
-    if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
-        size.x = j["size"][0];
-        size.y = j["size"][1];
-    } else {
-        size = ImVec2(100.0f, 25.0f);
-    }
-
     if (j.contains("font_size") && j["font_size"].is_number()) {
         font_size = j["font_size"];
     } else {
         font_size = 13.0f;
     }
-
-    ImVec2 scale = Element::getScaleFactors(resolution);
-
-    position = ImVec2(position.x * scale.x, position.y * scale.y);
-    size = ImVec2(size.x * scale.x, size.y * scale.y);
 }
 
 std::vector<Setting> Label::getSettings() {

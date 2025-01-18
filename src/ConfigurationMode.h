@@ -4,7 +4,22 @@
 #include "Module.h"
 #include "ImGuiFileDialog.h"
 
+template <typename T>
+struct SliderSettings {
+    char label[128]{};
+    T minValue = 0;
+    T maxValue = 10;
+    T initialValue = 5;
+    bool isHorizontal = true;
 
+    SliderSettings() = default;
+
+    SliderSettings(const std::string &labelStr, T min, T max, T init, bool horizontal)
+            : minValue(min), maxValue(max), initialValue(init), isHorizontal(horizontal) {
+        std::strncpy(label, labelStr.c_str(), sizeof(label) - 1);
+        label[sizeof(label) - 1] = '\0';
+    }
+};
 
 class ConfigurationMode : GUI {
 public:
@@ -30,6 +45,8 @@ public:
         setupShortcuts();
 
         templateManager.setConfigMode(true);
+        menuBarHeight = ImGui::GetFrameHeight();
+
     };
 
     int run() override;
@@ -38,31 +55,37 @@ public:
 
     void drawElements();
     void drawElementsWithSnappingOn();
-    void setupMenuBar();
+    void drawMenuBar();
     void drawGrid() const;
     void bringElementToTop(std::vector<Element*>& elements, Element* element);
 //    void renderSettingsPopup(Module& module, const std::string& part);
-    void createFloatSliderSettings();
-    void createIntSliderSettings();
     void createLabelSettings();
-    void initializeWindow(GLFWwindow* window);
+    void createButton(std::string elementName, std::string moduleName);
+    void createCheckbox(std::string elementName, std::string moduleName);
+    void createTextInput(std::string elementName, std::string moduleName);
+    void setNewElementAndAddToActiveTemplate(Element *element, std::string elementName, std::string moduleName, ImVec2 position, ImVec2 elementSize);
     void handleElementClick(Element* element,int i);
     void handleClicksOnElements(std::vector<Element*>& elements);
     bool isAnyPendingElement(std::vector<Element*>& elements);
     void setupShortcuts() override;
     void saveTemplate();
     void processFileDialog();
+    ImVec2 getPosition(ImVec2 elementSize);
+
     TemplateManager templateManager = TemplateManager(true);
 
 private:
     float gridSize = 60.0f;
     bool isSnapping = false;
     bool showGrid = false;
-    float menuBarHeight;
+    float menuBarHeight = 25.0f;
 
     void addModuleToActiveTemplate(GraphicModule *graphicModule);
 
     const float minGridValue = 10.0f;
     const float maxGridValue = 1000.0f;
+
+    template <typename T>
+    void createSliderSettings(const std::string &elementName, const std::string &moduleName, bool horizontal);
 };
 

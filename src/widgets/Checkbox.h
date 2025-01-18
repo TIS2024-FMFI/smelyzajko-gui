@@ -5,8 +5,8 @@ private:
     bool checked;
 
 public:
-    Checkbox(const std::string& lbl = "", const ImVec2& pos = ImVec2(0.0f, 0.0f), bool initialState = false)
-            : Element(pos, lbl), checked(initialState) {}
+    Checkbox(const std::string& lbl = "", const std::string& moduleName = "", const ImVec2& pos = ImVec2(0.0f, 0.0f), bool initialState = false)
+            : Element(lbl, moduleName, pos), checked(initialState) {}
 
     bool isChecked() const;
     void setChecked(bool state);
