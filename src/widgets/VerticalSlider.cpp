@@ -15,12 +15,14 @@ void VerticalSlider<E>::draw(ImGuiIO &io) {
         ImGui::VSliderFloat(this->label.c_str(), ImVec2(this->size.x, this->size.y), &this->value, this->minValue, this->maxValue);
     }
 
-    ImRect bbox = getBoundingBox();
-    ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    ImVec2 resize_handle_pos = ImVec2(this->position.x, this->position.y + bbox.GetSize().y + 10.0f);
-    ImVec2 handle_min = ImVec2(resize_handle_pos.x, resize_handle_pos.y);
-    ImVec2 handle_max = ImVec2(resize_handle_pos.x + 20.0f, resize_handle_pos.y + 10.0f);
-    draw_list->AddRectFilled(handle_min, handle_max, IM_COL32(255, 0, 0, 255)); // Red resize handle
+    if (this->configurationMode) {
+        ImRect bbox = getBoundingBox();
+        ImDrawList *draw_list = ImGui::GetWindowDrawList();
+        ImVec2 resize_handle_pos = ImVec2(this->position.x, this->position.y + bbox.GetSize().y + 10.0f);
+        ImVec2 handle_min = ImVec2(resize_handle_pos.x, resize_handle_pos.y);
+        ImVec2 handle_max = ImVec2(resize_handle_pos.x + 20.0f, resize_handle_pos.y + 10.0f);
+        draw_list->AddRectFilled(handle_min, handle_max, IM_COL32(255, 0, 0, 255)); // Red resize handle
+    }
 }
 
 template<typename E>
