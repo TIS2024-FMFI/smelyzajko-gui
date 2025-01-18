@@ -17,7 +17,6 @@ public:
     void run() override;
 
 
-    void saveLogToJson(const std::vector<int> &values);
     ModuleManager& moduleManager;
     std::vector<int> graphicModuleIds;
     float hodnota1 = 0;

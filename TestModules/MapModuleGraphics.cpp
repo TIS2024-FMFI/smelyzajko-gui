@@ -77,3 +77,45 @@ void MapModuleGraphics::updateValueOfModule(std::vector<int> value) {
         std::cerr << "Invalid value for MapModuleGraphics." << std::endl;
     }
 }
+
+void MapModuleGraphics::logToJson() {
+    if (!isGraphicsLogEnabled()) {
+        return;
+    }
+
+    static auto lastLogTime = std::chrono::steady_clock::now();
+    auto currentTime = std::chrono::steady_clock::now();
+    std::chrono::duration<float> elapsed = currentTime - lastLogTime;
+
+    float frequency = getGraphicsFrequency();
+    if (frequency > 0) {
+        float interval = 60.0f / frequency; // Convert frequency to interval in seconds
+        if (elapsed.count() < interval) {
+            return;
+        }
+    }
+
+    lastLogTime = currentTime;
+
+    std::lock_guard<std::mutex> lock(logMutex);
+
+    std::ofstream outFile(logFileDirectory + "/map.json");
+    if (!outFile.is_open()) {
+        std::cerr << "Error: Could not open map.json for writing.\n";
+        return;
+    }
+
+    nlohmann::json j;
+    j["rows"] = rows;
+    j["cols"] = cols;
+    j["map"] = nlohmann::json::array();
+    for (int row = 0; row < rows; ++row) {
+        j["map"][row] = nlohmann::json::array();
+        for (int col = 0; col < cols; ++col) {
+            j["map"][row][col] = map[row][col];
+        }
+    }
+
+    outFile << std::setw(4) << j << std::endl;
+    outFile.close();
+}

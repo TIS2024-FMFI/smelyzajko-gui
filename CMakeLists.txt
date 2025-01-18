@@ -11,7 +11,7 @@ file(GLOB IMGUI_HEADERS libs/imgui/*.h libs/imgui/backends/imgui_impl_glfw.h lib
 file(GLOB PROJECT_SOURCES src/*/*.cpp src/*.cpp TestModules/*.cpp)
 
 # Add ImGui as a library
-add_library(imgui ${IMGUI_SRC} ${IMGUI_HEADERS} ${PROJECT_SOURCES})
+add_library(imgui ${IMGUI_SRC} ${IMGUI_HEADERS})
 
 # Include directories
 add_subdirectory(libs/yaml-cpp)
@@ -19,7 +19,7 @@ include_directories(libs/imgui libs/imgui/backends ${CMAKE_SOURCE_DIR} libs/ImGu
 
 find_package(glfw3 REQUIRED)
 # Create the main executable
-add_executable(smelyzajko-gui libs/ImGuiFileDialog/ImGuiFileDialog.cpp main.cpp)
+add_executable(smelyzajko-gui libs/ImGuiFileDialog/ImGuiFileDialog.cpp main.cpp ${PROJECT_SOURCES})
 
 # Link the ImGui, OpenGL, GLFW, and yaml-cpp libraries
 if(APPLE)
@@ -31,6 +31,3 @@ else()
 endif()
 
 target_include_directories(smelyzajko-gui PRIVATE ${CMAKE_SOURCE_DIR}/libs/ImGuiFileDialog)
-
-
-############################################

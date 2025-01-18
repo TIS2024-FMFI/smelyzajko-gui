@@ -13,6 +13,7 @@ class MapModuleGraphics : public GraphicModule {
 public:
     MapModuleGraphics();
     void draw(ImGuiIO &io) override;
+    void logToJson() override;
     void updateValueOfModule(std::vector<int> value) override;
 
 private:
@@ -22,8 +23,9 @@ private:
     int cols = 10;
     std::vector<std::vector<int>> map;
     float cellSize = 40.0f;
+    std::mutex logMutex;
 
-    TextArea textArea; // TextArea for managing logs and scrolling
+
 
     // Private methods
     void loadMap(); // Load map data from a file

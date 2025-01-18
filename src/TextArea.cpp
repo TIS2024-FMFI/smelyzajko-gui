@@ -1,4 +1,5 @@
 #include "TextArea.h"
+#include "fstream"
 
 TextArea::TextArea()
         : scrollbar(0.0f, 0.0f) {
@@ -84,5 +85,58 @@ bool TextArea::isAutoscrollEnabled() const {
 }
 
 
+void TextArea::logToJson() {
+    if (!isTextLogEnabled()) {
+        return;
+    }
 
+    static auto lastLogTime = std::chrono::steady_clock::now();
+    auto currentTime = std::chrono::steady_clock::now();
+    std::chrono::duration<float> elapsed = currentTime - lastLogTime;
+
+    float frequency = getTextFrequency();
+    if (frequency > 0) {
+        float interval = 60.0f / frequency; // Convert frequency to interval in seconds
+        if (elapsed.count() < interval) {
+            return;
+        }
+    }
+
+    lastLogTime = currentTime;
+
+    std::lock_guard<std::mutex> lock(logMutex); // Protect writing
+
+    std::string filename = logFileDirectory+"text_area_"+moduleName+"_log.json";
+    nlohmann::json j;
+
+    // Load existing content
+    std::ifstream inFile(filename);
+    if (inFile.is_open()) {
+        try {
+            inFile >> j;
+        } catch (const std::exception& e) {
+            std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
+        }
+        inFile.close();
+    }
+
+    // Initialize the file if empty
+    if (!j.contains("logs")) {
+        j["logs"] = nlohmann::json::array();
+    }
+
+    // Add new logs
+    for (const std::string& log : logs) {
+        j["logs"].push_back(log);
+    }
+
+    // Overwrite the file with updated content
+    std::ofstream outFile(filename);
+    if (outFile.is_open()) {
+        outFile << std::setw(4) << j << std::endl;
+        outFile.close();
+    } else {
+        std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
+    }
+}
 
