@@ -68,36 +68,31 @@ std::vector<std::string> ShortcutsManager::parseShortcut(const std::string& shor
 }
 
 int ShortcutsManager::getGlfwKey(const std::string& key) {
-    // Map string keys to GLFW key codes
     if (key == "Ctrl") return GLFW_KEY_LEFT_CONTROL;
     if (key == "Cmd") return GLFW_KEY_LEFT_SUPER;
     if (key == "CmdR") return GLFW_KEY_RIGHT_SUPER;
+    if (key == "Space") return GLFW_KEY_SPACE;
+    if (key == "Enter") return GLFW_KEY_ENTER;
+    if (key == "Escape") return GLFW_KEY_ESCAPE;
+    if (key == "Backspace") return GLFW_KEY_BACKSPACE;
 
-    if (key == "A") return GLFW_KEY_A;
-    if (key == "S") return GLFW_KEY_S;
-    if (key == "D") return GLFW_KEY_D;
-    if (key == "F") return GLFW_KEY_F;
-    if (key == "G") return GLFW_KEY_G;
-    if (key == "Q") return GLFW_KEY_Q;
-    if (key == "W") return GLFW_KEY_W;
-    if (key == "E") return GLFW_KEY_E;
-    if (key == "R") return GLFW_KEY_R;
+    if (key.size() == 1 && std::isalpha(key[0])) {
+        return GLFW_KEY_A + (std::toupper(key[0]) - 'A');
+    }
+    if (key.size() == 1 && std::isdigit(key[0])) {
+        return GLFW_KEY_0 + (key[0] - '0');
+    }
 
-    if (key == "1") return GLFW_KEY_1;
-    if (key == "2") return GLFW_KEY_2;
-    if (key == "3") return GLFW_KEY_3;
-    if (key == "4") return GLFW_KEY_4;
-    if (key == "5") return GLFW_KEY_5;
-    if (key == "6") return GLFW_KEY_6;
-    if (key == "7") return GLFW_KEY_7;
-    if (key == "8") return GLFW_KEY_8;
-    if (key == "9") return GLFW_KEY_9;
-    if (key == "0") return GLFW_KEY_0;
+    if (key == "=") return GLFW_KEY_EQUAL;
+    if (key == "-") return GLFW_KEY_MINUS;
 
     if (key == "Left") return GLFW_KEY_LEFT;
     if (key == "Right") return GLFW_KEY_RIGHT;
+    if (key == "Up") return GLFW_KEY_UP;
+    if (key == "Down") return GLFW_KEY_DOWN;
 
-    return -1; // Unknown key
+    // If no match, return -1
+    return -1;
 }
 
 void ShortcutsManager::setWindow(GLFWwindow* window) {
