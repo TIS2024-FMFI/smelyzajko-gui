@@ -12,7 +12,7 @@ void TextArea::draw(ImGuiIO& io) {
     // Define text area boundaries
     float inner_padding = 5.0f;
     ImVec2 text_area_min = position;
-    ImVec2 text_area_max = ImVec2(position.x + size.x, position.y + size.y ); // Reduced padding
+    ImVec2 text_area_max = ImVec2(position.x + size.x, position.y + size.y); // Reduced padding
 
     // Draw text area boundary
     draw_list->AddRect(text_area_min, text_area_max, IM_COL32(255, 255, 255, 255));
@@ -28,7 +28,7 @@ void TextArea::draw(ImGuiIO& io) {
     }
 
     // Update scrollbar dimensions
-    float visible_height = size.x - 2 * inner_padding - 1.0f;
+    float visible_height = size.y - 2 * inner_padding - 1.0f;
     scrollbar.updateTotalHeight(total_log_height);
     scrollbar.updateVisibleHeight(visible_height);
 
