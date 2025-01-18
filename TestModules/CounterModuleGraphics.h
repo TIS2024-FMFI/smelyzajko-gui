@@ -14,6 +14,7 @@ class CounterModuleGraphics : public GraphicModule {
 public:
     CounterModuleGraphics();
     void draw(ImGuiIO &io) override;
+    void logToJson() override;
     void updateValueOfModule(int value) override;
 
 private:

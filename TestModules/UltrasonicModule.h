@@ -10,7 +10,6 @@
 class UltrasonicModule : public Module{
 
 private:
-    std::mutex logMutex;
     std::thread generatorThread;
     std::vector<UltrasonicSensorData> sensors;
     std::vector<int> graphicElementIds;

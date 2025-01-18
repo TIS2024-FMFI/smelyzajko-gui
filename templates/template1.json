@@ -1,95 +1,53 @@
 {
     "elements": [
         {
-            "label": "Hodnota 2",
-            "maxValue": 7,
-            "minValue": 0,
-            "moduleName": "Counter Module",
+            "label": "Interval",
+            "maxValue": 500,
+            "minValue": 1,
+            "moduleName": "Ultrasonic Module",
             "position": [
-                1016.0,
-                520.0
+                663.0,
+                585.0
             ],
             "size": [
-                316.0,
-                25.0
+                516.0,
+                60.0
             ],
             "type": "horizontal-slider-int",
-            "value": 0
-        },
-        {
-            "label": "Hodnota 1",
-            "maxValue": 10,
-            "minValue": 0,
-            "moduleName": "Counter Module",
-            "position": [
-                1019.0,
-                147.0
-            ],
-            "size": [
-                310.0,
-                25.0
-            ],
-            "type": "horizontal-slider-int",
-            "value": 0
+            "value": 500
         },
         {
             "label": "Speed",
-            "maxValue": 10000,
-            "minValue": 0,
-            "moduleName": "Counter Module",
+            "maxValue": 10.0,
+            "minValue": 1.0,
+            "moduleName": "Map Module",
             "position": [
-                769.0,
-                38.0
+                60.0,
+                582.0
             ],
             "size": [
-                100.0,
-                678.0
+                477.0,
+                20.0
             ],
-            "type": "vertical-slider-int",
-            "value": 0
-        },
-        {
-            "label": "Start",
-            "moduleName": "Counter Module",
-            "position": [
-                446.0,
-                737.0
-            ],
-            "size": [
-                291.0,
-                144.0
-            ],
-            "type": "button"
-        },
-        {
-            "label": "Stop",
-            "moduleName": "Counter Module",
-            "position": [
-                145.0,
-                737.0
-            ],
-            "size": [
-                283.0,
-                149.0
-            ],
-            "type": "button"
+            "type": "horizontal-slider-float",
+            "value": 5.0
         }
     ],
     "graphicModules": [
         {
-            "graphicElementId": 2,
+            "graphicElementId": 0,
             "graphicElementName": "Ultrasonic Graphic Element",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
-            "moduleId": 1,
-            "moduleName": "Counter Module",
+            "moduleId": 2,
+            "moduleName": "Ultrasonic Module",
             "position": [
-                1010.0,
-                195.0
+                660.0,
+                79.0
             ],
             "size": [
-                408.0,
-                306.0
+                602.0,
+                481.0
             ],
             "textFrequency": 0,
             "textLogEnabled": false,
@@ -100,15 +58,34 @@
             "graphicElementName": "Text Area",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
-            "moduleId": 1,
-            "moduleName": "Counter Module",
+            "moduleId": 0,
+            "moduleName": "Map Module",
             "position": [
-                130.0,
-                547.0
+                60.0,
+                619.0
             ],
             "size": [
-                616.0,
-                189.0
+                542.0,
+                242.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        },
+        {
+            "graphicElementId": 1,
+            "graphicElementName": "Text Area",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "moduleId": 2,
+            "moduleName": "Ultrasonic Module",
+            "position": [
+                660.0,
+                619.0
+            ],
+            "size": [
+                599.0,
+                239.0
             ],
             "textFrequency": 0,
             "textLogEnabled": false,
@@ -116,18 +93,18 @@
         },
         {
             "graphicElementId": 0,
-            "graphicElementName": "Counter Graphic Element",
+            "graphicElementName": "Map Graphic Element",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
-            "moduleId": 1,
-            "moduleName": "Counter Module",
+            "moduleId": 0,
+            "moduleName": "Map Module",
             "position": [
-                132.0,
-                35.0
+                60.0,
+                79.0
             ],
             "size": [
-                612.0,
-                506.0
+                543.0,
+                480.0
             ],
             "textFrequency": 0,
             "textLogEnabled": false,
@@ -136,7 +113,7 @@
     ],
     "name": "template1",
     "resolution": [
-        1920,
-        1080
+        1440,
+        900
     ]
 }

@@ -31,4 +31,3 @@ else()
 endif()
 
 target_include_directories(smelyzajko-gui PRIVATE ${CMAKE_SOURCE_DIR}/libs/ImGuiFileDialog)
-

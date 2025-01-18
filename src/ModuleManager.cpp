@@ -47,6 +47,14 @@ void ModuleManager::updateValueOfModule(int moduleID, int graphicModuleID, std::
 int ModuleManager::registerGraphicModule(const std::string &graphicElementName,const std::string &moduleName, int moduleID) {
     GraphicModule *graphicModule = moduleConstructors.at(graphicElementName)();
     graphicModule->setGraphicModuleID(graphicModules.size());
+    std::string logDir = logDirectory + "/" + moduleName;
+    graphicModule->setLogDirectory(logDir);
+
+    // Set the element logging settings
+//    graphicModule->setGraphicsFrequency(20);
+//    graphicModule->setGraphicsLogEnabled(true);
+
+
     graphicModule->setModuleName(moduleName);
     graphicModule->setModuleID(moduleID);
     graphicModules.push_back(graphicModule);
@@ -102,5 +110,11 @@ void ModuleManager::setValueFromInputElements(std::string moduleName, std::strin
         }
     }
 }
-
+void ModuleManager::setLogDirectory(std::string &logDirectory_) {
+    logDirectory = logDirectory_;
+    for (GraphicModule *module : graphicModules) {
+        std::string dir = logDirectory + "/"+module->getModuleName();
+        module->setLogDirectory(dir);
+    }
+}
 

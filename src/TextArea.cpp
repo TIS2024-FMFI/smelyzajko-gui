@@ -1,5 +1,6 @@
 #include "TextArea.h"
-
+#include "fstream"
+#include "sstream"
 TextArea::TextArea()
         : scrollbar(0.0f, 0.0f) {
     setGraphicElementName("Text Area");
@@ -11,23 +12,45 @@ void TextArea::draw(ImGuiIO& io) {
     // Define text area boundaries
     float inner_padding = 5.0f;
     ImVec2 text_area_min = position;
-    ImVec2 text_area_max = ImVec2(position.x + size.x, position.y + size.y ); // Reduced padding
+    ImVec2 text_area_max = ImVec2(position.x + size.x, position.y + size.y); // Reduced padding
 
     // Draw text area boundary
     draw_list->AddRect(text_area_min, text_area_max, IM_COL32(255, 255, 255, 255));
 
     // Calculate total log height dynamically
     float total_log_height = 0.0f;
+    std::vector<std::string> wrapped_logs;
     {
         std::lock_guard<std::mutex> lock(logMutex);
         for (const std::string& log : logs) {
             ImVec2 log_text_size = ImGui::CalcTextSize(log.c_str());
+            if (log_text_size.x > size.x - 2 * inner_padding) {
+                // Word wrapping
+                std::istringstream iss(log);
+                std::string word;
+                std::string current_line;
+                while (iss >> word) {
+                    std::string test_line = current_line.empty() ? word : current_line + " " + word;
+                    ImVec2 test_line_size = ImGui::CalcTextSize(test_line.c_str());
+                    if (test_line_size.x > size.x - 2 * inner_padding) {
+                        wrapped_logs.push_back(current_line);
+                        current_line = word;
+                    } else {
+                        current_line = test_line;
+                    }
+                }
+                if (!current_line.empty()) {
+                    wrapped_logs.push_back(current_line);
+                }
+            } else {
+                wrapped_logs.push_back(log);
+            }
             total_log_height += log_text_size.y + inner_padding;
         }
     }
 
     // Update scrollbar dimensions
-    float visible_height = size.x - 2 * inner_padding - 1.0f;
+    float visible_height = size.y - 2 * inner_padding - 1.0f;
     scrollbar.updateTotalHeight(total_log_height);
     scrollbar.updateVisibleHeight(visible_height);
 
@@ -37,7 +60,7 @@ void TextArea::draw(ImGuiIO& io) {
 
     {
         std::lock_guard<std::mutex> lock(logMutex);
-        for (const std::string& log : logs) {
+        for (const std::string& log : wrapped_logs) {
             ImVec2 log_text_size = ImGui::CalcTextSize(log.c_str());
             if (log_y_offset + log_text_size.y >= text_area_min.y &&
                 log_y_offset <= text_area_max.y) {
@@ -64,7 +87,6 @@ void TextArea::draw(ImGuiIO& io) {
     scrollbar.enableAutoscroll(autoscrollEnabled);
 }
 
-
 void TextArea::updateValueOfModule(std::string value) {
     std::lock_guard<std::mutex> lock(logMutex);
     logs.push_back(value);
@@ -84,5 +106,58 @@ bool TextArea::isAutoscrollEnabled() const {
 }
 
 
+void TextArea::logToJson() {
+    if (!isTextLogEnabled()) {
+        return;
+    }
 
+    static auto lastLogTime = std::chrono::steady_clock::now();
+    auto currentTime = std::chrono::steady_clock::now();
+    std::chrono::duration<float> elapsed = currentTime - lastLogTime;
+
+    float frequency = getTextFrequency();
+    if (frequency > 0) {
+        float interval = 60.0f / frequency; // Convert frequency to interval in seconds
+        if (elapsed.count() < interval) {
+            return;
+        }
+    }
+
+    lastLogTime = currentTime;
+
+    std::lock_guard<std::mutex> lock(logMutex); // Protect writing
+
+    std::string filename = logFileDirectory+"text_area_"+moduleName+"_log.json";
+    nlohmann::json j;
+
+    // Load existing content
+    std::ifstream inFile(filename);
+    if (inFile.is_open()) {
+        try {
+            inFile >> j;
+        } catch (const std::exception& e) {
+            std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
+        }
+        inFile.close();
+    }
+
+    // Initialize the file if empty
+    if (!j.contains("logs")) {
+        j["logs"] = nlohmann::json::array();
+    }
+
+    // Add new logs
+    for (const std::string& log : logs) {
+        j["logs"].push_back(log);
+    }
+
+    // Overwrite the file with updated content
+    std::ofstream outFile(filename);
+    if (outFile.is_open()) {
+        outFile << std::setw(4) << j << std::endl;
+        outFile.close();
+    } else {
+        std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
+    }
+}
 

@@ -15,7 +15,7 @@ public:
 
     // Draw the text area and handle interactions
     void draw (ImGuiIO& io) override;
-
+    void logToJson() override;
     // Manage logs
     void updateValueOfModule(std::string value ) override;
     void clearLogs();

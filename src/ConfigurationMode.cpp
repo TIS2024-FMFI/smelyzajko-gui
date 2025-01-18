@@ -130,6 +130,7 @@ int ConfigurationMode::run() {
         shortcutsManager.processShortcuts();
         drawMenuBar();
         processFileDialog();
+        processLogDirectoryDialog();
 
         ImGui::SetNextWindowPos(ImVec2(0, 0)); // Top-left corner of the screen
         ImGui::SetNextWindowSize(io.DisplaySize); // Fullscreen size
@@ -371,32 +372,9 @@ void ConfigurationMode::drawMenuBar() {
         }
 
         if (ImGui::BeginMenu("Configuration")) {
-//            for (Module& module : modules) {
-//                if (ImGui::BeginMenu(module.moduleName.c_str())) {
-//                    // Show Graphics and Text parts as separate items
-//                    if (ImGui::BeginMenu("Graphics")) {
-//                        // Open Settings Popup for Graphics part
-//                        std::string popupName = std::string(module.moduleName) + " Graphics Settings";
-//                        if (ImGui::Button("Settings")) {
-//                            ImGui::OpenPopup(popupName.c_str());
-//                        }
-//                        renderSettingsPopup(module, "Graphics");
-//                        ImGui::EndMenu();
-//                    }
-//
-//                    if (ImGui::BeginMenu("Text")) {
-//                        // Open Settings Popup for Text part
-//                        std::string popupName = std::string(module.moduleName) + " Text Settings";
-//                        if (ImGui::Button("Settings")) {
-//                            ImGui::OpenPopup(popupName.c_str());
-//                        }
-//                        renderSettingsPopup(module, "Text");
-//                        ImGui::EndMenu();
-//                    }
-//
-//                    ImGui::EndMenu();
-//                }
-//            }
+            if (ImGui::Button("Set log file directory")) {
+                openLogDirectoryDialog();
+            }
             ImGui::EndMenu();
         }
 
@@ -896,6 +874,63 @@ void ConfigurationMode::processFileDialog() {
         // Close the file dialog after file is selected or canceled
         ImGuiFileDialog::Instance()->Close();
     }
+}
+void ConfigurationMode::openLogDirectoryDialog() {
+    // Check if a file dialog is already open
+    if (ImGuiFileDialog::Instance()->IsOpened("ChooseLogDirDlgKey")) {
+        return; // If it's already open, return and avoid opening it again
+    }
+    std::cout << "openLogDirectoryDialog" << std::endl;
+
+    IGFD::FileDialogConfig config;
+    config.path = "../logs"; // Default path for the directory dialog
+
+    // Open the directory dialog
+    ImGuiFileDialog::Instance()->OpenDialog("ChooseLogDirDlgKey", "Choose Directory for logging", nullptr, config);
+}
+void ConfigurationMode::processLogDirectoryDialog() {
+    // Display the directory dialog and handle the directory selection
+    if (ImGuiFileDialog::Instance()->Display("ChooseLogDirDlgKey", ImGuiFileDialogFlags_Modal)) {
+        if (ImGuiFileDialog::Instance()->IsOk()) {
+            std::filesystem::path logDirPath = ImGuiFileDialog::Instance()->GetCurrentPath();
+            try {
+                // Create the directory if it doesn't exist
+                if (!std::filesystem::exists(logDirPath)) {
+                    std::filesystem::create_directories(logDirPath);
+                }
+
+                // Update the config1.yaml file with the new log directory
+                updateLogDirectoryInConfig(logDirPath.string());
+            } catch (const std::exception& e) {
+                std::cerr << "Error creating log directory: " << e.what() << std::endl;
+            }
+        }
+
+        // Close the directory dialog after directory is selected or canceled
+        ImGuiFileDialog::Instance()->Close();
+    }
+}
+
+void ConfigurationMode::updateLogDirectoryInConfig(const std::string& logDir) {
+    std::cout << "updateLogDirectoryInConfig " << logDir << std::endl;
+
+    // Load the existing config file
+
+    // Update the logDirectory field
+    configFile["logDirectory"] = logDir;
+
+    // Temporarily store the config file path
+    std::string configFilePath = configFile["configFile"].as<std::string>();
+
+    // Remove the configFile path entry
+    configFile.remove("configFile");
+
+    // Save the updated config back to the file
+    std::ofstream fout(configFilePath);
+    fout << configFile;
+
+    // Restore the configFile path entry
+    configFile["configFile"] = configFilePath;
 }
 
 void ConfigurationMode::setNewElementAndAddToActiveTemplate(Element *element, std::string elementName, std::string moduleName, ImVec2 position, ImVec2 elementSize) {

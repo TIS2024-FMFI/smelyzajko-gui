@@ -51,7 +51,6 @@ void MapModule::run() {
                 timeAccumulator = 0.0f;
                 if (currentStep < path.size() - 1) {
                     currentStep++;
-                    logToJson(path[currentStep]); // Logovanie aktuálnej pozície do JSON
                     int ballRow = path[currentStep].first;
                     int ballCol = path[currentStep].second;
                     moduleManager.updateValueOfModule(moduleId, graphicModuleId[0], std::vector<int>{ballRow, ballCol});
@@ -191,17 +190,7 @@ void MapModule::generatePath() {
     std::reverse(path.begin(), path.end());
 }
 
-void MapModule::logToJson(const std::pair<int, int> &position) {
-        std::ofstream outFile("../TestModules/logs/map_log.json", std::ios::app);
-        if (!outFile.is_open()) {
-            std::cerr << "Error: Could not open logs/map.json for writing.\n";
-            return;
-        }
-        if (outFile.is_open()) {
-            outFile << "{ \"row\": " << position.first << ", \"col\": " << position.second << " }\n";
-            outFile.close();
-        }
-    }
+
 
 void MapModule::registerShortcuts(ShortcutsManager& shortcutsManager, ToastNotificationManager& toastManager) {
     shortcutsManager.registerShortcut("Ctrl+R", [this, &toastManager]() {
@@ -261,12 +250,7 @@ void MapModule::saveMapToJson() {
 
 void MapModule::setValueFromInputElements(std::string elementName, std::string value) {
     if (elementName == "Reset") {
-        currentStep = 0;
-        if (!path.empty()) {
-            int ballRow = path[currentStep].first;
-            int ballCol = path[currentStep].second;
-            moduleManager.updateValueOfModule(moduleId, graphicModuleId[0], std::vector<int>{ballRow, ballCol});
-        }
+        resetMap();
     }
 }
 

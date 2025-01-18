@@ -6,41 +6,41 @@
             "graphicElementName": "Text Area",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
-            "moduleId": 0,
-            "moduleName": "Map Module",
+            "moduleId": 1,
+            "moduleName": "Counter Module",
             "position": [
                 1020.0,
                 79.0
             ],
             "size": [
-                303.5,
-                776.1666259765625
+                303.0,
+                715.0
             ],
             "textFrequency": 0,
             "textLogEnabled": false,
             "type": "rectangle"
         },
         {
-            "graphicElementId": 0,
-            "graphicElementName": "Map Graphic Element",
+            "graphicElementId": 2,
+            "graphicElementName": "Ultrasonic Graphic Element",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
-            "moduleId": 0,
-            "moduleName": "Map Module",
+            "moduleId": 1,
+            "moduleName": "Counter Module",
             "position": [
                 180.0,
                 79.0
             ],
             "size": [
-                781.25,
-                779.6666259765625
+                783.0,
+                719.0
             ],
             "textFrequency": 0,
             "textLogEnabled": false,
             "type": "rectangle"
         }
     ],
-    "name": "template3",
+    "name": "template4",
     "resolution": [
         1440,
         900

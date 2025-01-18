@@ -69,6 +69,10 @@ public:
     bool isAnyPendingElement(std::vector<Element*>& elements);
     void setupShortcuts() override;
     void saveTemplate();
+    void openLogDirectoryDialog();
+    void processLogDirectoryDialog();
+    void updateLogDirectoryInConfig(const std::string& logDir);
+
     void processFileDialog();
     ImVec2 getPosition(ImVec2 elementSize);
 
@@ -84,6 +88,8 @@ private:
 
     const float minGridValue = 10.0f;
     const float maxGridValue = 1000.0f;
+
+
 
     template <typename T>
     void createSliderSettings(const std::string &elementName, const std::string &moduleName, bool horizontal);

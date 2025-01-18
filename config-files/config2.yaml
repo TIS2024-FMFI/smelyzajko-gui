@@ -1,0 +1,5 @@
+templates:
+    - template1.json
+    - template2.json
+modules:
+logDirectory:

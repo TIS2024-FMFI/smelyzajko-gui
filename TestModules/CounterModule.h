@@ -19,7 +19,6 @@ public:
     void registerShortcuts(ShortcutsManager &shortcutsManager, ToastNotificationManager &toastNotificationManager) override;
 
 
-    void saveLogToJson(const std::vector<int> &values);
     ModuleManager& moduleManager;
     std::vector<int> graphicModuleIds;
     float hodnota1 = 0;
