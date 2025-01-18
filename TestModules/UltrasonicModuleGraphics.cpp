@@ -37,18 +37,21 @@ void UltrasonicModuleGraphics::draw(ImGuiIO& io) {
         // Draw line and endpoint
         draw_list->AddLine(center, ImVec2(x, y), IM_COL32(0, 255, 0, 255), 2.0f); // Green line
         draw_list->AddCircleFilled(ImVec2(x, y), 4.0f, IM_COL32(0, 255, 0, 255)); // Green dot
-        logToJson();
     }
 }
 
 
 
 void UltrasonicModuleGraphics::updateValueOfModule(std::vector<float> value) {
+    logToJson();
+
     sensors[i].distance = value[0];
     sensors[i].angle = value[1];
 }
 
 void UltrasonicModuleGraphics::updateValueOfModule(int value) {
+    logToJson();
+
     i = value;
 }
 
@@ -73,7 +76,10 @@ void UltrasonicModuleGraphics::logToJson() {
 
     std::lock_guard<std::mutex> lock(logMutex);
 
-    std::string filename = logFileDirectory+"/"+ moduleName+ "/ultrasonic_module_log.json";
+    std::string filename = logFileDirectory + "/ultrasonic_module_log.json";
+
+
+
     nlohmann::json j;
     std::ifstream inFile(filename);
 
@@ -105,4 +111,3 @@ void UltrasonicModuleGraphics::logToJson() {
         std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
     }
 }
-

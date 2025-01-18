@@ -119,9 +119,9 @@ void GraphicModule::setTextLogEnabled(bool logEnabled) {
     textLogEnabled = logEnabled;
 }
 
-void GraphicModule::setLogFileName(std::string name) {
+void GraphicModule::setLogDirectory(std::string name) {
     logFileDirectory = name;
 }
-std::string GraphicModule::getLogFileName() const {
+std::string GraphicModule::getLogDirectory() const {
     return logFileDirectory;
 }

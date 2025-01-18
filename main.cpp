@@ -39,6 +39,7 @@ int main(int argc, char* argv[]) {
     YAML::Node config;
     try {
         config = YAML::LoadFile(configFile);
+        config["configFile"] = configFile;
     } catch (const std::exception& e) {
         std::cerr << "Error loading configuration file: " << e.what() << "\n";
         return 1;

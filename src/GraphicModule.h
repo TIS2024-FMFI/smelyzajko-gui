@@ -54,8 +54,8 @@ public:
     bool isTextLogEnabled() const;
     void setTextLogEnabled(bool logEnabled);
 
-    void setLogFileName(std::string name);
-    std::string getLogFileName() const;
+    void setLogDirectory(std::string name);
+    std::string getLogDirectory() const;
 protected:
     // Graphic module element settings
     int graphicElementId;

@@ -25,6 +25,7 @@ void CounterModuleGraphics::draw(ImGuiIO &io) {
 }
 
 void CounterModuleGraphics::updateValueOfModule(int value) {
+    logToJson();
     counter = value;
 }
 

@@ -69,6 +69,7 @@ void MapModuleGraphics::draw(ImGuiIO &io) {
 }
 
 void MapModuleGraphics::updateValueOfModule(std::vector<int> value) {
+    logToJson();
     if (value.size() == 2) {
         ballRow = value[0];
         ballCol = value[1];
@@ -99,7 +100,7 @@ void MapModuleGraphics::logToJson() {
 
     std::lock_guard<std::mutex> lock(logMutex);
 
-    std::ofstream outFile(logFileDirectory + "/map.json");
+    std::ofstream outFile(logFileDirectory + "/map_logs.json");
     if (!outFile.is_open()) {
         std::cerr << "Error: Could not open map.json for writing.\n";
         return;
