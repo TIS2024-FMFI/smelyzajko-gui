@@ -4,7 +4,24 @@
 #include "Module.h"
 #include "ImGuiFileDialog.h"
 
+template <typename T>
+struct SliderSettings {
+    char label[128]{};
+    T minValue = 0;
+    T maxValue = 10;
+    T initialValue = 5;
+    bool isHorizontal = true;
 
+    // Default constructor
+    SliderSettings() = default;
+
+    // Constructor to initialize the structure
+    SliderSettings(const std::string &labelStr, T min, T max, T init, bool horizontal)
+            : minValue(min), maxValue(max), initialValue(init), isHorizontal(horizontal) {
+        std::strncpy(label, labelStr.c_str(), sizeof(label) - 1);
+        label[sizeof(label) - 1] = '\0';
+    }
+};
 
 class ConfigurationMode : GUI {
 public:
@@ -44,8 +61,6 @@ public:
     void drawGrid() const;
     void bringElementToTop(std::vector<Element*>& elements, Element* element);
 //    void renderSettingsPopup(Module& module, const std::string& part);
-    void createFloatSliderSettings(std::string elementName, std::string moduleName, bool isHorizontal);
-    void createIntSliderSettings(std::string elementName, std::string moduleName, bool isHorizontal);
     void createLabelSettings();
     void createButton(std::string elementName, std::string moduleName);
     void createCheckbox(std::string elementName, std::string moduleName);
@@ -71,5 +86,8 @@ private:
 
     const float minGridValue = 10.0f;
     const float maxGridValue = 1000.0f;
+
+    template <typename T>
+    void createSliderSettings(const std::string &elementName, const std::string &moduleName, bool horizontal);
 };
 

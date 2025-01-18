@@ -471,10 +471,10 @@ void ConfigurationMode::drawMenuBar() {
         auto elements = templateManager.getActiveTemplateElements();
 
         static const std::unordered_map<std::string, std::function<void(std::string, std::string)>> elementCreators = {
-                {"horizontal-slider-int", [&](std::string elementName, std::string moduleName) { createIntSliderSettings(elementName, moduleName, true); }},
-                {"horizontal-slider-float", [&](std::string elementName, std::string moduleName) { createFloatSliderSettings(elementName, moduleName, true); }},
-                {"vertical-slider-int", [&](std::string elementName, std::string moduleName) { createIntSliderSettings(elementName, moduleName, false); }},
-                {"vertical-slider-float", [&](std::string elementName, std::string moduleName) { createFloatSliderSettings(elementName, moduleName, false); }},
+                {"horizontal-slider-int", [&](std::string elementName, std::string moduleName) { createSliderSettings<int>(elementName, moduleName, true); }},
+                {"horizontal-slider-float", [&](std::string elementName, std::string moduleName) { createSliderSettings<float>(elementName, moduleName, true); }},
+                {"vertical-slider-int", [&](std::string elementName, std::string moduleName) { createSliderSettings<int>(elementName, moduleName, false); }},
+                {"vertical-slider-float", [&](std::string elementName, std::string moduleName) { createSliderSettings<float>(elementName, moduleName, false); }},
                 {"button", [&](std::string elementName, std::string moduleName) { createButton(elementName, moduleName); }},
                 {"checkbox", [&](std::string elementName, std::string moduleName) { createCheckbox(elementName, moduleName); }},
                 {"text-input", [&](std::string elementName, std::string moduleName) { createTextInput(elementName, moduleName); }},
@@ -674,8 +674,9 @@ void ConfigurationMode::createLabelSettings() {
     }
 }
 
-
-void ConfigurationMode::createIntSliderSettings(std::string elementName, std::string moduleName, bool horizontal) {
+template <typename T>
+void ConfigurationMode::createSliderSettings(
+        const std::string &elementName, const std::string &moduleName, bool horizontal) {
     std::string popupName = elementName + "-" + moduleName;
 
     if (ImGui::Button(elementName.c_str())) {
@@ -683,36 +684,40 @@ void ConfigurationMode::createIntSliderSettings(std::string elementName, std::st
     }
 
     if (ImGui::BeginPopup(popupName.c_str())) {
-        static char label[128];
-        static int minValue = 0;
-        static int maxValue = 10;
-        static int initialValue = 5;
-        static bool isHorizontal;
+        // Static map to store settings for each popup
+        static std::unordered_map<std::string, SliderSettings<T>> settingsMap;
 
-        static bool initialized = false;
-        if (!initialized) {
-            std::strncpy(label, elementName.c_str(), sizeof(label) - 1);
-            label[sizeof(label) - 1] = '\0';
-            isHorizontal = horizontal;
-            initialized = true;
+        if (settingsMap.find(popupName) == settingsMap.end()) {
+            settingsMap[popupName] = SliderSettings<T>(
+                    elementName, static_cast<T>(0), static_cast<T>(10), static_cast<T>(5), horizontal
+            );
         }
 
-        ImGui::InputText("Label", label, IM_ARRAYSIZE(label));
-        ImGui::InputInt("Min Value", &minValue);
-        ImGui::InputInt("Max Value", &maxValue);
-        ImGui::InputInt("Initial Value", &initialValue);
+        // Get a reference to the settings for this popup
+        SliderSettings<T> &settings = settingsMap[popupName];
 
-        if (initialValue < minValue) initialValue = minValue;
-        if (initialValue > maxValue) initialValue = maxValue;
+        // ImGui widgets to configure settings
+        ImGui::InputText("Label", settings.label, IM_ARRAYSIZE(settings.label));
+        if constexpr (std::is_same_v<T, int>) {
+            ImGui::InputInt("Min Value", reinterpret_cast<int *>(&settings.minValue));
+            ImGui::InputInt("Max Value", reinterpret_cast<int *>(&settings.maxValue));
+            ImGui::InputInt("Initial Value", reinterpret_cast<int *>(&settings.initialValue));
+        } else if constexpr (std::is_same_v<T, float>) {
+            ImGui::InputFloat("Min Value", &settings.minValue);
+            ImGui::InputFloat("Max Value", &settings.maxValue);
+            ImGui::InputFloat("Initial Value", &settings.initialValue);
+        }
 
-        ImGui::Checkbox("Horizontal Slider", &isHorizontal);
+        if (settings.initialValue < settings.minValue) settings.initialValue = settings.minValue;
+        if (settings.initialValue > settings.maxValue) settings.initialValue = settings.maxValue;
+
+        ImGui::Checkbox("Horizontal Slider", &settings.isHorizontal);
 
         auto elements = templateManager.getActiveTemplateElements();
-        ImVec2 sliderSize = isHorizontal ? ImVec2(200.0f, 20.0f) : ImVec2(20.0f, 200.0f);
+        ImVec2 sliderSize = settings.isHorizontal ? ImVec2(200.0f, 20.0f) : ImVec2(20.0f, 200.0f);
         ImVec2 padding(10.0f, 10.0f);
 
         ImVec2 position;
-
         if (isSnapping) {
             int widthInSquares = ceil(sliderSize.x / gridSize);
             int heightInSquares = ceil(sliderSize.y / gridSize);
@@ -729,123 +734,42 @@ void ConfigurationMode::createIntSliderSettings(std::string elementName, std::st
         }
 
         if (ImGui::Button("Add")) {
-            if (isHorizontal) {
-                auto *element = new HorizontalSlider<int>(
-                        label,
+            if (settings.isHorizontal) {
+                auto *element = new HorizontalSlider<T>(
+                        settings.label,
                         moduleName,
                         position,
                         sliderSize,
-                        minValue,
-                        maxValue,
-                        initialValue
+                        settings.minValue,
+                        settings.maxValue,
+                        settings.initialValue
                 );
                 addElementToActiveTemplate(element);
             } else {
-                auto *element = new VerticalSlider<int>(
-                        label,
+                auto *element = new VerticalSlider<T>(
+                        settings.label,
                         moduleName,
                         position,
                         sliderSize,
-                        minValue,
-                        maxValue,
-                        initialValue
+                        settings.minValue,
+                        settings.maxValue,
+                        settings.initialValue
                 );
                 addElementToActiveTemplate(element);
             }
             ImGui::CloseCurrentPopup();
+            settingsMap.erase(popupName);
         }
 
         ImGui::SameLine();
         if (ImGui::Button("Cancel")) {
             ImGui::CloseCurrentPopup();
+            settingsMap.erase(popupName);
         }
 
         ImGui::EndPopup();
     }
 }
-
-void ConfigurationMode::createFloatSliderSettings(std::string elementName, std::string moduleName, bool horizontal) {
-    std::string popupName = elementName + "-" + moduleName;
-
-    if (ImGui::Button(elementName.c_str())) {
-        ImGui::OpenPopup(popupName.c_str());
-    }
-
-    if (ImGui::BeginPopup(popupName.c_str())) {
-        static char label[128];
-        std::strncpy(label, elementName.c_str(), sizeof(label) - 1);
-        label[sizeof(label) - 1] = '\0';
-        static ImVec2 position = ImVec2(100.0f, 100.0f);
-        static float minValue = 0.0f;
-        static float maxValue = 1.0f;
-        static float initialValue = 0.0f;
-        static bool isHorizontal = horizontal;
-
-        ImGui::InputText("Label", label, IM_ARRAYSIZE(label));
-        ImGui::InputFloat("Min Value", &minValue);
-        ImGui::InputFloat("Max Value", &maxValue);
-        ImGui::InputFloat("Initial Value", &initialValue);
-
-        if (initialValue < minValue) initialValue = minValue;
-        if (initialValue > maxValue) initialValue = maxValue;
-
-        ImGui::Checkbox("Horizontal Slider", &isHorizontal);
-
-        auto elements = templateManager.getActiveTemplateElements();
-        ImVec2 sliderSize = isHorizontal ? ImVec2(200.0f, 20.0f) : ImVec2(20.0f, 200.0f);
-        ImVec2 padding(10.0f, 10.0f);
-
-        if (isSnapping) {
-            int widthInSquares = ceil(sliderSize.x / gridSize);
-            int heightInSquares = ceil(sliderSize.y / gridSize);
-            sliderSize = ImVec2(widthInSquares * gridSize, heightInSquares * gridSize);
-
-            position = findNearestFreeGridCorner(elements, sliderSize, gridSize, padding, menuBarHeight);
-        } else {
-            position = findFreePosition(elements, sliderSize, padding, 10.0f, 10.0f, 25.0f);
-        }
-
-        if (position.x == -1.0f && position.y == -1.0f) {
-            playBeep();
-            position = ImVec2(0.0f, menuBarHeight);
-        }
-
-        if (ImGui::Button("Add")) {
-            if (isHorizontal) {
-                auto *element = new HorizontalSlider<float>(
-                        label,
-                        moduleName,
-                        position,
-                        sliderSize,
-                        minValue,
-                        maxValue,
-                        initialValue
-                );
-                addElementToActiveTemplate(element);
-            } else {
-                auto *element = new VerticalSlider<float>(
-                        label,
-                        moduleName,
-                        position,
-                        sliderSize,
-                        minValue,
-                        maxValue,
-                        initialValue
-                );
-                addElementToActiveTemplate(element);
-            }
-            ImGui::CloseCurrentPopup();
-        }
-
-        ImGui::SameLine();
-        if (ImGui::Button("Cancel")) {
-            ImGui::CloseCurrentPopup();
-        }
-
-        ImGui::EndPopup();
-    }
-}
-
 
 void ConfigurationMode::addElementToActiveTemplate(Element* element) {
     templateManager.addElementToActiveTemplate(element);
