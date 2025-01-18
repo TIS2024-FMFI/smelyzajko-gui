@@ -120,9 +120,6 @@ ImVec2 findNearestFreeGridCorner(const std::vector<Element*>& elements, const Im
 }
 
 int ConfigurationMode::run() {
-    MapModule mapModule = MapModule(&moduleManager);
-    CounterModule counterModule = CounterModule(&moduleManager);
-    UltrasonicModule ultrasonicModule = UltrasonicModule(&moduleManager);
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
@@ -158,7 +155,6 @@ int ConfigurationMode::run() {
 
         if (showGrid) drawGrid();
 
-        // render all toast notifications
         toastManager.renderNotifications();
 
         ImGui::Render();

@@ -7,7 +7,6 @@
 UltrasonicModule::UltrasonicModule(ModuleManager* moduleManager)
         : moduleManager(moduleManager), running(true), deltaTime(0.0f) {
     setModuleName("Ultrasonic Module");
-    moduleId = this->moduleManager->registerModule(moduleName, this);
     for (const std::string& element : this->getPossibleGraphicsElement()) {
         graphicElementIds.push_back(this->moduleManager->registerGraphicModule(element, moduleName, moduleId));
     }
@@ -38,8 +37,6 @@ UltrasonicModule::~UltrasonicModule() {
         generatorThread.join();
     }
 }
-
-
 
 void UltrasonicModule::run() {
     while (running) {
@@ -74,13 +71,13 @@ void UltrasonicModule::updateDynamicSensors() {
 }
 
 void UltrasonicModule::setValueFromInputElements(std::string elementName, std::string value) {
-    if (elementName =="Stop"){
+    if (elementName =="Stop") {
         running = false;
         if (generatorThread.joinable()) {
             generatorThread.join();
         }
         moduleManager->updateValueOfModule(moduleId,graphicElementIds[1] , "Stopped");
-    }else if (elementName == "Start"){
+    }else if (elementName == "Start") {
         if (!running) {
             running = true;
             generatorThread = std::thread(&UltrasonicModule::run, this);
@@ -94,8 +91,9 @@ void UltrasonicModule::setValueFromInputElements(std::string elementName, int va
         updateDelayMs = value;
         std::string message = "Interval set to " + std::to_string(updateDelayMs) + " ms";
         moduleManager->updateValueOfModule(moduleId, graphicElementIds[1], message);
-
     }
 
 }
+
+void UltrasonicModule::registerShortcuts(ShortcutsManager& shortcutsManager, ToastNotificationManager& toastManager) {}
 

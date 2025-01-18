@@ -5,18 +5,12 @@
 #include "../TestModules/UltrasonicModule.h"
 
 int OperatingMode::run() {
-
-
-    MapModule mapModule = MapModule(&moduleManager);
-    CounterModule counterModule = CounterModule(&moduleManager);
-    UltrasonicModule ultrasonicModule = UltrasonicModule(&moduleManager);
     createLogDirectory();
-
-
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return 1;
     }
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
@@ -42,6 +36,8 @@ int OperatingMode::run() {
         if (!templateManager.getActiveTemplateModules().empty()) {
             moduleManager.setActiveModuleAndDraw(templateManager.getActiveTemplateModules(),io);
         }
+
+        toastManager.renderNotifications();
 
         drawElements();
         ImGui::End();
@@ -117,8 +113,6 @@ void OperatingMode::drawElements() {
             moduleManager.setValueFromInputElements(element->getModuleName(),element->getLabel(),*value);
         }
 
-
-
         ImGui::PopID();
     }
 }
@@ -129,18 +123,21 @@ void OperatingMode::setupShortcuts() {
     shortcutsManager.registerShortcut("Ctrl+Left", [this]() {
         switchTemplate(-1);
     });
-
     shortcutsManager.registerShortcut("Ctrl+Right", [this]() {
         switchTemplate(1);
     });
 
+    // Apple (use CMD)
     shortcutsManager.registerShortcut("Cmd+Left", [this]() {
         switchTemplate(-1);
     });
-
     shortcutsManager.registerShortcut("Cmd+Right", [this]() {
         switchTemplate(1);
     });
+
+    for (Module* module : moduleManager.getModules()) {
+        module->registerShortcuts(shortcutsManager, toastManager);
+    }
 }
 
 void OperatingMode::switchTemplate(int direction) {
@@ -160,6 +157,7 @@ void OperatingMode::switchTemplate(int direction) {
     std::string windowTitle = std::string("GUI") + " - " + activeTemplateName;
     glfwSetWindowTitle(window, windowTitle.c_str());
 }
+
 void OperatingMode::createLogDirectory() {
     std::string logDirectory;
 

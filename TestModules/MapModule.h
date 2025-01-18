@@ -14,7 +14,6 @@
 
 class MapModule : public Module {
 
-
 public:
     MapModule(ModuleManager* moduleManager);
 //    MapModule(int id, const char* name) : Module(id, name) {}
@@ -26,11 +25,14 @@ public:
     ModuleManager& moduleManager;
     std::vector<int> graphicModuleId;
 
+    void registerShortcuts(ShortcutsManager &shortcutsManager, ToastNotificationManager &toastNotificationManager) override;
+
+
 
     void setValueFromInputElements(std::string elementName, std::string value) override ;
     void setValueFromInputElements(std::string elementName, bool value) override ;
     void setValueFromInputElements(std::string elementName, float value) override ;
-//    void drawButtons();
+    void resetMap();
     std::vector<std::string> getPossibleGraphicsElement() override {
         return {"Map Graphic Element","Text Area","Counter Graphic Element"};
     }

@@ -49,4 +49,6 @@ public:
 
     virtual int run() = 0;
     virtual void setupShortcuts() = 0;
+
+    void loadModules(YAML::Node modules);
 };

@@ -7,7 +7,7 @@
 CounterModule::CounterModule(ModuleManager* moduleManager)
         : moduleManager(*moduleManager), counter(0), stopGeneration(false) {
     setModuleName("Counter Module");
-    moduleId = this->moduleManager.registerModule(moduleName, this);
+
     graphicModuleIds.push_back(this->moduleManager.registerGraphicModule("Counter Graphic Element",moduleName, moduleId));
     graphicModuleIds.push_back(this->moduleManager.registerGraphicModule("Text Area",moduleName, moduleId));
     graphicModuleIds.push_back(this->moduleManager.registerGraphicModule("Ultrasonic Graphic Element",moduleName, moduleId));
@@ -35,29 +35,15 @@ void CounterModule::run() {
     }
 }
 
-
-
-
-
-
 void CounterModule::setValueFromInputElements(std::string elementName, std::string value) {
     if (elementName == "Stop") {
-        if (!stopGeneration.load()) {
-            stopGeneration.store(true);
-            if (generatorThread.joinable()) {
-                generatorThread.join();
-            }
-        }
+        stopCounter();
     }
     else if (elementName == "Start") {
-        if (stopGeneration.load()) {
-            stopGeneration.store(false);
-            generatorThread = std::thread(&CounterModule::run, this);
-        }
+        startCounter();
     }
-
-
 }
+
 void CounterModule::setValueFromInputElements(std::string elementName, int value) {
     if ("Hodnota 1" == elementName) {
         hodnota1 = value;
@@ -67,6 +53,33 @@ void CounterModule::setValueFromInputElements(std::string elementName, int value
     }
     else if ("Speed" == elementName) {
         speed = value;
+    }
+}
+
+void CounterModule::registerShortcuts(ShortcutsManager& shortcutsManager, ToastNotificationManager& toastManager) {
+    shortcutsManager.registerShortcut("Ctrl+P", [this, &toastManager]() {
+        stopCounter();
+        toastManager.addNotification(moduleName, "Counter has been stopped.");
+    });
+    shortcutsManager.registerShortcut("Ctrl+S", [this, &toastManager]() {
+        startCounter();
+        toastManager.addNotification(moduleName, "Counter has been started.");
+    });
+}
+
+void CounterModule::stopCounter() {
+    if (!stopGeneration.load()) {
+        stopGeneration.store(true);
+        if (generatorThread.joinable()) {
+            generatorThread.join();
+        }
+    }
+}
+
+void CounterModule::startCounter() {
+    if (stopGeneration.load()) {
+        stopGeneration.store(false);
+        generatorThread = std::thread(&CounterModule::run, this);
     }
 }
 

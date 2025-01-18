@@ -25,6 +25,7 @@ private:
     int updateIntervalFrames = 4;
 
     void run() override;
+    void registerShortcuts(ShortcutsManager &shortcutsManager, ToastNotificationManager &toastNotificationManager) override;
     void updateDynamicSensors();
 
     void setValueFromInputElements(std::string elementName, std::string value) override;

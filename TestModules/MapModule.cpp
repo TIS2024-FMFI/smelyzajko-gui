@@ -11,7 +11,6 @@
 
 MapModule::MapModule(ModuleManager* moduleManager) : moduleManager(*moduleManager), running(false), deltaTime(0.0f){ // Initialize rows and cols
     setModuleName("Map Module") ;
-    moduleId = this->moduleManager.registerModule(moduleName,  this);
     graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Map Graphic Element",moduleName, moduleId));
     graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Text Area",moduleName, moduleId));
     graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Counter Graphic Element",moduleName, moduleId));
@@ -35,8 +34,6 @@ MapModule:: ~MapModule() {
         mapThread.join();
     }
 }
-
-
 
 void MapModule::run() {
     auto start = std::chrono::high_resolution_clock::now();
@@ -189,13 +186,24 @@ void MapModule::generatePath() {
     }
     // Trasu otočíme, pretože sme ju konštruovali od cieľa po štart
     std::reverse(path.begin(), path.end());
-
-    std::cout << std::endl;
 }
 
+void MapModule::registerShortcuts(ShortcutsManager& shortcutsManager, ToastNotificationManager& toastManager) {
+    shortcutsManager.registerShortcut("Ctrl+R", [this, &toastManager]() {
+        resetMap();
+        toastManager.addNotification(moduleName, "Map has been reset.");
+    });
 
+    shortcutsManager.registerShortcut("Ctrl+M", [this, &toastManager]() {
+        isStopped = true;
+        toastManager.addNotification(moduleName, "Map walk has been stopped.");
+    });
 
-
+    shortcutsManager.registerShortcut("Ctrl+N", [this, &toastManager]() {
+        isStopped = false;
+        toastManager.addNotification(moduleName, "Map walk has been started.");
+    });
+}
 
 
 void MapModule::saveMapToJson() {
@@ -237,25 +245,28 @@ void MapModule::saveMapToJson() {
 
 void MapModule::setValueFromInputElements(std::string elementName, std::string value) {
     if (elementName == "Reset") {
-        currentStep = 0;
-        if (!path.empty()) {
-            int ballRow = path[currentStep].first;
-            int ballCol = path[currentStep].second;
-            moduleManager.updateValueOfModule(moduleId, graphicModuleId[0], std::vector<int>{ballRow, ballCol});
-        }
+        resetMap();
     }
-
-
 }
+
 void MapModule::setValueFromInputElements(std::string elementName, bool value) {
     if (elementName == "Running") {
         isStopped = !value;
-
     }
 }
+
 void MapModule::setValueFromInputElements(std::string elementName, float value) {
     if (elementName == "Speed") {
         speed = value;
+    }
+}
+
+void MapModule::resetMap() {
+    currentStep = 0;
+    if (!path.empty()) {
+        int ballRow = path[currentStep].first;
+        int ballCol = path[currentStep].second;
+        moduleManager.updateValueOfModule(moduleId, graphicModuleId[0], std::vector<int>{ballRow, ballCol});
     }
 }
 
