@@ -85,3 +85,4 @@ public:
     static ImVec2 getScaleFactors(ImVec2 templateResolution);
     virtual std::vector<Setting> getSettings()  = 0;
 };
+

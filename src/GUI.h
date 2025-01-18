@@ -27,7 +27,6 @@
 #include "../TestModules/UltrasonicModule.h"
 #include "../TestModules/MapModule.h"
 #include "../TestModules/CounterModule.h"
-
 class GUI {
 protected:
     ImGuiIO& io;

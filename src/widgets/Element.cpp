@@ -1,5 +1,4 @@
 #include "Element.h"
-#include "iostream"
 
 ImVec2 Element::getPosition() const {
     return position;
@@ -51,7 +50,6 @@ void Element::setPopupPosition(ImVec2 newPopupPosition) {
 }
 
 void Element::detectRightClick() {
-
     popupPosition = ImGui::GetMousePos();
     pendingChooseWhatToDo = true; // Mark that the element is pending deletion
 }
@@ -144,3 +142,9 @@ ImVec2 Element::getScaleFactors(ImVec2 templateResolution) {
 
     return ImVec2(scaleX, scaleY);
 }
+
+
+
+
+
+
