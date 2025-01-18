@@ -35,8 +35,6 @@ MapModule:: ~MapModule() {
     }
 }
 
-
-
 void MapModule::run() {
     auto start = std::chrono::high_resolution_clock::now();
     while (running) {
@@ -190,23 +188,20 @@ void MapModule::generatePath() {
     std::reverse(path.begin(), path.end());
 }
 
-
-
 void MapModule::registerShortcuts(ShortcutsManager& shortcutsManager, ToastNotificationManager& toastManager) {
     shortcutsManager.registerShortcut("Ctrl+R", [this, &toastManager]() {
         resetMap();
         toastManager.addNotification(moduleName, "Map has been reset.");
     });
 
-    shortcutsManager.registerShortcut("Ctrl+=", [this, &toastManager]() {
-        speed += 1.0f;
-        toastManager.addNotification(moduleName, "Speed increased to: " + std::to_string(speed));
+    shortcutsManager.registerShortcut("Ctrl+M", [this, &toastManager]() {
+        isStopped = true;
+        toastManager.addNotification(moduleName, "Map walk has been stopped.");
     });
 
-    shortcutsManager.registerShortcut("Ctrl+-", [this, &toastManager]() {
-        speed -= 1.0f;
-        if (speed < 0) speed = 0;
-        toastManager.addNotification(moduleName, "Speed decreased to: " + std::to_string(speed));
+    shortcutsManager.registerShortcut("Ctrl+N", [this, &toastManager]() {
+        isStopped = false;
+        toastManager.addNotification(moduleName, "Map walk has been started.");
     });
 }
 
@@ -257,7 +252,6 @@ void MapModule::setValueFromInputElements(std::string elementName, std::string v
 void MapModule::setValueFromInputElements(std::string elementName, bool value) {
     if (elementName == "Running") {
         isStopped = !value;
-
     }
 }
 
