@@ -7,7 +7,7 @@
 CounterModule::CounterModule(ModuleManager* moduleManager)
         : moduleManager(*moduleManager), counter(0), stopGeneration(false) {
     setModuleName("Counter Module");
-    moduleId = this->moduleManager.registerModule(moduleName, this);
+
     graphicModuleIds.push_back(this->moduleManager.registerGraphicModule("Counter Graphic Element",moduleName, moduleId));
     graphicModuleIds.push_back(this->moduleManager.registerGraphicModule("Text Area",moduleName, moduleId));
     graphicModuleIds.push_back(this->moduleManager.registerGraphicModule("Ultrasonic Graphic Element",moduleName, moduleId));

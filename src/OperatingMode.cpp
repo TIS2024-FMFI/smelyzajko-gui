@@ -5,10 +5,6 @@
 #include "../TestModules/UltrasonicModule.h"
 
 int OperatingMode::run() {
-    MapModule mapModule = MapModule(&moduleManager);
-    CounterModule counterModule = CounterModule(&moduleManager);
-    UltrasonicModule ultrasonicModule = UltrasonicModule(&moduleManager);
-
 
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;

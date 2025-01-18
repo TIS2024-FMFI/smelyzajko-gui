@@ -24,6 +24,7 @@ GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()), configFile(configFile) {
     glfwMakeContextCurrent(window);
 
     setupImGui();
+    loadModules(configFile["modules"]);
 }
 
 void GUI::setupImGui() {
@@ -46,6 +47,38 @@ void GUI::cleanupImGui() {
     ImGui::DestroyContext();
 }
 
+void GUI::loadModules(YAML::Node modules) {
+    if (!modules || !modules.IsSequence()) {
+        throw std::runtime_error("Invalid modules configuration in the config file.");
+    }
+
+    for (const auto& moduleName : modules) {
+        if (!moduleName.IsScalar()) {
+            std::cerr << "Module name must be a scalar value." << std::endl;
+            continue;
+        }
+
+        std::string moduleNameStr = moduleName.as<std::string>();
+
+        if (moduleNameStr.empty()) {
+            std::cerr << "Empty module name found. Skipping." << std::endl;
+            continue;
+        }
+
+        if (moduleNameStr == "MapModule") {
+            MapModule* mapModule = new MapModule(&moduleManager);
+            moduleManager.registerModule("MapModule", mapModule);
+        } else if (moduleNameStr == "CounterModule") {
+            CounterModule* counterModule = new CounterModule(&moduleManager);
+            moduleManager.registerModule("CounterModule", counterModule);
+        } else if (moduleNameStr == "UltrasonicModule") {
+            UltrasonicModule* ultrasonicModule = new UltrasonicModule(&moduleManager);
+            moduleManager.registerModule("UltrasonicModule", ultrasonicModule);
+        } else {
+            std::cerr << "Unknown module: " << moduleNameStr << std::endl;
+        }
+    }
+}
 
 
 

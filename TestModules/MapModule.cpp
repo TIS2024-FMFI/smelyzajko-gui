@@ -11,7 +11,6 @@
 
 MapModule::MapModule(ModuleManager* moduleManager) : moduleManager(*moduleManager), running(false), deltaTime(0.0f){ // Initialize rows and cols
     setModuleName("Map Module") ;
-    moduleId = this->moduleManager.registerModule(moduleName,  this);
     graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Map Graphic Element",moduleName, moduleId));
     graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Text Area",moduleName, moduleId));
     graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Counter Graphic Element",moduleName, moduleId));
@@ -190,8 +189,6 @@ void MapModule::generatePath() {
     }
     // Trasu otočíme, pretože sme ju konštruovali od cieľa po štart
     std::reverse(path.begin(), path.end());
-
-    std::cout << std::endl;
 }
 
 
