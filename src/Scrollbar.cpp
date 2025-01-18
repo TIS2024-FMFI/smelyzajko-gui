@@ -11,8 +11,8 @@ void Scrollbar::drawScrollbar(ImVec2 scrollAreaMin, ImVec2 scrollAreaMax, ImGuiI
     ImVec2 scrollbarMin = ImVec2(scrollAreaMax.x - scrollbarWidth, scrollAreaMin.y + checkboxHeight);
     ImVec2 scrollbarMax = ImVec2(scrollAreaMax.x, scrollAreaMax.y);
 
-    ImDrawList* drawList = ImGui::GetForegroundDrawList();
-    drawList->AddRectFilled(scrollbarMin, scrollbarMax, IM_COL32(180, 180, 180, 255));
+    ImDrawList* drawList = ImGui::GetBackgroundDrawList();
+    drawList->AddRectFilled(scrollbarMin, scrollbarMax, IM_COL32(255, 255, 255, 255)); // White color for scrollbar
 
     // Calculate thumb size and position
     float thumbHeight = std::max((visibleHeight / totalHeight) * (scrollbarMax.y - scrollbarMin.y), 10.0f);
@@ -21,7 +21,7 @@ void Scrollbar::drawScrollbar(ImVec2 scrollAreaMin, ImVec2 scrollAreaMax, ImGuiI
 
     ImVec2 thumbMin = ImVec2(scrollbarMin.x, scrollbarMin.y + thumbOffset);
     ImVec2 thumbMax = ImVec2(scrollbarMax.x, thumbMin.y + thumbHeight);
-    drawList->AddRectFilled(thumbMin, thumbMax, IM_COL32(100, 100, 100, 255));
+    drawList->AddRectFilled(thumbMin, thumbMax, IM_COL32(0, 0, 0, 255)); // Black color for thumb
 
     // Handle scrollbar dragging
     if (ImGui::IsMouseHoveringRect(scrollbarMin, scrollbarMax) && ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
@@ -31,7 +31,6 @@ void Scrollbar::drawScrollbar(ImVec2 scrollAreaMin, ImVec2 scrollAreaMax, ImGuiI
         scrollOffset = std::clamp(scrollOffset, 0.0f, std::max(0.0f, totalHeight - visibleHeight));
     }
 }
-
 
 void Scrollbar::updateScrollOffset(ImGuiIO& io) {
     if (ImGui::IsMouseHoveringRect(ImVec2(0, 0), ImVec2(visibleHeight, totalHeight))) {
