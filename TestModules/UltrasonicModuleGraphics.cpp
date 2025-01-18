@@ -43,47 +43,71 @@ void UltrasonicModuleGraphics::draw(ImGuiIO& io) {
 
 
 void UltrasonicModuleGraphics::updateValueOfModule(std::vector<float> value) {
+    logToJson();
+
     sensors[i].distance = value[0];
     sensors[i].angle = value[1];
 }
 
 void UltrasonicModuleGraphics::updateValueOfModule(int value) {
+    logToJson();
+
     i = value;
 }
 
+void UltrasonicModuleGraphics::logToJson() {
+    if (!isGraphicsLogEnabled()) {
+        return;
+    }
 
-//void UltrasonicModuleGraphics::logSensorDataToJson() {
-//    std::lock_guard<std::mutex> lock(logMutex);
-//
-//    std::string filename = "../TestModules/logs/ultrasonic_module_log.json";
-//    nlohmann::json j;
-//    std::ifstream inFile(filename);
-//
-//    if (inFile.is_open()) {
-//        try {
-//            inFile >> j;
-//        } catch (const std::exception& e) {
-//            std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
-//        }
-//        inFile.close();
-//    }
-//
-//    if (!j.contains("sensor_data") || !j["sensor_data"].is_array()) {
-//        j["sensor_data"] = nlohmann::json::array();
-//    }
-//
-//    for (const auto& sensor : sensors) {
-//        nlohmann::json sensorEntry;
-//        sensorEntry["angle"] = sensor.angle;
-//        sensorEntry["distance"] = sensor.distance;
-//        j["sensor_data"].push_back(sensorEntry);
-//    }
-//
-//    std::ofstream outFile(filename, std::ios::trunc);
-//    if (outFile.is_open()) {
-//        outFile << std::setw(4) << j << std::endl;
-//        outFile.close();
-//    } else {
-//        std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
-//    }
-//}
+    static auto lastLogTime = std::chrono::steady_clock::now();
+    auto currentTime = std::chrono::steady_clock::now();
+    std::chrono::duration<float> elapsed = currentTime - lastLogTime;
+
+    float frequency = getGraphicsFrequency();
+    if (frequency > 0) {
+        float interval = 60.0f / frequency;
+        if (elapsed.count() < interval) {
+            return;
+        }
+    }
+
+    lastLogTime = currentTime;
+
+    std::lock_guard<std::mutex> lock(logMutex);
+
+    std::string filename = logFileDirectory + "/ultrasonic_module_log.json";
+
+
+
+    nlohmann::json j;
+    std::ifstream inFile(filename);
+
+    if (inFile.is_open()) {
+        try {
+            inFile >> j;
+        } catch (const std::exception& e) {
+            std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
+        }
+        inFile.close();
+    }
+
+    if (!j.contains("sensor_data") || !j["sensor_data"].is_array()) {
+        j["sensor_data"] = nlohmann::json::array();
+    }
+
+    for (const auto& sensor : sensors) {
+        nlohmann::json sensorEntry;
+        sensorEntry["angle"] = sensor.angle;
+        sensorEntry["distance"] = sensor.distance;
+        j["sensor_data"].push_back(sensorEntry);
+    }
+
+    std::ofstream outFile(filename, std::ios::trunc);
+    if (outFile.is_open()) {
+        outFile << std::setw(4) << j << std::endl;
+        outFile.close();
+    } else {
+        std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
+    }
+}

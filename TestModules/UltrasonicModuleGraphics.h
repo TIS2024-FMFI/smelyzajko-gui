@@ -20,13 +20,17 @@ public:
 
     // Overridden methods
     void draw(ImGuiIO& io) override;
+    void logToJson() override;
+
     void updateValueOfModule(int value) override;
     void updateValueOfModule(std::vector<float>) override;
 
-    void logSensorDataToJson();
+
 
     int i;
 private:
+    std::mutex logMutex;
+
     // Sensor data
     std::vector<UltrasonicSensorData> sensors = {
             {0, 5}, {45, 7}, {90, 4}, {135, 8},

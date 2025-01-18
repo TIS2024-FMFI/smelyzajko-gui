@@ -18,6 +18,7 @@ public:
 
     int registerModule(const std::string& name, Module *module);
     int registerGraphicModule(const std::string& graphicElementName,const std::string& moduleName,  int moduleID);
+    void setLogDirectory( std::string& logDirectory_);
 
     void updateValueOfModule(int moduleID,int graphicModuleID, std::string value);
     void updateValueOfModule(int moduleID,int graphicModuleID, int value);
@@ -37,6 +38,7 @@ public:
     std::vector<GraphicModule*> graphicModules;
     std::vector<Module*> modules ;
 
+
 private:
     std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
             {"Map Graphic Element", []() { return new MapModuleGraphics(); }},
@@ -44,6 +46,7 @@ private:
             {"Ultrasonic Graphic Element", []() { return new UltrasonicModuleGraphics(); }},
             {"Text Area", []() { return new TextArea(); }},
     };
+    std::string logDirectory;
 
 
 

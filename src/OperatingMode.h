@@ -35,12 +35,14 @@ public:
     void drawElements();
     void drawMenuBar();
     void setupShortcuts() override;
+    void createLogDirectory();
     TemplateManager templateManager = TemplateManager(false);
 
 private:
     int currentTemplateIndex = 0;
 
     void switchTemplate(int direction);
+
 };
 
 
