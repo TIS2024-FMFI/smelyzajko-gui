@@ -3,7 +3,7 @@
 #define MODULEMANAGER_H
 #include <vector>
 #include "Module.h"
-#include "../TestModules/TestGraphicModule.h"
+
 #include "../TestModules/MapModuleGraphics.h"
 #include "../TestModules/CounterModuleGraphics.h"
 #include "../TestModules/UltrasonicModuleGraphics.h"
@@ -35,7 +35,7 @@ public:
     const std::unordered_map<std::string, std::function<GraphicModule*()>> &getModuleConstructors() const;
     void clearModules();
     std::vector<GraphicModule*> graphicModules;
-    std::vector<Module*> modules ;
+    std::vector<Module*> modules;
 
 private:
     std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
@@ -44,7 +44,6 @@ private:
             {"Ultrasonic Graphic Element", []() { return new UltrasonicModuleGraphics(); }},
             {"Text Area", []() { return new TextArea(); }},
     };
-
 
 
     void readTemplateandCreateModules(const std::string &filename);
