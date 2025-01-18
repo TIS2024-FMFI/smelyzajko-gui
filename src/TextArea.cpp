@@ -1,6 +1,6 @@
 #include "TextArea.h"
 #include "fstream"
-
+#include "sstream"
 TextArea::TextArea()
         : scrollbar(0.0f, 0.0f) {
     setGraphicElementName("Text Area");
@@ -19,10 +19,32 @@ void TextArea::draw(ImGuiIO& io) {
 
     // Calculate total log height dynamically
     float total_log_height = 0.0f;
+    std::vector<std::string> wrapped_logs;
     {
         std::lock_guard<std::mutex> lock(logMutex);
         for (const std::string& log : logs) {
             ImVec2 log_text_size = ImGui::CalcTextSize(log.c_str());
+            if (log_text_size.x > size.x - 2 * inner_padding) {
+                // Word wrapping
+                std::istringstream iss(log);
+                std::string word;
+                std::string current_line;
+                while (iss >> word) {
+                    std::string test_line = current_line.empty() ? word : current_line + " " + word;
+                    ImVec2 test_line_size = ImGui::CalcTextSize(test_line.c_str());
+                    if (test_line_size.x > size.x - 2 * inner_padding) {
+                        wrapped_logs.push_back(current_line);
+                        current_line = word;
+                    } else {
+                        current_line = test_line;
+                    }
+                }
+                if (!current_line.empty()) {
+                    wrapped_logs.push_back(current_line);
+                }
+            } else {
+                wrapped_logs.push_back(log);
+            }
             total_log_height += log_text_size.y + inner_padding;
         }
     }
@@ -38,7 +60,7 @@ void TextArea::draw(ImGuiIO& io) {
 
     {
         std::lock_guard<std::mutex> lock(logMutex);
-        for (const std::string& log : logs) {
+        for (const std::string& log : wrapped_logs) {
             ImVec2 log_text_size = ImGui::CalcTextSize(log.c_str());
             if (log_y_offset + log_text_size.y >= text_area_min.y &&
                 log_y_offset <= text_area_max.y) {
@@ -64,7 +86,6 @@ void TextArea::draw(ImGuiIO& io) {
     ImGui::Checkbox(checkbox_id.c_str(), &autoscrollEnabled);
     scrollbar.enableAutoscroll(autoscrollEnabled);
 }
-
 
 void TextArea::updateValueOfModule(std::string value) {
     std::lock_guard<std::mutex> lock(logMutex);
