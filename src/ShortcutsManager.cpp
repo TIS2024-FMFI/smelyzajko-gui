@@ -70,6 +70,8 @@ std::vector<std::string> ShortcutsManager::parseShortcut(const std::string& shor
 int ShortcutsManager::getGlfwKey(const std::string& key) {
     // Map string keys to GLFW key codes
     if (key == "Ctrl") return GLFW_KEY_LEFT_CONTROL;
+    if (key == "Cmd") return GLFW_KEY_LEFT_SUPER;
+    if (key == "CmdR") return GLFW_KEY_RIGHT_SUPER;
 
     if (key == "A") return GLFW_KEY_A;
     if (key == "S") return GLFW_KEY_S;

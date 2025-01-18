@@ -21,12 +21,14 @@
 #include "widgets/SingleLineLabel.h"
 #include "widgets/MultiLineLabel.h"
 #include "widgets/TextInput.h"
+#include "TextArea.h"
 
 
 /* Here include all Modules header files */
 #include "../TestModules/UltrasonicModule.h"
 #include "../TestModules/MapModule.h"
 #include "../TestModules/CounterModule.h"
+
 class GUI {
 protected:
     ImGuiIO& io;

@@ -37,7 +37,13 @@ void ModuleManager::updateValueOfModule(int moduleID,int graphicModuleID, int va
         }
     }
 }
-
+void ModuleManager::updateValueOfModule(int moduleID, int graphicModuleID, std::vector<float> value) {
+    for (GraphicModule *module : graphicModules) {
+        if (module->getGraphicModuleID() == graphicModuleID && module->getModuleID() == moduleID) {
+            module->updateValueOfModule(value);
+        }
+    }
+}
 int ModuleManager::registerGraphicModule(const std::string &graphicElementName,const std::string &moduleName, int moduleID) {
     GraphicModule *graphicModule = moduleConstructors.at(graphicElementName)();
     graphicModule->setGraphicModuleID(graphicModules.size());
@@ -96,3 +102,5 @@ void ModuleManager::setValueFromInputElements(std::string moduleName, std::strin
         }
     }
 }
+
+

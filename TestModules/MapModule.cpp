@@ -11,8 +11,10 @@
 
 MapModule::MapModule(ModuleManager* moduleManager) : moduleManager(*moduleManager), running(false), deltaTime(0.0f){ // Initialize rows and cols
     setModuleName("Map Module") ;
-    moduleId = this->moduleManager.registerModule("Map Module",  this);
+    moduleId = this->moduleManager.registerModule(moduleName,  this);
     graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Map Graphic Element",moduleName, moduleId));
+    graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Text Area",moduleName, moduleId));
+    graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Counter Graphic Element",moduleName, moduleId));
 
     if (!mapInitialized) {
         generatePassableMap();
@@ -44,17 +46,18 @@ void MapModule::run() {
         // Your existing run logic here...
         if (!path.empty() && !isStopped) {
             static float timeAccumulator = 0.0f;
-            timeAccumulator += 0.009f; // Delta time
+            timeAccumulator += 0.009f * speed; // Delta time adjusted by speed
 
             if (timeAccumulator > 0.5f) {
-
                 timeAccumulator = 0.0f;
                 if (currentStep < path.size() - 1) {
                     currentStep++;
                     logToJson(path[currentStep]); // Logovanie aktuálnej pozície do JSON
                     int ballRow = path[currentStep].first;
                     int ballCol = path[currentStep].second;
-                    moduleManager.updateValueOfModule(moduleId,graphicModuleId[0], std::vector<int>{ballRow, ballCol});
+                    moduleManager.updateValueOfModule(moduleId, graphicModuleId[0], std::vector<int>{ballRow, ballCol});
+                    std::string text = "Step: " + std::to_string(currentStep) + " / " + std::to_string(path.size() - 1);
+                    moduleManager.updateValueOfModule(moduleId, graphicModuleId[1],text);
                 }
             }
         }
@@ -262,19 +265,28 @@ void MapModule::saveMapToJson() {
 }
 
 void MapModule::setValueFromInputElements(std::string elementName, std::string value) {
-    if (elementName == "Button1") {
-        if (running) {
-            running = false;
-            if (mapThread.joinable()) {
-                mapThread.join();
-            }
-        } else {
-            running = true;
-            mapThread = std::thread(&MapModule::run, this);
+    if (elementName == "Reset") {
+        currentStep = 0;
+        if (!path.empty()) {
+            int ballRow = path[currentStep].first;
+            int ballCol = path[currentStep].second;
+            moduleManager.updateValueOfModule(moduleId, graphicModuleId[0], std::vector<int>{ballRow, ballCol});
         }
     }
-}
 
+
+}
+void MapModule::setValueFromInputElements(std::string elementName, bool value) {
+    if (elementName == "Running") {
+        isStopped = !value;
+
+    }
+}
+void MapModule::setValueFromInputElements(std::string elementName, float value) {
+    if (elementName == "Speed") {
+        speed = value;
+    }
+}
 
 
 

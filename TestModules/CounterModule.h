@@ -19,23 +19,24 @@ public:
 
     void saveLogToJson(const std::vector<int> &values);
     ModuleManager& moduleManager;
-    int graphicModuleId;
+    std::vector<int> graphicModuleIds;
+    float hodnota1 = 0;
+    float hodnota2 = 0;
+    int speed = 1;
     std::vector<std::string> getPossibleGraphicsElement() override{
-        return {"Counter Graphic Element"};
+        return {"Counter Graphic Element","Text Area","Ultrasonic Graphic Element"};
     }
+
     std::unordered_map<std::string,std::vector<std::string>> getPossibleInputElements() override {
         return {
-            {"button", {"Button1", "Button2"}},
-            {"horizontal-slider-int", {"Slider-int1", "Slider-int2"}},
-            {"vertical-slider-int", {"Slider-int3", }},
-            {"checkbox", {"Checkbox1"}},
-            {"text-input", {"Text1"}}
+            {"button", {"Stop", "Start"}},
+            {"horizontal-slider-int", {"Hodnota 1", "Hodnota 2"}},
+            {"vertical-slider-int", {"Speed", }},
 
         };
     }
     void setValueFromInputElements(std::string elementName, std::string value) override ;
     void setValueFromInputElements(std::string elementName, int value) override ;
-    void setValueFromInputElements(std::string elementName, bool value) override ;
 
 
 

@@ -1,7 +1,7 @@
 #include "CounterModuleGraphics.h"
 
 CounterModuleGraphics::CounterModuleGraphics()
-        : counter(0), textArea(size.x, 100.f, "CounterModule") { // Dynamically initialize TextArea with width equal to module width
+        : counter(0) {
     setGraphicElementName("Counter Graphic Element");
 }
 
@@ -21,15 +21,14 @@ void CounterModuleGraphics::draw(ImGuiIO &io) {
                              (rect_min.y + rect_max.y) / 2.0f - text_size.y / 2.0f);
     draw_list->AddText(text_pos, text_color, text.c_str());
 
-    // Dynamically update TextArea width
-    textArea.setWidth(size.x);
-
-    // Draw the text area
-    ImVec2 textAreaPosition = ImVec2(rect_min.x, rect_max.y + 10.0f);
-    textArea.drawTextArea(textAreaPosition, io);
+//    // Dynamically update TextArea width
+//    textArea.setWidth(size.x);
+//
+//    // Draw the text area
+//    ImVec2 textAreaPosition = ImVec2(rect_min.x, rect_max.y + 10.0f);
+//    textArea.drawTextArea(textAreaPosition, io);
 }
 
 void CounterModuleGraphics::updateValueOfModule(int value) {
     counter = value;
-    textArea.addLog("Counter updated: " + std::to_string(value));
 }
