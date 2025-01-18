@@ -38,8 +38,6 @@ UltrasonicModule::~UltrasonicModule() {
     }
 }
 
-
-
 void UltrasonicModule::run() {
     while (running) {
         updateDynamicSensors();
@@ -73,13 +71,13 @@ void UltrasonicModule::updateDynamicSensors() {
 }
 
 void UltrasonicModule::setValueFromInputElements(std::string elementName, std::string value) {
-    if (elementName =="Stop"){
+    if (elementName =="Stop") {
         running = false;
         if (generatorThread.joinable()) {
             generatorThread.join();
         }
         moduleManager->updateValueOfModule(moduleId,graphicElementIds[1] , "Stopped");
-    }else if (elementName == "Start"){
+    }else if (elementName == "Start") {
         if (!running) {
             running = true;
             generatorThread = std::thread(&UltrasonicModule::run, this);
@@ -93,8 +91,9 @@ void UltrasonicModule::setValueFromInputElements(std::string elementName, int va
         updateDelayMs = value+1;
         std::string message = "Interval set to " + std::to_string(updateIntervalFrames) + " ms";
         moduleManager->updateValueOfModule(moduleId, graphicElementIds[1], message);
-
     }
 
 }
+
+void UltrasonicModule::registerShortcuts(ShortcutsManager& shortcutsManager, ToastNotificationManager& toastManager) {}
 

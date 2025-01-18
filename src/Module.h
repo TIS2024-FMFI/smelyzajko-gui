@@ -3,6 +3,9 @@
 #include "imgui.h"
 #include <string>
 #include "libs/json.hpp"
+#include "ShortcutsManager.h"
+#include "ToastNotificationManager.h"
+
 class Module {
 public:
     ~Module() = default;
@@ -17,6 +20,7 @@ public:
     virtual void setValueFromInputElements(std::string elementName, bool value);
     virtual void setValueFromInputElements(std::string elementName, std::vector<int> value);
 
+    virtual void registerShortcuts(ShortcutsManager& shortcutsManager, ToastNotificationManager& toastNotificationManager) = 0;
 
     // Module settings
     int getModuleID() const ;
@@ -24,7 +28,6 @@ public:
     std::string getModuleName() const;
     void setModuleName(std::string name) ;
 
-    // Module settings
     int moduleId;
     std::string moduleName;
 };

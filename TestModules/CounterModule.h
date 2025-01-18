@@ -9,12 +9,14 @@
 #include "imgui.h"
 #include "../src/Module.h"
 #include "../src/ModuleManager.h"
+
 class CounterModule : public Module {
 public:
     ImFont* largeFont;
     CounterModule(ModuleManager* moduleManager);
     ~CounterModule() ;
     void run() override;
+    void registerShortcuts(ShortcutsManager &shortcutsManager, ToastNotificationManager &toastNotificationManager) override;
 
 
     void saveLogToJson(const std::vector<int> &values);
@@ -23,7 +25,8 @@ public:
     float hodnota1 = 0;
     float hodnota2 = 0;
     int speed = 1;
-    std::vector<std::string> getPossibleGraphicsElement() override{
+
+    std::vector<std::string> getPossibleGraphicsElement() override {
         return {"Counter Graphic Element","Text Area","Ultrasonic Graphic Element"};
     }
 
@@ -38,7 +41,8 @@ public:
     void setValueFromInputElements(std::string elementName, std::string value) override ;
     void setValueFromInputElements(std::string elementName, int value) override ;
 
-
+    void stopCounter();
+    void startCounter();
 
 private:
     std::atomic<int> counter;

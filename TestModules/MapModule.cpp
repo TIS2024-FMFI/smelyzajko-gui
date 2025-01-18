@@ -191,7 +191,6 @@ void MapModule::generatePath() {
     std::reverse(path.begin(), path.end());
 }
 
-
 void MapModule::logToJson(const std::pair<int, int> &position) {
         std::ofstream outFile("../TestModules/logs/map_log.json", std::ios::app);
         if (!outFile.is_open()) {
@@ -204,24 +203,23 @@ void MapModule::logToJson(const std::pair<int, int> &position) {
         }
     }
 
-//
-//    void MapModule::drawButtons() {
-////    // Tlačidlá Start, Stop a Replay
-////    if (ImGui::Button("Start")) {
-////        isStopped = false;
-////    }
-////    ImGui::SameLine();
-////    if (ImGui::Button("Stop")) {
-////        isStopped = true;
-////    }
-////    ImGui::SameLine();
-////    if (ImGui::Button("Replay")) {
-////        if (currentStep > 0) {
-////            currentStep--; // Vrátenie o jeden krok dozadu
-////            isStopped = true;
-////        }
-////    }
-//    }
+void MapModule::registerShortcuts(ShortcutsManager& shortcutsManager, ToastNotificationManager& toastManager) {
+    shortcutsManager.registerShortcut("Ctrl+R", [this, &toastManager]() {
+        resetMap();
+        toastManager.addNotification(moduleName, "Map has been reset.");
+    });
+
+    shortcutsManager.registerShortcut("Ctrl+=", [this, &toastManager]() {
+        speed += 1.0f;
+        toastManager.addNotification(moduleName, "Speed increased to: " + std::to_string(speed));
+    });
+
+    shortcutsManager.registerShortcut("Ctrl+-", [this, &toastManager]() {
+        speed -= 1.0f;
+        if (speed < 0) speed = 0;
+        toastManager.addNotification(moduleName, "Speed decreased to: " + std::to_string(speed));
+    });
+}
 
 
 void MapModule::saveMapToJson() {
@@ -270,18 +268,27 @@ void MapModule::setValueFromInputElements(std::string elementName, std::string v
             moduleManager.updateValueOfModule(moduleId, graphicModuleId[0], std::vector<int>{ballRow, ballCol});
         }
     }
-
-
 }
+
 void MapModule::setValueFromInputElements(std::string elementName, bool value) {
     if (elementName == "Running") {
         isStopped = !value;
 
     }
 }
+
 void MapModule::setValueFromInputElements(std::string elementName, float value) {
     if (elementName == "Speed") {
         speed = value;
+    }
+}
+
+void MapModule::resetMap() {
+    currentStep = 0;
+    if (!path.empty()) {
+        int ballRow = path[currentStep].first;
+        int ballCol = path[currentStep].second;
+        moduleManager.updateValueOfModule(moduleId, graphicModuleId[0], std::vector<int>{ballRow, ballCol});
     }
 }
 
