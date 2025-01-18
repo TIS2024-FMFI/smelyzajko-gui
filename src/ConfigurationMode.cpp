@@ -684,7 +684,6 @@ void ConfigurationMode::createSliderSettings(
     }
 
     if (ImGui::BeginPopup(popupName.c_str())) {
-        // Static map to store settings for each popup
         static std::unordered_map<std::string, SliderSettings<T>> settingsMap;
 
         if (settingsMap.find(popupName) == settingsMap.end()) {
@@ -693,10 +692,8 @@ void ConfigurationMode::createSliderSettings(
             );
         }
 
-        // Get a reference to the settings for this popup
         SliderSettings<T> &settings = settingsMap[popupName];
 
-        // ImGui widgets to configure settings
         ImGui::InputText("Label", settings.label, IM_ARRAYSIZE(settings.label));
         if constexpr (std::is_same_v<T, int>) {
             ImGui::InputInt("Min Value", reinterpret_cast<int *>(&settings.minValue));

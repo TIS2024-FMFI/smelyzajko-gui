@@ -12,10 +12,8 @@ struct SliderSettings {
     T initialValue = 5;
     bool isHorizontal = true;
 
-    // Default constructor
     SliderSettings() = default;
 
-    // Constructor to initialize the structure
     SliderSettings(const std::string &labelStr, T min, T max, T init, bool horizontal)
             : minValue(min), maxValue(max), initialValue(init), isHorizontal(horizontal) {
         std::strncpy(label, labelStr.c_str(), sizeof(label) - 1);
