@@ -56,13 +56,8 @@ void Button::handleClicks(ImGuiIO &io) {
 }
 
 void Button::to_json(nlohmann::json &j) const {
-    j = nlohmann::json{
-            {"type", "button"},
-            {"label", label},
-            {"position", {position.x, position.y}},
-            {"size", {size.x, size.y}},
-            {"moduleName", moduleName}
-    };
+    Element::to_json(j);
+    j["type"] = "button";
 }
 
 void Button::from_json(const nlohmann::json &j, ImVec2 resolution) {

@@ -41,13 +41,9 @@ void Checkbox::handleClicks(ImGuiIO &io) {
 }
 
 void Checkbox::to_json(nlohmann::json &j) const {
-    j = nlohmann::json{
-            {"type", "checkbox"},
-            {"label", label},
-            {"position", {position.x, position.y}},
-            {"checked", checked},
-            {"moduleName", moduleName}
-    };
+    Element::to_json(j);
+    j["type"] = "checkbox";
+    j["checked"] = checked;
 }
 
 void Checkbox::from_json(const nlohmann::json &j, ImVec2 resolution) {

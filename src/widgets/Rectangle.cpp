@@ -83,19 +83,16 @@ void Rectangle::handleClicks(ImGuiIO &io) {
 }
 
 void Rectangle::to_json(nlohmann::json& j) const {
-    j = nlohmann::json{
-            {"graphicElementId",graphicElementId},
-            {"graphicElementName", graphicElementName},
-            {"moduleId", moduleId},
-            {"moduleName", moduleName},
-            {"position", {position.x, position.y}},
-            {"size", {size.x, size.y}},
-            {"graphicsFrequency", graphicsFrequency},
-            {"graphicsLogEnabled", graphicsLogEnabled},
-            {"textFrequency", textFrequency},
-            {"textLogEnabled", textLogEnabled},
-            {"type", "rectangle"}
-    };
+    Element::to_json(j);
+
+    j["graphicElementId"] = graphicElementId;
+    j["graphicElementName"] = graphicElementName;
+    j["moduleId"] = moduleId;
+    j["graphicsFrequency"] = graphicsFrequency;
+    j["graphicsLogEnabled"] = graphicsLogEnabled;
+    j["textFrequency"] = textFrequency;
+    j["textLogEnabled"] = textLogEnabled;
+    j["type"] = "rectangle";
 }
 
 void Rectangle::from_json(const nlohmann::json& j, ImVec2 resolution) {

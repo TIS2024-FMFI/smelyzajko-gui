@@ -64,13 +64,8 @@ ImRect TextInput::getBoundingBox() const {
 }
 
 void TextInput::to_json(nlohmann::json& j) const {
-    j = nlohmann::json{
-            {"type", "text-input"},
-            {"label", label},
-            {"position", {position.x, position.y}},
-            {"size", {size.x, size.y}},
-            {"moduleName", moduleName}
-    };
+    Element::to_json(j);
+    j["type"] = "text-input";
 }
 
 void TextInput::from_json(const nlohmann::json& j, ImVec2 resolution) {

@@ -90,7 +90,9 @@ ImVec2 Element::getSize() const {
 
 void Element::to_json(nlohmann::json &j) const {
     j["label"] = label;
-    j["position"] = {position.x, position.y};
+    j["position"] = {std::round(position.x), std::round(position.y)};
+    j["size"] = {std::round(size.x), std::round(size.y)};
+    j["moduleName"] = moduleName;
 }
 
 void Element::from_json(const nlohmann::json &j, ImVec2 templateResolution) {
