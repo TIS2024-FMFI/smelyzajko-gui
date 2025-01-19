@@ -30,7 +30,7 @@
     ./setup_project.sh
     ```
 
-## Step 6: Running the Project
+## Step 4: Running the Project
 
 1. After the script completes, you can run the program.
 2. Change to the `build` directory (if you are not already in it):
