@@ -64,7 +64,6 @@ public:
     void createCheckbox(std::string elementName, std::string moduleName);
     void createTextInput(std::string elementName, std::string moduleName);
 
-    void setNewElementAndAddToActiveTemplate(Element *element, std::string elementName, std::string moduleName, ImVec2 position, ImVec2 elementSize);
     void handleElementClick(Element* element,int i);
     void handleClicksOnElements(std::vector<Element*>& elements);
     bool isAnyPendingElement(std::vector<Element*>& elements);
