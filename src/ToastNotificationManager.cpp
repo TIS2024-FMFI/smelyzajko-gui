@@ -27,6 +27,9 @@ void ToastNotificationManager::renderNotifications() {
         ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
         ImGui::SetNextWindowBgAlpha(0.8f);
 
+        ImVec2 min_size(100.0f, 20.0f); // minimum size
+        ImGui::SetNextWindowSizeConstraints(min_size, ImVec2(FLT_MAX, FLT_MAX));
+
         // Use both the title and an index to ensure uniqueness in the window label
         std::string windowLabel = notification.title.empty() ? "ToastNotification" : notification.title;
         windowLabel += "##" + std::to_string(i); // Add unique index for non-unique titles

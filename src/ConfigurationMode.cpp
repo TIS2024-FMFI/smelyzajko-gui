@@ -216,6 +216,7 @@ void ConfigurationMode::drawElementsWithSnappingOn() {
         }
 
         // Draw the element
+        element->setConfigurationMode(true);
         element->draw(io);
         ImGui::PopID();
     }
@@ -374,7 +375,7 @@ void ConfigurationMode::drawMenuBar() {
 
         if (ImGui::Button("Send Notification")) {
             if (strlen(toastInputBuffer) > 0) {
-                toastManager.addNotification(toastInputBuffer);
+                toastManager.addNotification("Test", toastInputBuffer);
                 toastInputBuffer[0] = '\0'; // Clear the input buffer
             }
         }
