@@ -6,10 +6,12 @@
 class TemplateManager {
 private:
     Template activeTemplate;
-    bool configMode ;
+    bool configMode;
 public:
-    TemplateManager(bool configMode );
+    TemplateManager();
+    TemplateManager(bool configMode);
     TemplateManager(const std::vector<std::string>& templateNames,bool configMode);
+
     std::vector<Template> allTemplates;
     void loadAllTemplates();
     void loadTemplates(const std::vector<std::string>& templateNames);

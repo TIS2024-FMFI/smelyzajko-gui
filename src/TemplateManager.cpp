@@ -7,14 +7,14 @@
 
 namespace fs = std::filesystem;
 
+TemplateManager::TemplateManager() {}
+
 TemplateManager::TemplateManager(bool mode) : configMode(mode) {
     loadAllTemplates();
-
 }
 
-TemplateManager::TemplateManager(const std::vector<std::string> &templateNames,bool mode) : configMode(mode) {
+TemplateManager::TemplateManager(const std::vector<std::string> &templateNames, bool mode) : configMode(mode) {
     loadTemplates(templateNames);
-
 }
 
 void TemplateManager::loadAllTemplates() {

@@ -75,8 +75,7 @@ public:
 
     void processFileDialog();
     ImVec2 getPosition(ImVec2 elementSize);
-
-    TemplateManager templateManager = TemplateManager(true);
+    TemplateManager templateManager;
 
 private:
     float gridSize = 60.0f;
