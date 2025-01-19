@@ -3,5 +3,8 @@ templates:
   - template4.json
   - template5.json
 modules:
+  - UltrasonicModule
+  - MapModule
+  - CounterModule
 
 logDirectory:

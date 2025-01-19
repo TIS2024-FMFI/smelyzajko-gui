@@ -33,13 +33,10 @@ ImRect Slider<E>::getBoundingBox() const {
 
 template<typename E>
 void Slider<E>::to_json(nlohmann::json& j) const {
-    j["label"] = label;
-    j["position"] = {position.x, position.y};
-    j["size"] = {size.x, size.y};
+    Element::to_json(j);
     j["minValue"] = minValue;
     j["maxValue"] = maxValue;
     j["value"] = value;
-    j["moduleName"] = moduleName;
 }
 
 template<typename E>

@@ -13,8 +13,6 @@ public:
     ImRect getBoundingBox() const override;
     void draw(ImGuiIO& io) override;
     void handleClicks(ImGuiIO &io) override;
-    static void setStyles();
-    static void removeStyles();
 
     void to_json(nlohmann::json &j) const override;
     void from_json(const nlohmann::json &j, ImVec2 resolution) override;

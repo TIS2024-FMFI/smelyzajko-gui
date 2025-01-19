@@ -1,20 +1,27 @@
 #include "GraphicModule.h"
 #include "GLFW/glfw3.h"
+
 void GraphicModule::scaleFromResolution(ImVec2 templateResolution) {
+    if (templateResolution.x <= 0 || templateResolution.y <= 0) {
+        std::cerr << "Error: Invalid template resolution." << std::endl;
+        return;
+    }
+
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* videoMode = glfwGetVideoMode(primaryMonitor);
 
     int monitorWidth = videoMode->width;
     int monitorHeight = videoMode->height;
 
-    float scaleX = monitorWidth / templateResolution.x;
-    float scaleY = monitorHeight / templateResolution.y;
+    float scaleX = static_cast<float>(monitorWidth) / templateResolution.x;
+    float scaleY = static_cast<float>(monitorHeight) / templateResolution.y;
 
-    position.x *= scaleX;
-    position.y *= scaleY;
+    float scale = std::min(scaleX, scaleY);
 
-    size.x *= scaleX;
-    size.y *= scaleY;
+    position.x *= scale;
+    position.y *= scale;
+    size.x *= scale;
+    size.y *= scale;
 }
 
 // Modules settings

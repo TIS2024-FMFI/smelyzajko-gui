@@ -36,7 +36,7 @@ public:
     void drawMenuBar();
     void setupShortcuts() override;
     void createLogDirectory();
-    TemplateManager templateManager = TemplateManager(false);
+    TemplateManager templateManager;
 
 private:
     int currentTemplateIndex = 0;

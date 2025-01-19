@@ -1,6 +1,5 @@
 #include "Element.h"
 
-
 class Rectangle : public Element {
 private:
 
@@ -13,8 +12,6 @@ private:
     bool graphicsLogEnabled= false;
     int textFrequency =  0.0;
     bool textLogEnabled= false;
-
-
 
 public:
     // Constructor to initialize position, label, and size

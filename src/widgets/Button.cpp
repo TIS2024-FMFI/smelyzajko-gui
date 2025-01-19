@@ -56,13 +56,8 @@ void Button::handleClicks(ImGuiIO &io) {
 }
 
 void Button::to_json(nlohmann::json &j) const {
-    j = nlohmann::json{
-            {"type", "button"},
-            {"label", label},
-            {"position", {position.x, position.y}},
-            {"size", {size.x, size.y}},
-            {"moduleName", moduleName}
-    };
+    Element::to_json(j);
+    j["type"] = "button";
 }
 
 void Button::from_json(const nlohmann::json &j, ImVec2 resolution) {
@@ -72,19 +67,6 @@ void Button::from_json(const nlohmann::json &j, ImVec2 resolution) {
 
     Element::from_json(j, resolution);
 
-}
-
-void Button::setStyles() {
-    ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(50, 120, 200, 255));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(80, 150, 240, 255));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, IM_COL32(30, 100, 180, 255));
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
-    ImGui::PushStyleColor(ImGuiCol_Border, IM_COL32(255, 255, 255, 255));
-}
-
-void Button::removeStyles() {
-    ImGui::PopStyleVar(1); // Restore the default border size
-    ImGui::PopStyleColor(4); // Restore the previous colors (Button, Hovered, Active, Border)
 }
 
 std::vector<Setting> Button::getSettings() {

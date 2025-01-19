@@ -2,4 +2,7 @@ templates:
     - template1.json
     - template2.json
 modules:
+    - UltrasonicModule
+    - MapModule
+    - CounterModule
 logDirectory:

@@ -13,6 +13,7 @@ void ShortcutsManager::processShortcuts() {
         std::cerr << "Error: window is not initialized." << std::endl;
         return;
     }
+
     if (glfwGetWindowAttrib(window, GLFW_FOCUSED)) {
         // Process shortcuts only when window is focused
         for (const auto& [shortcut, callback] : shortcuts) {
@@ -21,7 +22,6 @@ void ShortcutsManager::processShortcuts() {
             }
         }
     }
-
 }
 
 bool ShortcutsManager::isShortcutPressed(const std::string& shortcut) {

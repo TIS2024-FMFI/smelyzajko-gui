@@ -31,13 +31,9 @@ void MultiLineLabel::draw(ImGuiIO &io) {
 }
 
 void MultiLineLabel::to_json(nlohmann::json& j) const {
-    j = nlohmann::json{
-            {"type", "multi-line-label"},
-            {"label", label},
-            {"position", {position.x, position.y}},
-            {"size", {size.x, size.y}},
-            {"font_size", font_size}
-    };
+    Element::to_json(j);
+    j["type"] = "multi-line-label";
+    j["font_size"] = font_size;
 }
 
 void MultiLineLabel::from_json(const nlohmann::json& j, ImVec2 resolution) {

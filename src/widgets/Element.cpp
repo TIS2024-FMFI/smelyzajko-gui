@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Element.h"
 
 ImVec2 Element::getPosition() const {
@@ -89,22 +90,27 @@ ImVec2 Element::getSize() const {
 
 void Element::to_json(nlohmann::json &j) const {
     j["label"] = label;
-    j["position"] = {position.x, position.y};
+    j["position"] = {std::round(position.x), std::round(position.y)};
+    j["size"] = {std::round(size.x), std::round(size.y)};
+    j["moduleName"] = moduleName;
 }
 
-void Element::from_json(const nlohmann::json &j, ImVec2 resolution) {
+void Element::from_json(const nlohmann::json &j, ImVec2 templateResolution) {
+    // Parse label
     if (j.contains("label") && j["label"].is_string()) {
         label = j["label"];
     } else {
         label = "";
     }
 
+    // Parse moduleName
     if (j.contains("moduleName") && j["moduleName"].is_string()) {
         moduleName = j["moduleName"];
     } else {
         moduleName = "";
     }
 
+    // Parse size
     if (j.contains("size") && j["size"].is_array() && j["size"].size() == 2) {
         size.x = j["size"][0];
         size.y = j["size"][1];
@@ -112,6 +118,7 @@ void Element::from_json(const nlohmann::json &j, ImVec2 resolution) {
         size = ImVec2(0.0f, 0.0f);
     }
 
+    // Parse position
     if (j.contains("position") && j["position"].is_array() && j["position"].size() == 2) {
         position.x = j["position"][0];
         position.y = j["position"][1];
@@ -119,31 +126,35 @@ void Element::from_json(const nlohmann::json &j, ImVec2 resolution) {
         position = ImVec2(0.0f, 0.0f);
     }
 
-    ImVec2 scale = Element::getScaleFactors(resolution);
-
-    position = ImVec2(position.x * scale.x, position.y * scale.y);
-    size = ImVec2(size.x * scale.x, size.y * scale.y);
+    scaleFromResolution(templateResolution);
 }
 
-void Element::setConfigurationMode(bool newBool) {
-    configurationMode = newBool;
-}
+void Element::scaleFromResolution(ImVec2 templateResolution) {
+    if (templateResolution.x <= 0 || templateResolution.y <= 0) {
+        std::cerr << "Error: Invalid template resolution." << std::endl;
+        return;
+    }
 
-
-ImVec2 Element::getScaleFactors(ImVec2 templateResolution) {
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* videoMode = glfwGetVideoMode(primaryMonitor);
 
     int monitorWidth = videoMode->width;
     int monitorHeight = videoMode->height;
 
-    float scaleX = monitorWidth / templateResolution.x;
-    float scaleY = monitorHeight / templateResolution.y;
+    float scaleX = static_cast<float>(monitorWidth) / templateResolution.x;
+    float scaleY = static_cast<float>(monitorHeight) / templateResolution.y;
 
-    return ImVec2(scaleX, scaleY);
+    float scale = std::min(scaleX, scaleY);
+
+    position.x *= scale;
+    position.y *= scale;
+    size.x *= scale;
+    size.y *= scale;
 }
 
-
+void Element::setConfigurationMode(bool newBool) {
+    configurationMode = newBool;
+}
 
 
 

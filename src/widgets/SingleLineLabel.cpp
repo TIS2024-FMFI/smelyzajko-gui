@@ -16,13 +16,9 @@ void SingleLineLabel::draw(ImGuiIO &io) {
 }
 
 void SingleLineLabel::to_json(nlohmann::json& j) const {
-    j = nlohmann::json{
-            {"type", "single-line-label"},
-            {"label", label},
-            {"position", {position.x, position.y}},
-            {"size", {size.x, size.y}},
-            {"font_size", font_size}
-    };
+    Element::to_json(j);
+    j["type"] = "single-line-label";
+    j["font_size"] = font_size;
 }
 
 void SingleLineLabel::from_json(const nlohmann::json& j, ImVec2 resolution) {

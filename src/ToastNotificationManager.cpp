@@ -4,7 +4,6 @@ void ToastNotificationManager::addNotification(const std::string& title, const s
     notifications.push_back({title, message, std::chrono::steady_clock::now(), true});
 }
 
-
 void ToastNotificationManager::renderNotifications() {
     if (notifications.empty()) return;
 

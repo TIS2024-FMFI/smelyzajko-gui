@@ -2,25 +2,6 @@
 #include "ConfigurationMode.h"
 #include "Template.h"
 
-#include <iostream> // For std::cerr (debugging)
-#ifdef _WIN32
-#include <windows.h> // For Beep on Windows
-#else
-#include <unistd.h> // For usleep on Unix-based systems
-#endif
-
-
-#if defined(_WIN32) || defined(_WIN64)
-#include <Windows.h>
-void playBeep() {
-    MessageBeep(MB_ICONEXCLAMATION); // Standard system beep
-}
-#elif defined(__linux__) || defined(__APPLE__)
-#include <iostream>
-void playBeep() {
-    std::cout << "\a"; // Linux/macOS beep
-}
-#endif
 
 inline bool isOverlapping(const ImRect& a, const ImRect& b) {
     return !(a.Max.x <= b.Min.x ||  // No overlap on the left
@@ -422,7 +403,6 @@ void ConfigurationMode::drawMenuBar() {
                             position = findFreePosition(elements, elementSize, padding, 20.0f, 20.0f, menuBarHeight);
                         }
                         if (position.x == -1.0f && position.y == -1.0f) { // No free position found
-                            playBeep();
                             position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
                         }
                         //addElementToActiveTemplate(new class Rectangle("Rectangle", position, elementSize));
@@ -483,63 +463,6 @@ void ConfigurationMode::drawMenuBar() {
 
     ImGui::EndMainMenuBar();
 }
-
-//
-//void ConfigurationMode::renderSettingsPopup(Module& module, const std::string& part) {
-//    std::string popupName = std::string(module.moduleName) + " " + part + " Settings";
-//
-//    // Set the size and position of the popup to be centered on the screen
-//    ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_Always);  // Set size of the popup
-//    ImVec2 windowSize = ImGui::GetIO().DisplaySize; // Get screen dimensions
-//    ImVec2 popupPos = ImVec2(windowSize.x / 2 - 200, windowSize.y / 2 - 150);  // Centering position
-//    ImGui::SetNextWindowPos(popupPos, ImGuiCond_Always);  // Set the position of the popup
-//
-//    // Begin the modal popup
-//    if (ImGui::BeginPopupModal(popupName.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-//        // Center the content inside the popup
-//        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(20, 20));  // Add padding for a better layout
-//        ImGui::Text("Settings for %s", popupName.c_str());
-//
-//        // Frequency Slider and Logging Checkbox
-//        if (part == "Graphics") {
-//            float frequency = module.GetGraphicsFrequency();
-//            int frequencyInt = static_cast<int>(frequency);  // Convert to integer for the slider
-//            if (ImGui::SliderInt("Frequency", &frequencyInt, 0, 100)) {
-//                module.SetGraphicsFrequency(static_cast<float>(frequencyInt)); // Set integer as frequency
-//            }
-//
-//            bool logEnabled = module.IsGraphicsLoggingEnabled();
-//            if (ImGui::Checkbox("Enable Logging", &logEnabled)) {
-//                module.SetGraphicsLoggingEnabled(logEnabled);
-//            }
-//        } else if (part == "Text") {
-//            float frequency = module.GetTextFrequency();
-//            int frequencyInt = static_cast<int>(frequency);  // Convert to integer for the slider
-//            if (ImGui::SliderInt("Frequency", &frequencyInt, 0, 100)) {
-//                module.SetTextFrequency(static_cast<float>(frequencyInt)); // Set integer as frequency
-//            }
-//
-//            bool logEnabled = module.IsTextLoggingEnabled();
-//            if (ImGui::Checkbox("Enable Logging", &logEnabled)) {
-//                module.SetTextLoggingEnabled(logEnabled);
-//            }
-//        }
-//
-//        // Apply and Cancel buttons
-//        ImGui::NewLine();
-//        if (ImGui::Button("Apply")) {
-//            ImGui::CloseCurrentPopup();
-//        }
-//
-//        ImGui::SameLine();
-//        if (ImGui::Button("Cancel")) {
-//            ImGui::CloseCurrentPopup();
-//        }
-//
-//        ImGui::PopStyleVar();  // Restore the style to default
-//        ImGui::EndPopup();
-//    }
-//}
 
 void ConfigurationMode::drawGrid() const {
     ImVec2 displaySize = io.DisplaySize;
@@ -609,7 +532,6 @@ void ConfigurationMode::createLabelSettings() {
         }
 
         if (position.x == -1.0f && position.y == -1.0f) { // No free position found
-            playBeep();
             position = ImVec2(0.0f, menuBarHeight); // Default to the top-left corner
         }
 
@@ -700,7 +622,6 @@ void ConfigurationMode::createSliderSettings(
         }
 
         if (position.x == -1.0f && position.y == -1.0f) {
-            playBeep();
             position = ImVec2(0.0f, menuBarHeight);
         }
 
@@ -996,7 +917,6 @@ ImVec2 ConfigurationMode::getPosition(ImVec2 elementSize) {
     }
 
     if (position.x == -1.0f && position.y == -1.0f) { // No free position found
-        playBeep();
         position = ImVec2(0.0f, menuBarHeight);
     }
     return position;
