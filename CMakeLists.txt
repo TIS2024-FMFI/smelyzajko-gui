@@ -15,7 +15,6 @@ file(GLOB IMGUI_HEADERS
         libs/imgui/backends/imgui_impl_opengl3.h
 )
 
-
 file(GLOB PROJECT_SOURCES
         src/*/*.cpp
         src/*.cpp
@@ -25,13 +24,16 @@ file(GLOB PROJECT_SOURCES
 add_library(imgui STATIC ${IMGUI_SRC} ${IMGUI_HEADERS} ${PROJECT_SOURCES})
 
 include_directories(
+        ${CMAKE_SOURCE_DIR}/libs/glfw/include/
         ${CMAKE_SOURCE_DIR}/libs/imgui
         ${CMAKE_SOURCE_DIR}/libs/imgui/backends
         ${CMAKE_SOURCE_DIR}/libs/ImGuiFileDialog
+        ${CMAKE_SOURCE_DIR}/libs/yaml-cpp
         ${CMAKE_SOURCE_DIR}/libs/yaml-cpp/include
         ${CMAKE_SOURCE_DIR}
         ${PROJECT_SOURCE_DIR}/src
 )
+
 add_subdirectory(libs/glfw)
 add_subdirectory(libs/yaml-cpp)
 

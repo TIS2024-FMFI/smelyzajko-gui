@@ -216,6 +216,7 @@ void ConfigurationMode::drawElementsWithSnappingOn() {
         }
 
         // Draw the element
+        element->setConfigurationMode(true);
         element->draw(io);
         ImGui::PopID();
     }
@@ -374,7 +375,7 @@ void ConfigurationMode::drawMenuBar() {
 
         if (ImGui::Button("Send Notification")) {
             if (strlen(toastInputBuffer) > 0) {
-                toastManager.addNotification(toastInputBuffer);
+                toastManager.addNotification("Test", toastInputBuffer);
                 toastInputBuffer[0] = '\0'; // Clear the input buffer
             }
         }
@@ -801,7 +802,6 @@ void ConfigurationMode::openLogDirectoryDialog() {
     if (ImGuiFileDialog::Instance()->IsOpened("ChooseLogDirDlgKey")) {
         return; // If it's already open, return and avoid opening it again
     }
-    std::cout << "openLogDirectoryDialog" << std::endl;
 
     IGFD::FileDialogConfig config;
     config.path = "../logs"; // Default path for the directory dialog
@@ -833,7 +833,6 @@ void ConfigurationMode::processLogDirectoryDialog() {
 }
 
 void ConfigurationMode::updateLogDirectoryInConfig(const std::string& logDir) {
-    std::cout << "updateLogDirectoryInConfig " << logDir << std::endl;
 
     // Load the existing config file
 

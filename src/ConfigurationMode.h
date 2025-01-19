@@ -46,7 +46,6 @@ public:
 
         templateManager.setConfigMode(true);
         menuBarHeight = ImGui::GetFrameHeight();
-
     };
 
     int run() override;

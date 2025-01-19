@@ -51,7 +51,6 @@ int ModuleManager::registerGraphicModule(const std::string &graphicElementName,c
 //    graphicModule->setGraphicsFrequency(20);
 //    graphicModule->setGraphicsLogEnabled(true);
 
-
     graphicModule->setModuleName(moduleName);
     graphicModule->setModuleID(moduleID);
     graphicModules.push_back(graphicModule);
