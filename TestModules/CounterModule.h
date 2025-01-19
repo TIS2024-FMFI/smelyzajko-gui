@@ -23,7 +23,7 @@ public:
     std::vector<int> graphicModuleIds;
     float hodnota1 = 0;
     float hodnota2 = 0;
-    int speed = 1;
+    int speed = 200;
 
     std::vector<std::string> getPossibleGraphicsElement() override {
         return {"Counter Graphic Element","Text Area","Ultrasonic Graphic Element"};
