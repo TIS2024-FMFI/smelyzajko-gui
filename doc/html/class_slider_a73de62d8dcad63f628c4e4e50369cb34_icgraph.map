@@ -1,0 +1,7 @@
+<map id="Slider::from_json" name="Slider::from_json">
+<area shape="rect" id="Node000001" title=" " alt="" coords="232,31,351,57"/>
+<area shape="rect" id="Node000002" href="$class_horizontal_slider.html#a74aeb8e6f85050eb745eb5226bfa8196" title=" " alt="" coords="5,5,184,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="216,37,184,33,184,28,217,32"/>
+<area shape="rect" id="Node000003" href="$class_vertical_slider.html#a852dc6d9f83681eb88bdefacdd4e0be0" title=" " alt="" coords="13,56,176,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="217,56,177,61,176,56,216,51"/>
+</map>

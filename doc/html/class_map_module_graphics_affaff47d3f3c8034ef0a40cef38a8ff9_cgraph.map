@@ -1,0 +1,7 @@
+<map id="MapModuleGraphics::logToJson" name="MapModuleGraphics::logToJson">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,39,154,81"/>
+<area shape="rect" id="Node000002" href="$class_graphic_module.html#aa6b9455acb1796f13192fa396d035761" title=" " alt="" coords="202,5,388,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,46,186,41,187,46,154,51"/>
+<area shape="rect" id="Node000003" href="$class_graphic_module.html#a877129a50cb6205b9a8d184e80022957" title=" " alt="" coords="206,72,384,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="154,69,191,75,190,80,154,74"/>
+</map>

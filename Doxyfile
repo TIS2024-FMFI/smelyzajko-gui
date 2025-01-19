@@ -1,0 +1,42 @@
+# Project name
+PROJECT_NAME = "Smely Zajko"
+
+# Input directories to process
+INPUT = src src/widgets testModules
+
+# File types to process
+FILE_PATTERNS = *.cpp *.h *.json
+
+# Output directory for generated documentation
+OUTPUT_DIRECTORY = doc
+
+# Enable the generation of HTML documentation
+GENERATE_HTML = YES
+
+# Enable the generation of LaTeX documentation
+GENERATE_LATEX = YES
+
+# Set the LaTeX output directory
+LATEX_OUTPUT = doc
+
+# Ensure Graphviz is enabled and specify the path if necessary
+HAVE_DOT = YES
+DOT_PATH = "C:\Program Files (x86)\Graphviz\bin"
+
+# Extract all members (including private)
+EXTRACT_ALL = YES
+EXTRACT_PRIVATE = YES
+EXTRACT_STATIC = YES
+
+# Show all functions and include files in the documentation
+SHOW_INCLUDE_FILES = YES
+
+# Enable call graphs, inheritance diagrams, etc.
+CALL_GRAPH = YES
+CALLER_GRAPH = YES
+
+# Enable diagrams
+DOT_GRAPH_MAX_NODES = 50
+MAX_DOT_GRAPH_DEPTH = 0
+
+# Enable collaboration graphs and UML-style diagrams

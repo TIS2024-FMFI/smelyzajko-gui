@@ -1,0 +1,9 @@
+<map id="Module" name="Module">
+<area shape="rect" id="Node000001" title="Module class represents the base class for all modules." alt="" coords="151,5,214,32"/>
+<area shape="rect" id="Node000002" href="$class_counter_module.html" title="CounterModule class is responsible for generating a counter value and updating the graphic element wi..." alt="" coords="5,80,115,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,43,83,82,80,77,147,38"/>
+<area shape="rect" id="Node000003" href="$class_map_module.html" title="MapModule class is responsible for generating a map and pathfinding on it.There is a red ball that mo..." alt="" coords="138,80,227,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,48,185,80,180,80,180,48"/>
+<area shape="rect" id="Node000004" href="$class_ultrasonic_module.html" title="UltrasonicModule class is responsible for generating a ultrasonic sensor data and updating the graphi..." alt="" coords="251,80,373,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="220,38,291,77,288,82,217,42"/>
+</map>

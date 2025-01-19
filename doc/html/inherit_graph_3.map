@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$class_module.html" title="Module class represents the base class for all modules." alt="" coords="5,56,69,83"/>
+<area shape="rect" id="Node000001" href="$class_counter_module.html" title="CounterModule class is responsible for generating a counter value and updating the graphic element wi..." alt="" coords="123,5,232,32"/>
+<area shape="poly" id="edge17_Node000000_Node000001" title=" " alt="" coords="82,50,138,30,139,35,84,55"/>
+<area shape="rect" id="Node000002" href="$class_map_module.html" title="MapModule class is responsible for generating a map and pathfinding on it.There is a red ball that mo..." alt="" coords="134,56,222,83"/>
+<area shape="poly" id="edge18_Node000000_Node000002" title=" " alt="" coords="84,67,133,67,133,72,84,72"/>
+<area shape="rect" id="Node000003" href="$class_ultrasonic_module.html" title="UltrasonicModule class is responsible for generating a ultrasonic sensor data and updating the graphi..." alt="" coords="117,107,239,133"/>
+<area shape="poly" id="edge19_Node000000_Node000003" title=" " alt="" coords="84,83,139,104,138,109,82,88"/>
+</map>

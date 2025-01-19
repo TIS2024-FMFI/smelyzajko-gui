@@ -1,0 +1,25 @@
+var class_rectangle =
+[
+    [ "Rectangle", "class_rectangle.html#a03eddce94e7e450357a358a3fe87c735", null ],
+    [ "draw", "class_rectangle.html#a78bbd996c80d50e0418c0240a372dea9", null ],
+    [ "from_json", "class_rectangle.html#a291d0040549a944380038b252f67868c", null ],
+    [ "getBoundingBox", "class_rectangle.html#aa2157d26011877669751dba7654fddd5", null ],
+    [ "getHeight", "class_rectangle.html#acd9b848297f86e141b99c150d8d16bab", null ],
+    [ "getSettings", "class_rectangle.html#a6584b6b63c951a060383899358a8f716", null ],
+    [ "getWidth", "class_rectangle.html#a3dc5863bdde58a3fd599eac5bc5761b1", null ],
+    [ "handleClicks", "class_rectangle.html#ae06cef4ae8f2b30a7923c41d281dd311", null ],
+    [ "setGraphicElementId", "class_rectangle.html#af41f7eeb506de5d5d9a5e09500ca6aa7", null ],
+    [ "setGraphicElementName", "class_rectangle.html#a12de336ac49109d974cfc1f2194f779f", null ],
+    [ "setHeight", "class_rectangle.html#a7394a8d1706e8e6f587801cf5b33a2d2", null ],
+    [ "setModuleID", "class_rectangle.html#ab406b96653bdadcb49bc455350be2e06", null ],
+    [ "setModuleName", "class_rectangle.html#a85e688d140f33f5ae6864ad0b277e5f3", null ],
+    [ "setWidth", "class_rectangle.html#addb145886c137e7d5a9dfe13cb3c6c11", null ],
+    [ "to_json", "class_rectangle.html#a7e607311a882ee06ef9a7858164af994", null ],
+    [ "graphicElementId", "class_rectangle.html#a190f2d8a5a60b93ed05654086ab8d216", null ],
+    [ "graphicElementName", "class_rectangle.html#a77f284fec3feaafe41d12e02fab0f2c6", null ],
+    [ "graphicsFrequency", "class_rectangle.html#a003909ac52f1b67315442c517cdc5b69", null ],
+    [ "graphicsLogEnabled", "class_rectangle.html#a474de10e3b834936e8cc7c7222a7f66c", null ],
+    [ "moduleId", "class_rectangle.html#a24d3fbf4ee0bc0953813c1be1c7089e7", null ],
+    [ "textFrequency", "class_rectangle.html#a4a9be508a6b47bcb1450985d785cbcf9", null ],
+    [ "textLogEnabled", "class_rectangle.html#a137034ad18dddd75b081557f72f2e0b0", null ]
+];

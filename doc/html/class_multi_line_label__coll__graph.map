@@ -1,0 +1,7 @@
+<map id="MultiLineLabel" name="MultiLineLabel">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,155,110,181"/>
+<area shape="rect" id="Node000002" href="$class_label.html" title=" " alt="" coords="31,80,84,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="60,122,60,154,55,154,55,122"/>
+<area shape="rect" id="Node000003" href="$class_element.html" title=" " alt="" coords="23,5,92,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="60,48,60,80,55,80,55,48"/>
+</map>

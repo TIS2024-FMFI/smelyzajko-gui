@@ -1,0 +1,9 @@
+<map id="VerticalSlider::VerticalSlider" name="VerticalSlider::VerticalSlider">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,154,48"/>
+<area shape="rect" id="Node000002" href="$class_slider.html#ab6fe7c409c19ea30bf77d49d399db1ad" title=" " alt="" coords="202,13,297,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,24,186,24,186,29,154,29"/>
+<area shape="rect" id="Node000003" href="$class_element.html#ac56584813421bd0f3294034b7875e893" title=" " alt="" coords="345,13,470,40"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="297,24,329,24,329,29,297,29"/>
+<area shape="rect" id="Node000004" href="$class_element.html#a048ee27f6114e20ea1f840366ef8c1ed" title=" " alt="" coords="518,13,628,40"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="471,24,503,24,503,29,471,29"/>
+</map>

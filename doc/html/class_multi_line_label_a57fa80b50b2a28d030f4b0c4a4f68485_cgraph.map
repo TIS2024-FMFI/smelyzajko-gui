@@ -1,0 +1,9 @@
+<map id="MultiLineLabel::MultiLineLabel" name="MultiLineLabel::MultiLineLabel">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,170,48"/>
+<area shape="rect" id="Node000002" href="$class_label.html#a1bb576e446b3facca24881563832cb32" title=" " alt="" coords="218,13,309,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,24,202,24,202,29,170,29"/>
+<area shape="rect" id="Node000003" href="$class_element.html#ac56584813421bd0f3294034b7875e893" title=" " alt="" coords="357,13,482,40"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="310,24,341,24,341,29,310,29"/>
+<area shape="rect" id="Node000004" href="$class_element.html#a048ee27f6114e20ea1f840366ef8c1ed" title=" " alt="" coords="530,13,640,40"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="483,24,515,24,515,29,483,29"/>
+</map>

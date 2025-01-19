@@ -1,0 +1,5 @@
+<map id="CounterModuleGraphics" name="CounterModuleGraphics">
+<area shape="rect" id="Node000001" title="CounterModuleGraphics is graphic part of CounterModule class. It is responsible for drawing the count..." alt="" coords="5,80,167,107"/>
+<area shape="rect" id="Node000002" href="$class_graphic_module.html" title="GraphicModule class represents graphical element of the module." alt="" coords="32,5,140,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,48,89,80,83,80,83,48"/>
+</map>

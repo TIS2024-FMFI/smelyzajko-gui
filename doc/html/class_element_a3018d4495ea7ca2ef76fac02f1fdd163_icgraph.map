@@ -1,0 +1,13 @@
+<map id="Element::getBoundingBox" name="Element::getBoundingBox">
+<area shape="rect" id="Node000001" title=" " alt="" coords="676,43,849,69"/>
+<area shape="rect" id="Node000002" href="$class_configuration_mode.html#ab0f713f1cd40d14d1faa88ac9b2561d9" title=" " alt="" coords="210,5,412,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="661,52,412,36,413,31,661,47"/>
+<area shape="rect" id="Node000004" href="$class_configuration_mode.html#a2d24404387dc0f705ba64cde56d99d4e" title=" " alt="" coords="460,64,628,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="661,72,629,77,628,71,660,67"/>
+<area shape="rect" id="Node000003" href="$class_configuration_mode.html#a5667197558392fb80ec3cbb365ef865e" title=" " alt="" coords="5,47,162,73"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="195,46,163,51,162,46,194,41"/>
+<area shape="poly" id="edge6_Node000004_Node000002" title=" " alt="" coords="444,63,398,51,399,46,446,58"/>
+<area shape="rect" id="Node000005" href="$class_configuration_mode.html#af8ded2309f09bd0534651e449b0c5f8e" title=" " alt="" coords="242,72,380,115"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="445,91,381,94,380,88,445,86"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="226,84,162,74,162,69,227,78"/>
+</map>

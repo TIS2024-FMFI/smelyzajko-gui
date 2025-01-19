@@ -1,0 +1,11 @@
+<map id="GraphicModule::setGraphicElementName" name="GraphicModule::setGraphicElementName">
+<area shape="rect" id="Node000001" title=" " alt="" coords="236,101,415,144"/>
+<area shape="rect" id="Node000002" href="$class_counter_module_graphics.html#a665983df2a9b3deb05132b7bbbb02909" title=" " alt="" coords="12,5,181,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="264,97,187,62,158,51,160,46,189,58,266,92"/>
+<area shape="rect" id="Node000003" href="$class_map_module_graphics.html#a80a85adde53f81491ed590edfbb386d7" title=" " alt="" coords="22,72,171,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,112,171,105,171,100,220,107"/>
+<area shape="rect" id="Node000004" href="$class_text_area.html#af298ce42ff6f8233052e516c00e8f122" title=" " alt="" coords="30,139,163,165"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="221,139,164,146,163,141,220,133"/>
+<area shape="rect" id="Node000005" href="$class_ultrasonic_module_graphics.html#a617f3c62e62b8cf77d54f99855b55942" title=" " alt="" coords="5,189,188,232"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="257,153,189,180,158,191,156,186,187,175,255,148"/>
+</map>

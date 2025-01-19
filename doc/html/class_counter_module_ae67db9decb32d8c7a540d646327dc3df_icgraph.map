@@ -1,0 +1,11 @@
+<map id="CounterModule::run" name="CounterModule::run">
+<area shape="rect" id="Node000001" title=" " alt="" coords="523,31,658,57"/>
+<area shape="rect" id="Node000002" href="$class_counter_module.html#acb4a65f4fea75668bfa8923830ac329a" title=" " alt="" coords="270,5,475,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="507,37,475,33,476,28,508,32"/>
+<area shape="rect" id="Node000003" href="$class_counter_module.html#a407699ec26bb477daee4ed397dc5bb81" title=" " alt="" coords="278,56,467,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="508,56,468,61,467,56,507,51"/>
+<area shape="rect" id="Node000004" href="$class_counter_module.html#aaaca5edb56e4c2f1f6748f197c0c0ac7" title=" " alt="" coords="5,27,222,53"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="262,60,222,55,222,50,263,54"/>
+<area shape="rect" id="Node000005" href="$class_counter_module.html#a9c904a81f2e7a8fc0f263585950d30f4" title=" " alt="" coords="15,77,212,120"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="262,84,213,90,212,85,262,79"/>
+</map>

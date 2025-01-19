@@ -1,0 +1,9 @@
+<map id="ShortcutsManager::processShortcuts" name="ShortcutsManager::processShortcuts">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,23,187,65"/>
+<area shape="rect" id="Node000002" href="$class_shortcuts_manager.html#a2d521c6b34f87c51cfd355f7954934da" title=" " alt="" coords="235,23,429,65"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,41,219,41,219,47,187,47"/>
+<area shape="rect" id="Node000003" href="$class_shortcuts_manager.html#a2a7f7434645f65341504892da26cb574" title=" " alt="" coords="484,5,687,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="429,32,468,28,468,33,430,37"/>
+<area shape="rect" id="Node000004" href="$class_shortcuts_manager.html#a17b5235ad99537ce966065e004272960" title=" " alt="" coords="477,56,693,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="430,51,462,54,461,60,429,56"/>
+</map>

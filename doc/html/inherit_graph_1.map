@@ -1,0 +1,11 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$class_graphic_module.html" title="GraphicModule class represents graphical element of the module." alt="" coords="5,81,114,108"/>
+<area shape="rect" id="Node000001" href="$class_counter_module_graphics.html" title="CounterModuleGraphics is graphic part of CounterModule class. It is responsible for drawing the count..." alt="" coords="168,5,330,32"/>
+<area shape="poly" id="edge11_Node000000_Node000001" title=" " alt="" coords="98,71,161,42,194,30,196,35,163,46,100,76"/>
+<area shape="rect" id="Node000002" href="$class_map_module_graphics.html" title="MapModuleGraphics is graphic part of MapModule class. It is responsible for drawing the map." alt="" coords="179,56,319,83"/>
+<area shape="poly" id="edge12_Node000000_Node000002" title=" " alt="" coords="129,83,178,76,179,81,130,88"/>
+<area shape="rect" id="Node000003" href="$class_text_area.html" title="The TextArea class is responsible for displaying logs in a scrollable text area." alt="" coords="212,107,286,133"/>
+<area shape="poly" id="edge13_Node000000_Node000003" title=" " alt="" coords="130,101,212,113,211,118,129,107"/>
+<area shape="rect" id="Node000004" href="$class_ultrasonic_module_graphics.html" title="UltrasonicModuleGraphics is graphic part of UltrasonicModule class. It is responsible for drawing the..." alt="" coords="162,157,336,184"/>
+<area shape="poly" id="edge14_Node000000_Node000004" title=" " alt="" coords="100,113,163,143,196,154,194,159,161,148,98,118"/>
+</map>

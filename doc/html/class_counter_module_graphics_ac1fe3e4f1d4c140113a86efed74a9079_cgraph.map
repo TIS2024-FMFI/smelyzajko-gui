@@ -1,0 +1,9 @@
+<map id="CounterModuleGraphics::updateValueOfModule" name="CounterModuleGraphics::updateValueOfModule">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,39,167,81"/>
+<area shape="rect" id="Node000002" href="$class_counter_module_graphics.html#a6e7b3d12ad6d3b10e6ab72305704ef35" title=" " alt="" coords="215,39,376,81"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,57,199,57,199,63,167,63"/>
+<area shape="rect" id="Node000003" href="$class_graphic_module.html#aa6b9455acb1796f13192fa396d035761" title=" " alt="" coords="424,5,610,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="376,45,408,40,409,46,377,51"/>
+<area shape="rect" id="Node000004" href="$class_graphic_module.html#a877129a50cb6205b9a8d184e80022957" title=" " alt="" coords="428,72,606,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="377,69,413,75,412,80,376,75"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="GUI::GUI" name="GUI::GUI">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,83,57"/>
+<area shape="rect" id="Node000002" href="$class_g_u_i.html#ae97e08402cf1a0d66de572b1d2438cc5" title=" " alt="" coords="131,5,257,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,35,115,29,116,35,84,40"/>
+<area shape="rect" id="Node000003" href="$class_g_u_i.html#a048f24dd2ed1d09c8398a5948a024c1d" title=" " alt="" coords="134,56,254,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="84,48,119,54,118,59,83,53"/>
+</map>

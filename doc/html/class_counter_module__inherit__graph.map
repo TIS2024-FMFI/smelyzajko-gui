@@ -1,0 +1,5 @@
+<map id="CounterModule" name="CounterModule">
+<area shape="rect" id="Node000001" title="CounterModule class is responsible for generating a counter value and updating the graphic element wi..." alt="" coords="5,80,115,107"/>
+<area shape="rect" id="Node000002" href="$class_module.html" title="Module class represents the base class for all modules." alt="" coords="28,5,92,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,48,63,80,57,80,57,48"/>
+</map>

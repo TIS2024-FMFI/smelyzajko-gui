@@ -1,0 +1,17 @@
+<map id="Template::loadTemplate" name="Template::loadTemplate">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,81,165,108"/>
+<area shape="rect" id="Node000002" href="$class_template.html#a5f04806369b3a4c0ddf043be2034be5f" title=" " alt="" coords="213,81,352,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,92,197,92,197,97,165,97"/>
+<area shape="rect" id="Node000003" href="$class_template.html#a0593ca466d360d874f94050c5a3a35c1" title=" " alt="" coords="436,5,546,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="319,78,399,48,435,35,437,40,401,53,321,83"/>
+<area shape="rect" id="Node000004" href="$class_element.html#ac749d32490cd27b372ecd5c1735422f8" title=" " alt="" coords="629,81,764,108"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="353,92,614,92,614,97,353,97"/>
+<area shape="rect" id="Node000006" href="$class_rectangle.html#a291d0040549a944380038b252f67868c" title=" " alt="" coords="418,107,563,133"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="352,100,403,107,402,112,352,106"/>
+<area shape="rect" id="Node000007" href="$class_module_manager.html#ac2dd04c42f1585b837e9cb01e6e2f98f" title=" " alt="" coords="400,181,581,224"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="311,106,436,172,433,176,309,111"/>
+<area shape="rect" id="Node000005" href="$class_element.html#a70fe3b1d12f133389f75e7271891fff4" title=" " alt="" coords="812,81,1012,108"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="764,92,796,92,796,97,764,97"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="563,108,614,102,614,107,564,114"/>
+<area shape="poly" id="edge8_Node000007_Node000007" title=" " alt="" coords="451,181,450,171,456,162,470,157,491,155,513,157,526,163,524,168,511,162,491,160,471,162,460,167,455,173,457,180"/>
+</map>

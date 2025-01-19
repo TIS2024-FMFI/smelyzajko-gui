@@ -1,0 +1,18 @@
+<map id="Element::getLabel" name="Element::getLabel">
+<area shape="rect" id="Node000001" title=" " alt="" coords="925,35,1051,61"/>
+<area shape="rect" id="Node000002" href="$class_operating_mode.html#a46dd30d4bd5155bb4f3480a9719d6d37" title=" " alt="" coords="676,5,877,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="909,40,877,35,878,30,910,35"/>
+<area shape="rect" id="Node000004" href="$class_configuration_mode.html#a3f7ba78ea9b5b205cc3ff935c155bf45" title=" " alt="" coords="707,56,846,99"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="910,61,847,70,846,65,909,56"/>
+<area shape="rect" id="Node000003" href="$class_operating_mode.html#a8c7295cd3f7e9c281b8a069148366dde" title=" " alt="" coords="476,5,612,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="661,21,612,21,612,16,661,16"/>
+<area shape="rect" id="Node000005" href="$class_configuration_mode.html#a2d24404387dc0f705ba64cde56d99d4e" title=" " alt="" coords="460,56,628,99"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="692,80,629,80,629,75,692,75"/>
+<area shape="rect" id="Node000006" href="$class_configuration_mode.html#af8ded2309f09bd0534651e449b0c5f8e" title=" " alt="" coords="242,23,380,65"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="444,66,380,57,381,51,445,61"/>
+<area shape="rect" id="Node000008" href="$class_configuration_mode.html#ab0f713f1cd40d14d1faa88ac9b2561d9" title=" " alt="" coords="210,89,412,132"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="445,94,413,99,412,94,444,89"/>
+<area shape="rect" id="Node000007" href="$class_configuration_mode.html#a5667197558392fb80ec3cbb365ef865e" title=" " alt="" coords="5,64,162,91"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="227,59,162,69,162,63,226,54"/>
+<area shape="poly" id="edge8_Node000008_Node000007" title=" " alt="" coords="194,96,162,91,163,86,195,91"/>
+</map>

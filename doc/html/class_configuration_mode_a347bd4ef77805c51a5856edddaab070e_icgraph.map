@@ -1,0 +1,15 @@
+<map id="ConfigurationMode::getPosition" name="ConfigurationMode::getPosition">
+<area shape="rect" id="Node000001" title=" " alt="" coords="582,72,721,115"/>
+<area shape="rect" id="Node000002" href="$class_configuration_mode.html#a17ab977141b247ee11ea1fc3a536a8e6" title=" " alt="" coords="396,5,534,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="575,69,526,51,528,46,577,64"/>
+<area shape="rect" id="Node000005" href="$class_configuration_mode.html#a12ed436790b667949a90acb544e3e594" title=" " alt="" coords="396,72,534,115"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="566,96,535,96,535,91,566,91"/>
+<area shape="rect" id="Node000006" href="$class_configuration_mode.html#abefe455d257ab04c206ab6a22a480d07" title=" " alt="" coords="396,139,534,181"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="577,123,528,141,526,136,575,118"/>
+<area shape="rect" id="Node000003" href="$class_configuration_mode.html#aa16a8ae156f03e9961d841dfc1ab0bfc" title=" " alt="" coords="210,72,348,115"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="391,56,341,74,340,69,389,51"/>
+<area shape="rect" id="Node000004" href="$class_configuration_mode.html#a5667197558392fb80ec3cbb365ef865e" title=" " alt="" coords="5,80,162,107"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="194,96,162,96,162,91,194,91"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="380,96,349,96,349,91,380,91"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="389,136,340,118,341,113,391,131"/>
+</map>

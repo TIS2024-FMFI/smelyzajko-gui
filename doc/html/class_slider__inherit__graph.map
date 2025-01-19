@@ -1,0 +1,9 @@
+<map id="Slider&lt; E &gt;" name="Slider&lt; E &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="116,80,204,107"/>
+<area shape="rect" id="Node000003" href="$class_horizontal_slider.html" title=" " alt="" coords="5,155,152,181"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="136,119,94,156,91,152,133,115"/>
+<area shape="rect" id="Node000004" href="$class_vertical_slider.html" title=" " alt="" coords="176,155,306,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="187,115,229,152,225,156,183,119"/>
+<area shape="rect" id="Node000002" href="$class_element.html" title=" " alt="" coords="125,5,194,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,48,162,80,157,80,157,48"/>
+</map>

@@ -1,0 +1,23 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$class_element.html" title=" " alt="" coords="5,132,75,159"/>
+<area shape="rect" id="Node000001" href="$class_button.html" title=" " alt="" coords="137,5,196,32"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="56,118,84,80,121,42,137,30,140,35,124,46,89,84,60,121"/>
+<area shape="rect" id="Node000002" href="$class_checkbox.html" title=" " alt="" coords="126,56,206,83"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="75,121,121,92,140,81,143,85,124,97,78,126"/>
+<area shape="rect" id="Node000003" href="$class_label.html" title=" " alt="" coords="140,107,192,133"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="89,133,139,123,140,128,90,138"/>
+<area shape="rect" id="Node000006" href="$class_rectangle.html" title=" " alt="" coords="126,157,206,184"/>
+<area shape="poly" id="edge6_Node000000_Node000006" title=" " alt="" coords="91,153,126,160,125,165,90,158"/>
+<area shape="rect" id="Node000007" href="$class_slider.html" title=" " alt="" coords="123,208,210,235"/>
+<area shape="poly" id="edge7_Node000000_Node000007" title=" " alt="" coords="78,165,124,194,143,205,140,210,121,198,75,170"/>
+<area shape="rect" id="Node000010" href="$class_text_input.html" title=" " alt="" coords="129,259,204,285"/>
+<area shape="poly" id="edge10_Node000000_Node000010" title=" " alt="" coords="60,170,89,207,124,245,140,256,137,260,121,249,84,211,56,173"/>
+<area shape="rect" id="Node000004" href="$class_multi_line_label.html" title=" " alt="" coords="279,81,383,108"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="208,111,278,100,279,105,209,116"/>
+<area shape="rect" id="Node000005" href="$class_single_line_label.html" title=" " alt="" coords="275,132,387,159"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="208,124,275,134,274,139,208,129"/>
+<area shape="rect" id="Node000008" href="$class_horizontal_slider.html" title=" " alt="" coords="258,208,404,235"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="225,219,257,219,257,224,225,224"/>
+<area shape="rect" id="Node000009" href="$class_vertical_slider.html" title=" " alt="" coords="266,259,396,285"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="226,237,286,256,284,261,224,242"/>
+</map>

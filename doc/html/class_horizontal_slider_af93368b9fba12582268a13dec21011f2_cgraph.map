@@ -1,0 +1,7 @@
+<map id="HorizontalSlider::handleClicks" name="HorizontalSlider::handleClicks">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,165,48"/>
+<area shape="rect" id="Node000002" href="$class_horizontal_slider.html#a7edd45f2125105469b44f42fd1490b46" title=" " alt="" coords="213,13,429,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,24,197,24,197,29,165,29"/>
+<area shape="rect" id="Node000003" href="$class_slider.html#a350b385459395eeda483223957f4bcef" title=" " alt="" coords="477,13,634,40"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="429,24,461,24,461,29,429,29"/>
+</map>

@@ -1,0 +1,19 @@
+<map id="src/widgets/VerticalSlider.h" name="src/widgets/VerticalSlider.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="280,5,460,32"/>
+<area shape="rect" id="Node000002" href="$_g_u_i_8h.html" title=" " alt="" coords="207,80,285,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="337,42,269,82,266,77,334,38"/>
+<area shape="rect" id="Node000008" href="$_template_8cpp.html" title=" " alt="" coords="309,80,431,107"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="373,48,373,80,367,80,367,48"/>
+<area shape="rect" id="Node000009" href="$_vertical_slider_8cpp.html" title=" " alt="" coords="455,80,648,107"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="417,36,520,77,519,82,415,41"/>
+<area shape="rect" id="Node000003" href="$_configuration_mode_8h.html" title=" " alt="" coords="12,155,176,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="207,116,122,156,120,152,205,111"/>
+<area shape="rect" id="Node000005" href="$_g_u_i_8cpp.html" title=" " alt="" coords="200,155,292,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="249,122,249,154,243,154,243,122"/>
+<area shape="rect" id="Node000006" href="$_operating_mode_8h.html" title=" " alt="" coords="316,155,458,181"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="285,112,364,152,361,156,283,116"/>
+<area shape="rect" id="Node000004" href="$_configuration_mode_8cpp.html" title=" " alt="" coords="5,229,183,256"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="97,197,97,229,91,229,91,197"/>
+<area shape="rect" id="Node000007" href="$_operating_mode_8cpp.html" title=" " alt="" coords="309,229,466,256"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="390,197,390,229,385,229,385,197"/>
+</map>

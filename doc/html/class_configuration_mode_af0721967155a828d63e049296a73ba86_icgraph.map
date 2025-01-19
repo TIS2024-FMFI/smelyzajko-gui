@@ -1,0 +1,22 @@
+<map id="ConfigurationMode::addElementToActiveTemplate" name="ConfigurationMode::addElementToActiveTemplate">
+<area shape="rect" id="Node000001" title=" " alt="" coords="582,156,777,199"/>
+<area shape="rect" id="Node000002" href="$class_configuration_mode.html#a17ab977141b247ee11ea1fc3a536a8e6" title=" " alt="" coords="396,5,534,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="638,148,533,69,504,51,507,46,536,64,642,144"/>
+<area shape="rect" id="Node000003" href="$class_configuration_mode.html#aa16a8ae156f03e9961d841dfc1ab0bfc" title=" " alt="" coords="210,156,348,199"/>
+<area shape="poly" id="edge12_Node000001_Node000003" title=" " alt="" coords="628,151,583,129,534,113,495,105,465,102,435,105,397,113,350,133,310,158,307,153,347,128,395,108,434,99,465,97,496,100,535,108,585,124,630,146"/>
+<area shape="rect" id="Node000005" href="$class_configuration_mode.html#a12ed436790b667949a90acb544e3e594" title=" " alt="" coords="396,123,534,165"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="567,162,534,157,535,152,568,157"/>
+<area shape="rect" id="Node000006" href="$class_configuration_mode.html#a6588369a1de347d2bf6e82c570bc89d3" title=" " alt="" coords="396,189,534,232"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="568,197,535,203,534,197,567,192"/>
+<area shape="rect" id="Node000007" href="$class_configuration_mode.html#a3fe005173760682039e9723c9350e65f" title=" " alt="" coords="396,256,534,299"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="619,208,514,258,512,253,617,203"/>
+<area shape="rect" id="Node000008" href="$class_configuration_mode.html#abefe455d257ab04c206ab6a22a480d07" title=" " alt="" coords="396,323,534,365"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="650,212,599,262,536,313,517,324,514,320,533,308,595,258,646,209"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="412,59,398,69,345,114,302,157,298,154,341,111,394,65,409,54"/>
+<area shape="rect" id="Node000004" href="$class_configuration_mode.html#a5667197558392fb80ec3cbb365ef865e" title=" " alt="" coords="5,164,162,191"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="194,180,162,180,162,175,194,175"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="381,162,349,168,348,162,380,156"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="380,198,348,192,349,187,381,193"/>
+<area shape="poly" id="edge9_Node000007_Node000003" title=" " alt="" coords="404,251,395,246,316,202,318,197,397,242,406,246"/>
+<area shape="poly" id="edge11_Node000008_Node000003" title=" " alt="" coords="399,316,394,313,363,285,335,255,293,201,297,197,339,252,367,282,398,309,402,312"/>
+</map>

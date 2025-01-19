@@ -1,0 +1,18 @@
+<map id="testModules/MapModule.h" name="testModules/MapModule.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="408,5,582,32"/>
+<area shape="rect" id="Node000002" href="$_g_u_i_8h.html" title=" " alt="" coords="278,80,356,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="451,41,349,82,347,77,449,36"/>
+<area shape="rect" id="Node000007" href="$_operating_mode_8cpp.html" title=" " alt="" coords="362,229,519,256"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="496,48,489,110,473,182,451,230,446,228,467,180,484,109,491,47"/>
+<area shape="rect" id="Node000008" href="$_map_module_8cpp.html" title=" " alt="" coords="533,80,722,107"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="532,37,605,77,603,82,530,42"/>
+<area shape="rect" id="Node000003" href="$_configuration_mode_8h.html" title=" " alt="" coords="12,155,176,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="265,114,134,157,132,151,263,109"/>
+<area shape="rect" id="Node000005" href="$_g_u_i_8cpp.html" title=" " alt="" coords="200,155,292,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="296,120,260,156,256,152,292,116"/>
+<area shape="rect" id="Node000006" href="$_operating_mode_8h.html" title=" " alt="" coords="316,155,458,181"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="341,116,377,152,373,156,338,120"/>
+<area shape="rect" id="Node000004" href="$_configuration_mode_8cpp.html" title=" " alt="" coords="5,229,183,256"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="97,197,97,229,91,229,91,197"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="408,192,434,227,429,231,404,196"/>
+</map>

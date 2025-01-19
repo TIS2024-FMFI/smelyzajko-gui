@@ -1,0 +1,5 @@
+<map id="OperatingMode" name="OperatingMode">
+<area shape="rect" id="Node000001" title="OperatingMode class is responsible for handling the operating mode of the GUI. IT allows the user to ..." alt="" coords="5,80,115,107"/>
+<area shape="rect" id="Node000002" href="$class_g_u_i.html" title="GUI class is responsible for setting up the GUI and running the main loop." alt="" coords="37,5,83,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,48,63,80,57,80,57,48"/>
+</map>

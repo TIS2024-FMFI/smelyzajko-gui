@@ -1,0 +1,37 @@
+<map id="src/ModuleManager.h" name="src/ModuleManager.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="745,5,891,32"/>
+<area shape="rect" id="Node000002" href="$_g_u_i_8h.html" title=" " alt="" coords="547,155,625,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="731,29,668,47,639,62,613,82,601,99,594,118,589,155,583,154,589,117,597,96,609,78,636,57,666,42,729,24"/>
+<area shape="rect" id="Node000008" href="$_module_manager_8cpp.html" title=" " alt="" coords="1054,80,1214,107"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="889,33,1079,77,1078,82,888,39"/>
+<area shape="rect" id="Node000009" href="$_template_8cpp.html" title=" " alt="" coords="1239,80,1360,107"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="907,30,1226,77,1239,79,1238,85,1226,83,906,35"/>
+<area shape="rect" id="Node000010" href="$_counter_module_8h.html" title=" " alt="" coords="286,80,481,107"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="730,37,460,82,459,77,729,32"/>
+<area shape="rect" id="Node000012" href="$_map_module_8h.html" title=" " alt="" coords="623,80,797,107"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="788,43,730,82,727,77,785,39"/>
+<area shape="rect" id="Node000014" href="$_ultrasonic_module_8h.html" title=" " alt="" coords="822,80,1030,107"/>
+<area shape="poly" id="edge17_Node000001_Node000014" title=" " alt="" coords="851,39,909,77,906,82,848,43"/>
+<area shape="rect" id="Node000003" href="$_configuration_mode_8h.html" title=" " alt="" coords="290,229,453,256"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="535,189,410,231,408,226,534,184"/>
+<area shape="rect" id="Node000005" href="$_g_u_i_8cpp.html" title=" " alt="" coords="477,229,570,256"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="567,195,536,231,532,227,563,192"/>
+<area shape="rect" id="Node000006" href="$_operating_mode_8h.html" title=" " alt="" coords="594,229,736,256"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="613,190,653,227,649,231,609,194"/>
+<area shape="rect" id="Node000004" href="$_configuration_mode_8cpp.html" title=" " alt="" coords="283,304,460,331"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="374,272,374,304,369,304,369,272"/>
+<area shape="rect" id="Node000007" href="$_operating_mode_8cpp.html" title=" " alt="" coords="640,304,796,331"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="685,267,711,302,707,305,681,270"/>
+<area shape="poly" id="edge10_Node000010_Node000002" title=" " alt="" coords="434,110,551,152,550,157,432,115"/>
+<area shape="poly" id="edge11_Node000010_Node000007" title=" " alt="" coords="354,118,318,147,286,182,275,201,269,220,270,237,280,254,296,263,328,272,423,288,639,308,639,313,422,293,327,277,294,268,276,258,265,239,264,219,270,199,281,179,314,143,350,114"/>
+<area shape="rect" id="Node000011" href="$_counter_module_8cpp.html" title=" " alt="" coords="5,155,215,181"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="322,114,159,157,157,151,320,109"/>
+<area shape="poly" id="edge14_Node000012_Node000002" title=" " alt="" coords="677,117,609,156,606,152,674,112"/>
+<area shape="poly" id="edge15_Node000012_Node000007" title=" " alt="" coords="720,121,750,229,752,243,750,257,740,283,728,305,724,302,735,281,745,255,746,243,745,230,715,122"/>
+<area shape="rect" id="Node000013" href="$_map_module_8cpp.html" title=" " alt="" coords="748,155,936,181"/>
+<area shape="poly" id="edge16_Node000012_Node000013" title=" " alt="" coords="747,112,820,152,818,156,745,117"/>
+<area shape="poly" id="edge18_Node000014_Node000002" title=" " alt="" coords="852,113,626,161,625,156,851,108"/>
+<area shape="poly" id="edge19_Node000014_Node000007" title=" " alt="" coords="945,119,956,150,956,167,951,183,934,207,913,229,865,264,814,289,767,306,765,301,812,284,862,259,910,225,930,204,946,180,951,166,950,151,940,121"/>
+<area shape="rect" id="Node000015" href="$_ultrasonic_module_8cpp.html" title=" " alt="" coords="1011,155,1233,181"/>
+<area shape="poly" id="edge20_Node000014_Node000015" title=" " alt="" coords="975,110,1089,152,1087,157,973,115"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="TextArea" name="TextArea">
+<area shape="rect" id="Node000001" title="The TextArea class is responsible for displaying logs in a scrollable text area." alt="" coords="80,96,154,123"/>
+<area shape="rect" id="Node000002" href="$class_graphic_module.html" title="GraphicModule class represents graphical element of the module." alt="" coords="5,5,114,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,44,111,94,106,97,74,47"/>
+<area shape="rect" id="Node000003" href="$class_scrollbar.html" title="Scrollbar class represents a scrollbar element in the GUI." alt="" coords="138,5,210,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="160,47,127,97,123,94,156,44"/>
+</map>

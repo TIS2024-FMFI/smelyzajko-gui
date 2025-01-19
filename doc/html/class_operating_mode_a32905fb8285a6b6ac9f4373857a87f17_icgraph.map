@@ -1,0 +1,7 @@
+<map id="OperatingMode::switchTemplate" name="OperatingMode::switchTemplate">
+<area shape="rect" id="Node000001" title=" " alt="" coords="512,5,720,32"/>
+<area shape="rect" id="Node000002" href="$class_operating_mode.html#aeeea1156e43f3af06d7dd5b0cb44874b" title=" " alt="" coords="259,5,464,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="497,21,465,21,465,16,497,16"/>
+<area shape="rect" id="Node000003" href="$class_operating_mode.html#a00a42c9213ae07402deac3024bedd195" title=" " alt="" coords="5,5,211,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="243,21,211,21,211,16,243,16"/>
+</map>

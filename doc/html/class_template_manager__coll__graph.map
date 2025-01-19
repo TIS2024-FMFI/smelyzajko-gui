@@ -1,0 +1,5 @@
+<map id="TemplateManager" name="TemplateManager">
+<area shape="rect" id="Node000001" title="TemplateManager class is responsible for managing templates and their elements." alt="" coords="5,96,130,123"/>
+<area shape="rect" id="Node000002" href="$class_template.html" title="Template class represents a template that can be loaded, saved, and modified." alt="" coords="30,5,105,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,48,70,95,65,95,65,48"/>
+</map>

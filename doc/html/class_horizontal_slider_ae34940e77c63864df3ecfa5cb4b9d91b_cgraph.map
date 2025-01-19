@@ -1,0 +1,9 @@
+<map id="HorizontalSlider::HorizontalSlider" name="HorizontalSlider::HorizontalSlider">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,186,48"/>
+<area shape="rect" id="Node000002" href="$class_slider.html#ab6fe7c409c19ea30bf77d49d399db1ad" title=" " alt="" coords="234,13,329,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,24,218,24,218,29,186,29"/>
+<area shape="rect" id="Node000003" href="$class_element.html#ac56584813421bd0f3294034b7875e893" title=" " alt="" coords="377,13,502,40"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="329,24,361,24,361,29,329,29"/>
+<area shape="rect" id="Node000004" href="$class_element.html#a048ee27f6114e20ea1f840366ef8c1ed" title=" " alt="" coords="550,13,660,40"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="503,24,535,24,535,29,503,29"/>
+</map>

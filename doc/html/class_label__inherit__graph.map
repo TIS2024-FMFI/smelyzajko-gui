@@ -1,0 +1,9 @@
+<map id="Label" name="Label">
+<area shape="rect" id="Node000001" title=" " alt="" coords="97,80,149,107"/>
+<area shape="rect" id="Node000003" href="$class_multi_line_label.html" title=" " alt="" coords="5,155,110,181"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="103,120,71,156,67,152,99,116"/>
+<area shape="rect" id="Node000004" href="$class_single_line_label.html" title=" " alt="" coords="133,155,246,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="147,116,180,152,176,156,143,120"/>
+<area shape="rect" id="Node000002" href="$class_element.html" title=" " alt="" coords="88,5,158,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,48,126,80,120,80,120,48"/>
+</map>

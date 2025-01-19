@@ -1,0 +1,13 @@
+<map id="CounterModule::registerShortcuts" name="CounterModule::registerShortcuts">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,109,222,136"/>
+<area shape="rect" id="Node000002" href="$class_toast_notification_manager.html#aef50e91ebe21d1db14456a0dfaeacc8f" title=" " alt="" coords="280,5,449,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,106,269,58,286,51,287,56,271,62,149,111"/>
+<area shape="rect" id="Node000003" href="$class_shortcuts_manager.html#adf49f48c118af8170f376e04243800d3" title=" " alt="" coords="275,72,454,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="222,107,260,103,260,108,223,113"/>
+<area shape="rect" id="Node000004" href="$class_counter_module.html#a407699ec26bb477daee4ed397dc5bb81" title=" " alt="" coords="270,139,459,165"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="223,133,254,136,254,142,222,138"/>
+<area shape="rect" id="Node000006" href="$class_counter_module.html#af25025763d3f04d56d413d9d9ff28e68" title=" " alt="" coords="270,189,458,216"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="152,134,270,175,296,182,294,187,269,180,151,139"/>
+<area shape="rect" id="Node000005" href="$class_counter_module.html#ae67db9decb32d8c7a540d646327dc3df" title=" " alt="" coords="507,139,642,165"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="459,149,491,149,491,155,459,155"/>
+</map>

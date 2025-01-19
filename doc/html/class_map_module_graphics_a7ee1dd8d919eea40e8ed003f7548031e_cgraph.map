@@ -1,0 +1,5 @@
+<map id="MapModuleGraphics::draw" name="MapModuleGraphics::draw">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,182,40"/>
+<area shape="rect" id="Node000002" href="$class_map_module_graphics.html#ab4756c92f5a22cc94e347c82eb2e6dc5" title=" " alt="" coords="230,5,378,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,24,214,24,214,29,182,29"/>
+</map>

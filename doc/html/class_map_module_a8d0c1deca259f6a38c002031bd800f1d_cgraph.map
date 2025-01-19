@@ -1,0 +1,9 @@
+<map id="MapModule::registerShortcuts" name="MapModule::registerShortcuts">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,80,201,107"/>
+<area shape="rect" id="Node000002" href="$class_toast_notification_manager.html#aef50e91ebe21d1db14456a0dfaeacc8f" title=" " alt="" coords="253,5,422,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,77,245,50,246,55,154,82"/>
+<area shape="rect" id="Node000003" href="$class_shortcuts_manager.html#adf49f48c118af8170f376e04243800d3" title=" " alt="" coords="249,72,427,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="201,91,233,91,233,96,201,96"/>
+<area shape="rect" id="Node000004" href="$class_map_module.html#ae7e9a400ba22cac78ff9ff658a6dd6bc" title=" " alt="" coords="263,139,413,165"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="160,105,267,132,266,137,159,110"/>
+</map>

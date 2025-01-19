@@ -1,0 +1,9 @@
+<map id="UltrasonicModuleGraphics::updateValueOfModule" name="UltrasonicModuleGraphics::updateValueOfModule">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,39,180,81"/>
+<area shape="rect" id="Node000002" href="$class_ultrasonic_module_graphics.html#a2ecee718df44883b95032ef56d09995c" title=" " alt="" coords="228,39,402,81"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,57,212,57,212,63,180,63"/>
+<area shape="rect" id="Node000003" href="$class_graphic_module.html#aa6b9455acb1796f13192fa396d035761" title=" " alt="" coords="450,5,636,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="402,45,434,40,435,45,403,50"/>
+<area shape="rect" id="Node000004" href="$class_graphic_module.html#a877129a50cb6205b9a8d184e80022957" title=" " alt="" coords="454,72,632,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="403,70,439,75,438,81,402,75"/>
+</map>

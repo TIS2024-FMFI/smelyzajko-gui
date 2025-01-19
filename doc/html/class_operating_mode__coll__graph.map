@@ -1,0 +1,15 @@
+<map id="OperatingMode" name="OperatingMode">
+<area shape="rect" id="Node000001" title="OperatingMode class is responsible for handling the operating mode of the GUI. IT allows the user to ..." alt="" coords="309,187,418,213"/>
+<area shape="rect" id="Node000002" href="$class_g_u_i.html" title="GUI class is responsible for setting up the GUI and running the main loop." alt="" coords="287,96,333,123"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="328,135,358,185,353,187,323,138"/>
+<area shape="rect" id="Node000003" href="$class_module_manager.html" title="ModuleManager class is responsible for managing modules." alt="" coords="5,5,119,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,38,160,70,229,90,288,102,286,107,228,95,158,74,94,43"/>
+<area shape="rect" id="Node000004" href="$class_toast_notification_manager.html" title=" " alt="" coords="143,5,312,32"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="252,42,300,94,296,97,248,45"/>
+<area shape="rect" id="Node000005" href="$class_shortcuts_manager.html" title="ShortcutsManager class is responsible for handling keyboard shortcuts." alt="" coords="336,5,463,32"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="386,47,365,74,334,98,331,94,361,70,382,44"/>
+<area shape="rect" id="Node000006" href="$class_template_manager.html" title="TemplateManager class is responsible for managing templates and their elements." alt="" coords="413,96,538,123"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="449,135,381,188,378,184,446,130"/>
+<area shape="rect" id="Node000007" href="$class_template.html" title="Template class represents a template that can be loaded, saved, and modified." alt="" coords="494,5,568,32"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="520,47,504,73,487,97,483,94,500,71,515,44"/>
+</map>

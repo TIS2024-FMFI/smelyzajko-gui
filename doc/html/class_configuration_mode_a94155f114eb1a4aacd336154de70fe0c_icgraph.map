@@ -1,0 +1,5 @@
+<map id="ConfigurationMode::drawGrid" name="ConfigurationMode::drawGrid">
+<area shape="rect" id="Node000001" title=" " alt="" coords="210,5,348,48"/>
+<area shape="rect" id="Node000002" href="$class_configuration_mode.html#a5667197558392fb80ec3cbb365ef865e" title=" " alt="" coords="5,13,162,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,29,162,29,162,24,194,24"/>
+</map>

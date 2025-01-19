@@ -1,0 +1,9 @@
+<map id="SingleLineLabel::from_json" name="SingleLineLabel::from_json">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,183,32"/>
+<area shape="rect" id="Node000002" href="$class_label.html#a1254708ed5b32e1a0d44f49293e64f32" title=" " alt="" coords="231,5,348,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,16,215,16,215,21,183,21"/>
+<area shape="rect" id="Node000003" href="$class_element.html#ac749d32490cd27b372ecd5c1735422f8" title=" " alt="" coords="396,5,530,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="349,16,381,16,381,21,349,21"/>
+<area shape="rect" id="Node000004" href="$class_element.html#a70fe3b1d12f133389f75e7271891fff4" title=" " alt="" coords="578,5,779,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="531,16,563,16,563,21,531,21"/>
+</map>

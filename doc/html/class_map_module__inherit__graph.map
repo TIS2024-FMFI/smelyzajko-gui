@@ -1,0 +1,5 @@
+<map id="MapModule" name="MapModule">
+<area shape="rect" id="Node000001" title="MapModule class is responsible for generating a map and pathfinding on it.There is a red ball that mo..." alt="" coords="5,80,94,107"/>
+<area shape="rect" id="Node000002" href="$class_module.html" title="Module class represents the base class for all modules." alt="" coords="18,5,81,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="52,48,52,80,47,80,47,48"/>
+</map>

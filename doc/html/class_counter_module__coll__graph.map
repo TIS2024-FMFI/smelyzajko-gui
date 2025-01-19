@@ -1,0 +1,7 @@
+<map id="CounterModule" name="CounterModule">
+<area shape="rect" id="Node000001" title="CounterModule class is responsible for generating a counter value and updating the graphic element wi..." alt="" coords="38,96,148,123"/>
+<area shape="rect" id="Node000002" href="$class_module.html" title="Module class represents the base class for all modules." alt="" coords="5,5,69,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="55,44,87,94,83,97,51,47"/>
+<area shape="rect" id="Node000003" href="$class_module_manager.html" title="ModuleManager class is responsible for managing modules." alt="" coords="92,5,206,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="135,47,103,97,99,94,131,44"/>
+</map>

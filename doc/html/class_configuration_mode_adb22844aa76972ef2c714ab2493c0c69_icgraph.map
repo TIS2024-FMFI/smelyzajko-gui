@@ -1,0 +1,11 @@
+<map id="ConfigurationMode::saveTemplate" name="ConfigurationMode::saveTemplate">
+<area shape="rect" id="Node000001" title=" " alt="" coords="396,39,534,81"/>
+<area shape="rect" id="Node000002" href="$class_configuration_mode.html#aa16a8ae156f03e9961d841dfc1ab0bfc" title=" " alt="" coords="210,5,348,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="380,48,348,42,349,36,381,42"/>
+<area shape="rect" id="Node000004" href="$class_configuration_mode.html#ae64712e754f19a0d96f0d689ab82f780" title=" " alt="" coords="210,72,348,115"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="381,78,349,84,348,78,380,72"/>
+<area shape="rect" id="Node000003" href="$class_configuration_mode.html#a5667197558392fb80ec3cbb365ef865e" title=" " alt="" coords="5,13,162,40"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="194,29,162,29,162,24,194,24"/>
+<area shape="rect" id="Node000005" href="$class_configuration_mode.html#a53eef7e2f61c86633c8aa27d1dc0d38f" title=" " alt="" coords="14,72,153,115"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="194,96,153,96,153,91,194,91"/>
+</map>

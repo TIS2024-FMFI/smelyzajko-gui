@@ -1,0 +1,7 @@
+<map id="GUI::cleanupImGui" name="GUI::cleanupImGui">
+<area shape="rect" id="Node000001" title=" " alt="" coords="210,31,343,57"/>
+<area shape="rect" id="Node000002" href="$class_configuration_mode.html#a5667197558392fb80ec3cbb365ef865e" title=" " alt="" coords="5,5,162,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,36,161,32,162,26,194,31"/>
+<area shape="rect" id="Node000003" href="$class_operating_mode.html#a8c7295cd3f7e9c281b8a069148366dde" title=" " alt="" coords="16,56,151,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="194,57,152,63,151,58,194,52"/>
+</map>

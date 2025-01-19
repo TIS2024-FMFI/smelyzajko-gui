@@ -1,0 +1,7 @@
+<map id="MapModuleGraphics::loadMap" name="MapModuleGraphics::loadMap">
+<area shape="rect" id="Node000001" title=" " alt="" coords="230,27,378,69"/>
+<area shape="rect" id="Node000002" href="$class_map_module_graphics.html#a7ee1dd8d919eea40e8ed003f7548031e" title=" " alt="" coords="5,5,182,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="214,38,182,34,183,28,215,33"/>
+<area shape="rect" id="Node000003" href="$class_map_module_graphics.html#a80a85adde53f81491ed590edfbb386d7" title=" " alt="" coords="19,56,168,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="215,63,168,70,168,64,214,58"/>
+</map>
