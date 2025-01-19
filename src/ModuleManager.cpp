@@ -1,7 +1,4 @@
 #include "ModuleManager.h"
-#include <filesystem>
-#include <fstream>
-#include <sstream>
 #include <iostream>
 
 int ModuleManager::registerModule(const std::string &name, Module *module) {
@@ -16,14 +13,14 @@ const std::unordered_map<std::string, std::function<GraphicModule *()>> &ModuleM
     return moduleConstructors;
 }
 
-void ModuleManager::updateValueOfModule(int moduleID,int graphicModuleID, std::string value) {
+void ModuleManager::updateValueOfModule(int moduleID,int graphicModuleID, const std::string& value) {
     for (GraphicModule *module : graphicModules) {
         if (module->getGraphicModuleID() == graphicModuleID && module->getModuleID() == moduleID) {
             module->updateValueOfModule(value);
         }
     }
 }
-void ModuleManager::updateValueOfModule(int moduleID,int graphicModuleID,std::vector<int> value) {
+void ModuleManager::updateValueOfModule(int moduleID,int graphicModuleID,const std::vector<int>& value) {
     for (GraphicModule *module : graphicModules) {
         if (module->getGraphicModuleID() == graphicModuleID && module->getModuleID() == moduleID) {
             module->updateValueOfModule(value);
@@ -37,7 +34,7 @@ void ModuleManager::updateValueOfModule(int moduleID,int graphicModuleID, int va
         }
     }
 }
-void ModuleManager::updateValueOfModule(int moduleID, int graphicModuleID, std::vector<float> value) {
+void ModuleManager::updateValueOfModule(int moduleID, int graphicModuleID, const std::vector<float>& value) {
     for (GraphicModule *module : graphicModules) {
         if (module->getGraphicModuleID() == graphicModuleID && module->getModuleID() == moduleID) {
             module->updateValueOfModule(value);
@@ -62,7 +59,7 @@ int ModuleManager::registerGraphicModule(const std::string &graphicElementName,c
 }
 
 
-void ModuleManager::setActiveModuleAndDraw(std::vector<GraphicModule *> graphicModules_, ImGuiIO &io) {
+void ModuleManager::setActiveModuleAndDraw(const std::vector<GraphicModule *>& graphicModules_, ImGuiIO &io) {
     for (GraphicModule *module : graphicModules) {
         for (GraphicModule *module_ : graphicModules_) {
             if (module->getGraphicElementName() == module_->getGraphicElementName() && module->getModuleName() == module_->getModuleName()) {
@@ -81,7 +78,7 @@ std::vector<Module *> ModuleManager::getModules() const {
     return modules;
 }
 
-void ModuleManager::setValueFromInputElements(std::string moduleName, std::string elementName, std::string value) {
+void ModuleManager::setValueFromInputElements(const std::string& moduleName, const std::string& elementName, const std::string& value) {
     for (Module *module : modules) {
         if (module->getModuleName() == moduleName) {
             module->setValueFromInputElements(elementName, value);
@@ -89,21 +86,21 @@ void ModuleManager::setValueFromInputElements(std::string moduleName, std::strin
     }
 }
 
-void ModuleManager::setValueFromInputElements(std::string moduleName, std::string elementName, bool value) {
+void ModuleManager::setValueFromInputElements(const std::string& moduleName, const std::string& elementName, bool value) {
     for (Module *module : modules) {
         if (module->getModuleName() == moduleName) {
             module->setValueFromInputElements(elementName, value);
         }
     }
 }
-void ModuleManager::setValueFromInputElements(std::string moduleName, std::string elementName, int value) {
+void ModuleManager::setValueFromInputElements(const std::string& moduleName, const std::string& elementName, int value) {
     for (Module *module : modules) {
         if (module->getModuleName() == moduleName) {
             module->setValueFromInputElements(elementName, value);
         }
     }
 }
-void ModuleManager::setValueFromInputElements(std::string moduleName, std::string elementName, float value) {
+void ModuleManager::setValueFromInputElements(const std::string& moduleName, const std::string& elementName, float value) {
     for (Module *module : modules) {
         if (module->getModuleName() == moduleName) {
             module->setValueFromInputElements(elementName, value);

@@ -20,24 +20,23 @@ public:
     int registerGraphicModule(const std::string& graphicElementName,const std::string& moduleName,  int moduleID);
     void setLogDirectory( std::string& logDirectory_);
 
-    void updateValueOfModule(int moduleID,int graphicModuleID, std::string value);
+    void updateValueOfModule(int moduleID,int graphicModuleID, const std::string& value);
     void updateValueOfModule(int moduleID,int graphicModuleID, int value);
-    void updateValueOfModule(int moduleID,int graphicModuleID, std::vector<int> value);
-    void updateValueOfModule(int moduleID,int graphicModuleID, std::vector<float> value);
+    void updateValueOfModule(int moduleID,int graphicModuleID, const std::vector<int>& value);
+    void updateValueOfModule(int moduleID,int graphicModuleID, const std::vector<float>& value);
 
 
-    void setValueFromInputElements(std::string moduleName, std::string elementName, std::string value);
-    void setValueFromInputElements(std::string moduleName, std::string elementName, bool value);
-    void setValueFromInputElements(std::string moduleName, std::string elementname, int value);
-    void setValueFromInputElements(std::string moduleName, std::string elementName, float value);
+    void setValueFromInputElements(const std::string& moduleName, const std::string& elementName, const std::string& value);
+    void setValueFromInputElements(const std::string& moduleName, const std::string& elementName, bool value);
+    void setValueFromInputElements(const std::string& moduleName, const std::string& elementname, int value);
+    void setValueFromInputElements(const std::string& moduleName, const std::string& elementName, float value);
 
-    void setActiveModuleAndDraw(std::vector<GraphicModule *> graphicModules_, ImGuiIO &io);
+    void setActiveModuleAndDraw(const std::vector<GraphicModule *>& graphicModules_, ImGuiIO &io);
     std::vector<Module*> getModules() const;
     const std::unordered_map<std::string, std::function<GraphicModule*()>> &getModuleConstructors() const;
     void clearModules();
     std::vector<GraphicModule*> graphicModules;
     std::vector<Module*> modules;
-
 
 private:
     std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
@@ -48,8 +47,6 @@ private:
     };
     std::string logDirectory;
 
-
-    void readTemplateandCreateModules(const std::string &filename);
 };
 
 #endif //MODULEMANAGER_H

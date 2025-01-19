@@ -66,13 +66,13 @@ void GUI::loadModules(YAML::Node modules) {
         }
 
         if (moduleNameStr == "MapModule") {
-            MapModule* mapModule = new MapModule(&moduleManager);
+            auto mapModule = new MapModule(&moduleManager);
             moduleManager.registerModule("MapModule", mapModule);
         } else if (moduleNameStr == "CounterModule") {
-            CounterModule* counterModule = new CounterModule(&moduleManager);
+            auto counterModule = new CounterModule(&moduleManager);
             moduleManager.registerModule("CounterModule", counterModule);
         } else if (moduleNameStr == "UltrasonicModule") {
-            UltrasonicModule* ultrasonicModule = new UltrasonicModule(&moduleManager);
+            auto ultrasonicModule = new UltrasonicModule(&moduleManager);
             moduleManager.registerModule("UltrasonicModule", ultrasonicModule);
         } else {
             std::cerr << "Unknown module: " << moduleNameStr << std::endl;

@@ -81,5 +81,4 @@ protected:
 
 };
 
-
 #endif //SMELYZAJKO_GUI_GRAPHICMODULE_H

@@ -24,8 +24,6 @@ void GraphicModule::scaleFromResolution(ImVec2 templateResolution) {
     size.y *= scale;
 }
 
-
-
 // Modules settings
 void GraphicModule::setModuleName(std::string name) {moduleName = name;}
 std::string GraphicModule::getModuleName() const {return moduleName;}

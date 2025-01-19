@@ -58,11 +58,12 @@ public:
     void drawMenuBar();
     void drawGrid() const;
     void bringElementToTop(std::vector<Element*>& elements, Element* element);
-//    void renderSettingsPopup(Module& module, const std::string& part);
+
     void createLabelSettings();
     void createButton(std::string elementName, std::string moduleName);
     void createCheckbox(std::string elementName, std::string moduleName);
     void createTextInput(std::string elementName, std::string moduleName);
+
     void setNewElementAndAddToActiveTemplate(Element *element, std::string elementName, std::string moduleName, ImVec2 position, ImVec2 elementSize);
     void handleElementClick(Element* element,int i);
     void handleClicksOnElements(std::vector<Element*>& elements);
