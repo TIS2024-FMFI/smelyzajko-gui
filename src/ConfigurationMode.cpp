@@ -801,7 +801,6 @@ void ConfigurationMode::openLogDirectoryDialog() {
     if (ImGuiFileDialog::Instance()->IsOpened("ChooseLogDirDlgKey")) {
         return; // If it's already open, return and avoid opening it again
     }
-    std::cout << "openLogDirectoryDialog" << std::endl;
 
     IGFD::FileDialogConfig config;
     config.path = "../logs"; // Default path for the directory dialog
@@ -833,7 +832,6 @@ void ConfigurationMode::processLogDirectoryDialog() {
 }
 
 void ConfigurationMode::updateLogDirectoryInConfig(const std::string& logDir) {
-    std::cout << "updateLogDirectoryInConfig " << logDir << std::endl;
 
     // Load the existing config file
 
