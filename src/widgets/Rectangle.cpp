@@ -1,6 +1,4 @@
 #include "Rectangle.h"
-#include <iostream>
-
 
 float Rectangle::getWidth() const {
     return size.x;
@@ -9,8 +7,6 @@ float Rectangle::getWidth() const {
 float Rectangle::getHeight() const {
     return size.y;
 }
-
-
 
 void Rectangle::setWidth(float newWidth) {
     size.x = newWidth;
