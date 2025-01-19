@@ -18,7 +18,8 @@ install_ubuntu_debian_dependencies() {
         pkg-config \
         libxinerama-dev \
         libxcursor-dev \
-        libxi-dev
+        libxi-dev \
+        libwayland-dev
 }
 
 # Function to install dependencies for Fedora-based distributions
@@ -30,27 +31,28 @@ install_fedora_dependencies() {
         glfw-devel \
         mesa-libGL-devel \
         mesa-libGLU-devel \
-        libXkbcommon-devel \
+        libxkbcommon-devel \
         pkgconfig \
         libXinerama-devel \
         libXcursor-devel \
-        libXi-devel
+        libXi-devel \
+        wayland-devel
 }
 
-# Function to install dependencies for Arch-based distributions
-install_arch_dependencies() {
-    echo "Installing dependencies for Arch Linux..."
-    sudo pacman -Syu --noconfirm
-    sudo pacman -S --noconfirm \
-        cmake \
-        git \
-        glfw-wayland \
-        mesa \
-        libxkbcommon \
-        pkgconf \
-        libxinerama \
-        libxcursor \
-        libxi
+# Function to install compilers for all distributions
+install_compilers() {
+    echo "Installing necessary compilers..."
+
+    # Check for Ubuntu/Debian
+    if [ -f /etc/os-release ] && { grep -q "ID=ubuntu" /etc/os-release || grep -q "ID=debian" /etc/os-release; }; then
+        sudo apt-get install -y build-essential
+    # Check for Fedora
+    elif [ -f /etc/os-release ] && grep -q "ID=fedora" /etc/os-release; then
+        sudo dnf install -y gcc-c++ gcc
+    else
+        echo "Unsupported distribution for compiler installation"
+        exit 1
+    fi
 }
 
 # Detect the distribution
@@ -64,12 +66,12 @@ if [ "$DISTRO" == "ubuntu" ] || [ "$DISTRO" == "debian" ]; then
     install_ubuntu_debian_dependencies
 elif [ "$DISTRO" == "fedora" ]; then
     install_fedora_dependencies
-elif [ "$DISTRO" == "arch" ] || [ "$DISTRO" == "manjaro" ]; then
-    install_arch_dependencies
 else
     echo "Unsupported Linux distribution: $DISTRO"
     exit 1
 fi
+
+install_compilers
 
 # Create the build directory if it doesn't exist
 if [ ! -d "build" ]; then

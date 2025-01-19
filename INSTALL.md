@@ -1,4 +1,5 @@
-# Installation Using Script 
+# Installation Using Script for `smelyzajko-gui`
+## Works for Ubuntu/Debian/Fedora-based linux distibutions 
 
 ## Step 1: Clone the Repository
 
@@ -28,7 +29,6 @@
     ```bash
     ./setup_project.sh
     ```
-
 
 ## Step 6: Running the Project
 
@@ -87,18 +87,7 @@ This guide provides step-by-step instructions on how to manually install the nec
 
 2. Install the required dependencies:
    ```bash
-   sudo dnf install -y cmake git glfw-devel mesa-libGL-devel mesa-libGLU-devel libXkbcommon-devel pkgconfig libXinerama-devel libXcursor-devel libXi-devel
-   ```
-
-### For Arch-based Distributions (Arch, Manjaro, etc.)
-
-1. Update your system:
-   ```bash
-   sudo pacman -Syu --noconfirm
-   ```
-2. Install the required dependencies:
-   ```bash
-   sudo pacman -S --noconfirm cmake git glfw-wayland mesa libxkbcommon pkgconf libxinerama libxcursor libxi
+   sudo dnf install -y cmake git glfw-devel mesa-libGL-devel mesa-libGLU-devel libxkbcommon-devel pkgconfig libXinerama-devel libXcursor-devel libXi-devel wayland-devel
    ```
 
 ## Step 3: Prepare the Build Directory
