@@ -854,15 +854,6 @@ void ConfigurationMode::updateLogDirectoryInConfig(const std::string& logDir) {
     configFile["configFile"] = configFilePath;
 }
 
-void ConfigurationMode::setNewElementAndAddToActiveTemplate(Element *element, std::string elementName, std::string moduleName, ImVec2 position, ImVec2 elementSize) {
-    element->setConfigurationMode(true);
-    element->setLabel(elementName);
-    element->setModuleName(moduleName);
-    element->setPosition(position);
-    element->setSize(elementSize);
-    addElementToActiveTemplate(element);
-}
-
 void ConfigurationMode::createButton(std::string elementName, std::string moduleName) {
     if (ImGui::MenuItem(elementName.c_str())) {
         ImVec2 elementSize(100.0f, 25.0f);
@@ -900,8 +891,8 @@ void ConfigurationMode::createTextInput(std::string elementName, std::string mod
 
         ImVec2 position = getPosition(elementSize);
 
-        auto element = new TextInput();
-        setNewElementAndAddToActiveTemplate(element, elementName, moduleName, position, elementSize);
+        auto element = new TextInput(elementName, moduleName, position, elementSize);
+        addElementToActiveTemplate(element);
     }
 }
 

@@ -15,7 +15,6 @@ file(GLOB IMGUI_HEADERS
         libs/imgui/backends/imgui_impl_opengl3.h
 )
 
-
 file(GLOB PROJECT_SOURCES
         src/*/*.cpp
         src/*.cpp
@@ -25,12 +24,11 @@ file(GLOB PROJECT_SOURCES
 add_library(imgui STATIC ${IMGUI_SRC} ${IMGUI_HEADERS} ${PROJECT_SOURCES})
 
 include_directories(
-        libs/imgui
-        libs/imgui/backends
+        ${CMAKE_SOURCE_DIR}/libs/imgui
+        ${CMAKE_SOURCE_DIR}/libs/imgui/backends
+        ${CMAKE_SOURCE_DIR}/libs/ImGuiFileDialog
+        ${CMAKE_SOURCE_DIR}/libs/yaml-cpp/include
         ${CMAKE_SOURCE_DIR}
-        libs/ImGuiFileDialog
-        libs/yaml-cpp/include
-        /opt/homebrew/include
         ${PROJECT_SOURCE_DIR}/src
 )
 
@@ -41,12 +39,19 @@ add_executable(smelyzajko-gui
         main.cpp
 )
 
+# Find OpenGL
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIRS})
+
+# Find GLFW
+find_package(glfw3 REQUIRED)
+include_directories(${GLFW_INCLUDE_DIRS})
+
 if(APPLE)
     add_definitions(-DGL_SILENCE_DEPRECATION)
-    find_library(OPENGL_FRAMEWORK OpenGL)
     target_link_libraries(smelyzajko-gui PRIVATE imgui ${OPENGL_FRAMEWORK} glfw yaml-cpp)
 else()
-    target_link_libraries(smelyzajko-gui PRIVATE imgui glfw GL yaml-cpp)
+    target_link_libraries(smelyzajko-gui PRIVATE imgui glfw yaml-cpp ${OPENGL_LIBRARIES})
 endif()
 
 target_include_directories(smelyzajko-gui PRIVATE ${CMAKE_SOURCE_DIR}/libs/ImGuiFileDialog)
