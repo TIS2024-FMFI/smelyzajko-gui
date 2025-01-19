@@ -2,6 +2,13 @@
 #include "GUI.h"
 #include <algorithm>
 #include "Module.h"
+
+/**
+ * @class OperatingMode
+ * @brief OperatingMode class is responsible for handling the operating mode of the GUI. IT allows the user to switch between templates.
+ */
+
+
 class OperatingMode :  GUI {
 public:
 

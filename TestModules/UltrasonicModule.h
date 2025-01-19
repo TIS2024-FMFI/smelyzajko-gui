@@ -6,6 +6,11 @@
 #include "../src/ModuleManager.h"
 
 
+/**
+ * @class UltrasonicModule
+ * @brief UltrasonicModule class is responsible for generating a ultrasonic sensor data and updating the graphic element with the value.
+ */
+
 
 class UltrasonicModule : public Module{
 

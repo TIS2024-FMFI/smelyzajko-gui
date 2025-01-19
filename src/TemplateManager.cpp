@@ -7,6 +7,8 @@
 
 namespace fs = std::filesystem;
 
+
+
 TemplateManager::TemplateManager() {}
 
 TemplateManager::TemplateManager(bool mode) : configMode(mode) {

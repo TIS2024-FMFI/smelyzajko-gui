@@ -6,6 +6,12 @@
 #include "ShortcutsManager.h"
 #include "ToastNotificationManager.h"
 
+
+/**
+ * @class Module
+ * @brief Module class represents the base class for all modules.
+ */
+
 class Module {
 public:
     ~Module() = default;

@@ -10,6 +10,11 @@
 #include "../src/Module.h"
 #include "../src/ModuleManager.h"
 
+/**
+ * @class CounterModule
+ * @brief CounterModule class is responsible for generating a counter value and updating the graphic element with the value.
+ */
+
 class CounterModule : public Module {
 public:
     ImFont* largeFont;

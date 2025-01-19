@@ -10,6 +10,11 @@
 #include <mutex>
 #include <thread>
 
+/**
+ * @class CounterModuleGraphics
+ * @brief CounterModuleGraphics is graphic part of CounterModule class. It is responsible for drawing the counter value.
+ */
+
 class CounterModuleGraphics : public GraphicModule {
 public:
     CounterModuleGraphics();

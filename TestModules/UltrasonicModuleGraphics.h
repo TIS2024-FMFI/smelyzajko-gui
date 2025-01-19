@@ -14,6 +14,11 @@ struct UltrasonicSensorData {
     float distance; // Distance reading from the sensor
 };
 
+/**
+ * @class UltrasonicModuleGraphics
+ * @brief UltrasonicModuleGraphics is graphic part of UltrasonicModule class. It is responsible for drawing the ultrasonic sensor data.
+ */
+
 class UltrasonicModuleGraphics : public GraphicModule {
 public:
     UltrasonicModuleGraphics();

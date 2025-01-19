@@ -7,6 +7,12 @@
 #include "vector"
 #include "string"
 
+
+/**
+ * @class Template
+ * @brief Template class represents a template that can be loaded, saved, and modified.
+ */
+
 class Template {
 private:
     std::vector<Element *> elements;

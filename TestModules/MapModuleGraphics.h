@@ -9,6 +9,11 @@
 #include <string>
 #include <mutex>
 
+/**
+ * @class MapModuleGraphics
+ * @brief MapModuleGraphics is graphic part of MapModule class. It is responsible for drawing the map.
+ */
+
 class MapModuleGraphics : public GraphicModule {
 public:
     MapModuleGraphics();

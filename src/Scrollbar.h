@@ -4,6 +4,11 @@
 #include "imgui.h"
 #include <algorithm>
 
+/**
+ * @class Scrollbar
+ * @brief Scrollbar class represents a scrollbar element in the GUI.
+ */
+
 class Scrollbar {
 public:
     Scrollbar(float visibleHeight, float totalHeight);

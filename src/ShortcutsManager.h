@@ -8,6 +8,12 @@
 #include <chrono>
 #include <GLFW/glfw3.h>
 
+
+/**
+ * @class ShortcutsManager
+ * @brief ShortcutsManager class is responsible for handling keyboard shortcuts.
+ */
+
 class ShortcutsManager {
 public:
     using ShortcutCallback = std::function<void()>;

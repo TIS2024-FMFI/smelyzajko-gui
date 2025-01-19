@@ -4,6 +4,10 @@
 #include "imgui.h"
 #include "libs/json.hpp"
 
+/**
+ * @class GraphicModule
+ * @brief GraphicModule class represents graphical element of the module.
+ */
 
 class GraphicModule {
 public:

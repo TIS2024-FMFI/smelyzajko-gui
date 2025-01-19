@@ -3,6 +3,13 @@
 #include "widgets/Element.h"
 #include "Module.h"
 
+
+/**
+ * @class TemplateManager
+ * @brief TemplateManager class is responsible for managing templates and their elements.
+ */
+
+
 class TemplateManager {
 private:
     Template activeTemplate;

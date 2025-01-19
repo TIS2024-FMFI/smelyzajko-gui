@@ -5,6 +5,15 @@
 #include <string>
 #include <chrono>
 
+
+/**
+ * @class GraphicModule
+ * @brief GraphicModule class is an abstract class that represents a graphic element in the GUI.
+ */
+
+
+
+
 class ToastNotificationManager {
 public:
     struct Notification {

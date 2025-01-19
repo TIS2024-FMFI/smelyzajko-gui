@@ -9,6 +9,11 @@
 #include <mutex>
 #include "Scrollbar.h"
 
+/**
+ * @class TextArea
+ * @brief The TextArea class is responsible for displaying logs in a scrollable text area.
+ */
+
 class TextArea : public GraphicModule  {
 public:
     TextArea();

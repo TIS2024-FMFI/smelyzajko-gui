@@ -11,6 +11,10 @@
 #include <chrono>
 #include "../src/ModuleManager.h"
 
+/**
+ * @class MapModule
+ * @brief MapModule class is responsible for generating a map and pathfinding on it.There is a red ball that moves on the map.
+ */
 
 class MapModule : public Module {
 

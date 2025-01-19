@@ -21,6 +21,12 @@ struct SliderSettings {
     }
 };
 
+/**
+ * @class ConfigurationMode
+ * @brief ConfigurationMode class is responsible for handling the configuration mode of the GUI.
+ * It allows the user to create and edit templates, add elements to them, and save them to a file.
+ */
+
 class ConfigurationMode : GUI {
 public:
 

@@ -1,6 +1,6 @@
-templates:
+templates: ~
 modules:
   - UltrasonicModule
   - MapModule
   - CounterModule
-logDirectory:
+logDirectory: C:\Users\15zuz\OneDrive - Univerzita Komenskeho v Bratislave\Dokumenty\skola\3Z\TIS\smelyzajko-gui\logs

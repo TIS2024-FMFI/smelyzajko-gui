@@ -8,6 +8,11 @@
 #include "../TestModules/CounterModuleGraphics.h"
 #include "../TestModules/UltrasonicModuleGraphics.h"
 
+/**
+ * @class ModuleManager
+ * @brief ModuleManager class is responsible for managing modules.
+ */
+
 
 class ModuleManager  {
 public:

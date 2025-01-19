@@ -30,6 +30,11 @@
 #include "../TestModules/MapModule.h"
 #include "../TestModules/CounterModule.h"
 
+/**
+ * @class GUI
+ * @brief GUI class is responsible for setting up the GUI and running the main loop.
+ */
+
 class GUI {
 protected:
     ImGuiIO& io;
