@@ -1,5 +1,6 @@
 #include "src/ConfigurationMode.h"
 #include "src/OperatingMode.h"
+#include "src/ReplayMode.h"
 #include <iostream>
 #include <string>
 #include <filesystem>
@@ -8,55 +9,60 @@ namespace fs = std::filesystem;
 
 std::string getFirstConfigFile(const std::string& directory) {
     for (const auto& entry : fs::directory_iterator(directory)) {
-        if (entry.is_regular_file() && entry.path().extension() == ".yaml") {
+        if (entry.is_regular_file() && entry.path().filename() == "config1.yaml") {
             return entry.path().string();
         }
     }
-    return ""; // Return an empty string if no valid file is found
+    return ""; // Ak sa nenašiel súbor config1.yaml
 }
 
 int main(int argc, char* argv[]) {
     if (argc < 2 || argc > 3) {
-        std::cerr << "Usage: " << argv[0] << " (--config | --operate) [path for config_file.yaml]\n";
+        std::cerr << "Usage: " << argv[0] << " (--config | --operate | --replay) [path for config1.yaml]\n";
         return 1;
     }
 
     std::string mode = argv[1];
     std::string configFile;
 
-    // If no config file is provided, choose the first one in the "config-files" directory
+    // Ak nie je špecifikovaný súbor, nájde prvý config1.yaml
     if (argc == 3) {
         configFile = argv[2];
     } else {
         configFile = getFirstConfigFile("../config-files");
         if (configFile.empty()) {
-            std::cerr << "Error: No configuration file provided and no `.yaml` files found in the `config-files` directory.\n";
+            std::cerr << "Error: No configuration file provided and no `config1.yaml` file found in the `config-files` directory.\n";
             return 1;
         }
     }
 
-    // Load the YAML configuration
+    // Načítanie YAML konfigurácie
     YAML::Node config;
     try {
         config = YAML::LoadFile(configFile);
-        config["configFile"] = configFile;
+        config["configFile"] = configFile; // Uloží cestu ku konfigurácii
     } catch (const std::exception& e) {
         std::cerr << "Error loading configuration file: " << e.what() << "\n";
         return 1;
     }
 
-    ImGui::CreateContext();  // Create the ImGui context here
-    ImGui::SetCurrentContext(ImGui::GetCurrentContext());  // Ensure that we are setting the context if needed
+    ImGui::CreateContext();
+    ImGui::SetCurrentContext(ImGui::GetCurrentContext());
 
-    // Determine the mode
+    // Spustenie podľa režimu
     if (mode == "--config") {
         ConfigurationMode gui(config);
         gui.run();
     } else if (mode == "--operate") {
         OperatingMode operatingMode(config);
         operatingMode.run();
+    } else if (mode == "--replay") {
+        ReplayMode replayMode(config);
+
+        // Ak je načítaná správna konfigurácia, spustí sa ReplayMode
+        replayMode.run();
     } else {
-        std::cerr << "Invalid flag. Use --config or --operate.\n";
+        std::cerr << "Invalid flag. Use --config, --operate, or --replay.\n";
         return 1;
     }
 
