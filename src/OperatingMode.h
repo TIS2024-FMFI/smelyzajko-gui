@@ -35,7 +35,6 @@ public:
     void drawElements();
     void drawMenuBar();
     void setupShortcuts() override;
-    void createLogDirectory();
     TemplateManager templateManager;
 
 private:

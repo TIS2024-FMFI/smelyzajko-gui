@@ -81,6 +81,8 @@ void GUI::loadModules(YAML::Node modules) {
         }
         moduleManager.registerModule(moduleName, module);
     }
+    moduleManager.logSettings(configFile);
+
 }
 
 

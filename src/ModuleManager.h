@@ -19,7 +19,6 @@ public:
 
     int registerModule(const std::string& name, Module *module);
     int registerGraphicModule(const std::string& graphicElementName,const std::string& moduleName,  int moduleID);
-    void setLogDirectory( std::string& logDirectory_);
     void logSettings(YAML::Node configFile);
 
     void updateValueOfModule(int moduleID,int graphicModuleID, const std::string& value);

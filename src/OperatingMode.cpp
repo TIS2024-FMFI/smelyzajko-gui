@@ -5,7 +5,6 @@
 #include "../TestModules/UltrasonicModule.h"
 
 int OperatingMode::run() {
-    createLogDirectory();
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return 1;
@@ -158,57 +157,5 @@ void OperatingMode::switchTemplate(int direction) {
     glfwSetWindowTitle(window, windowTitle.c_str());
 }
 
-void OperatingMode::createLogDirectory() {
-    moduleManager.logSettings(configFile);
-    if (!configFile["logDirectory"]) {
-        std::cerr << "[ERROR] No log directory specified in the configuration file." << std::endl;
-        return;
-    }
 
-    std::string logDirectory;
-    std::cout<<configFile["modules"]<<std::endl;
-    if (configFile["logDirectory"] && configFile["logDirectory"].as<std::string>().empty()) {
-        logDirectory = configFile["logDirectory"].as<std::string>();
-    } else {
-        logDirectory = "../logs";
-    }
-
-    auto now = std::chrono::system_clock::now();
-    auto in_time_t = std::chrono::system_clock::to_time_t(now);
-
-    std::stringstream ss;
-    ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M-%S");
-    std::string timestamp = ss.str();
-    std::filesystem::path newLogDir = std::filesystem::path(logDirectory) / timestamp;
-
-    // Ensure the directory is writable
-    if (std::filesystem::exists(newLogDir) && !std::filesystem::is_directory(newLogDir)) {
-        std::cerr << "[ERROR] Path exists and is not a directory: " << newLogDir << std::endl;
-        return;
-    }
-
-    try {
-        std::filesystem::create_directories(newLogDir);
-    } catch (const std::filesystem::filesystem_error& e) {
-        std::cerr << "[ERROR] Could not create directory: " << e.what() << std::endl;
-        return;
-    }
-
-    for (const auto& module : moduleManager.getModules()) {
-        std::string moduleName = module->getModuleName();
-        std::filesystem::path moduleLogDir = newLogDir / moduleName;
-        try {
-            std::filesystem::create_directories(moduleLogDir);
-        } catch (const std::filesystem::filesystem_error& e) {
-            std::cerr << "[ERROR] Could not create module directory: " << e.what() << std::endl;
-            return;
-        }
-    }
-
-    std::string newlog = logDirectory + "/" + timestamp;
-    std::cout<<newlog<<std::endl;
-    moduleManager.setLogDirectory(newlog);
-
-
-}
 
