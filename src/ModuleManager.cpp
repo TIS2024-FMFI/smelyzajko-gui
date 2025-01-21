@@ -1,6 +1,7 @@
 #include "ModuleManager.h"
 #include <iostream>
 
+
 int ModuleManager::registerModule(const std::string &name, Module *module) {
     modules.push_back(module);
     return modules.size() - 1;
@@ -113,4 +114,38 @@ void ModuleManager::setLogDirectory(std::string &logDirectory_) {
         module->setLogDirectory(dir);
     }
 }
+void ModuleManager::logSettings(YAML::Node configFile) {
+    for (GraphicModule *module : graphicModules) {
+        for (const auto& moduleNode : configFile["modules"]) {
+            if (!moduleNode.IsMap() || moduleNode.size() != 1) {
+                std::cerr << "Invalid module format. Each module should be a map with one key-value pair." << std::endl;
+                continue;
+            }
 
+            std::string moduleName = moduleNode.begin()->first.as<std::string>();
+            YAML::Node moduleParams = moduleNode.begin()->second;
+
+            if (moduleName.empty()) {
+                std::cerr << "Empty module name found. Skipping." << std::endl;
+                continue;
+            }
+#include <algorithm>
+
+            std::string moduleName_ = module->getModuleName();
+            std::replace(moduleName.begin(), moduleName.end(), ' ', '');
+            std::cout << moduleName << " ||| " << moduleName << std::endl;
+            if (moduleName == module->getModuleName()) {
+                std::cout<<"  >>>>>>"<<moduleParams["graphicsFrequency"]<<std::endl;
+                module->setGraphicsFrequency(moduleParams["graphicsFrequency"].as<float>());
+                module->setGraphicsLogEnabled(moduleParams["graphicsLogEnabled"].as<bool>());
+                module->setTextFrequency(moduleParams["textFrequency"].as<float>());
+                module->setTextLogEnabled(moduleParams["textLogEnabled"].as<bool>());
+            }
+        }
+
+//        module->setGraphicsFrequency(configFile["modules"][module->getModuleName()]["graphicsFrequency"].as<float>());
+//        module->setGraphicsLogEnabled(configFile["modules"][module->getModuleName()]["graphicsLogEnabled"].as<bool>());
+//        module->setTextFrequency(configFile["modules"][module->getModuleName()]["textFrequency"].as<float>());
+//        module->setTextLogEnabled(configFile["modules"][module->getModuleName()]["textLogEnabled"].as<bool>());
+    }
+}

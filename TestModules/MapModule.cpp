@@ -10,7 +10,7 @@
 #include <iostream>
 
 MapModule::MapModule(ModuleManager* moduleManager) : moduleManager(*moduleManager), running(false), deltaTime(0.0f){ // Initialize rows and cols
-    setModuleName("Map Module") ;
+    setModuleName("MapModule") ;
     graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Map Graphic Element",moduleName, moduleId));
     graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Text Area",moduleName, moduleId));
     graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Counter Graphic Element",moduleName, moduleId));

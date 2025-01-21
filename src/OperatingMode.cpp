@@ -159,8 +159,14 @@ void OperatingMode::switchTemplate(int direction) {
 }
 
 void OperatingMode::createLogDirectory() {
-    std::string logDirectory;
+    moduleManager.logSettings(configFile);
+    if (!configFile["logDirectory"]) {
+        std::cerr << "[ERROR] No log directory specified in the configuration file." << std::endl;
+        return;
+    }
 
+    std::string logDirectory;
+    std::cout<<configFile["modules"]<<std::endl;
     if (configFile["logDirectory"] && configFile["logDirectory"].as<std::string>().empty()) {
         logDirectory = configFile["logDirectory"].as<std::string>();
     } else {
@@ -202,6 +208,7 @@ void OperatingMode::createLogDirectory() {
     std::string newlog = logDirectory + "/" + timestamp;
     std::cout<<newlog<<std::endl;
     moduleManager.setLogDirectory(newlog);
+
 
 }
 
