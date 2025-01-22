@@ -86,7 +86,7 @@ void MapModuleGraphics::logToJson() {
     if (!isGraphicsLogEnabled()) {
         return;
     }
-
+    saveMapToJson();
     static auto lastLogTime = std::chrono::steady_clock::now();
     auto currentTime = std::chrono::steady_clock::now();
     std::chrono::duration<float> elapsed = currentTime - lastLogTime;
@@ -132,7 +132,7 @@ void MapModuleGraphics::updateValueOfModule(std::vector<std::vector<int>> value)
 }
 
 void MapModuleGraphics::saveMapToJson() {
-    std::ofstream outFile2("../TestModules/logs/map.json");
+    std::ofstream outFile2(logFileDirectory+"/map.json");
     if (!outFile2.is_open()) {
         std::cerr << "Error: Could not open map.json for writing.\n";
         return;

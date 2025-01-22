@@ -9,7 +9,7 @@ modules:
         graphicsLogEnabled: false
         graphicsFrequency: 0
         textLogEnabled: false
-        textFrequency: 30
+        textFrequency: 50
   - CounterModule:
        graphicsLogEnabled: false
        graphicsFrequency: 0
