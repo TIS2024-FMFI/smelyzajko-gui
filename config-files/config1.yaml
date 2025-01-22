@@ -1,18 +1,18 @@
 templates:
 modules:
   - UltrasonicModule:
-      graphicsLogEnabled: true
-      graphicsFrequency: 0
-      textLogEnabled: true
-      textFrequency: 0
+      graphicsLogEnabled: false
+      graphicsFrequency: 60
+      textLogEnabled: false
+      textFrequency: 60
   - MapModule:
       graphicsLogEnabled: true
-      graphicsFrequency: 0
-      textLogEnabled: true
-      textFrequency: 0
+      graphicsFrequency: 120
+      textLogEnabled: false
+      textFrequency: 60
   - CounterModule:
-      graphicsLogEnabled: true
-      graphicsFrequency: 0
-      textLogEnabled: true
-      textFrequency: 0
+      graphicsLogEnabled: false
+      graphicsFrequency: 60
+      textLogEnabled: false
+      textFrequency: 60
 logDirectory:

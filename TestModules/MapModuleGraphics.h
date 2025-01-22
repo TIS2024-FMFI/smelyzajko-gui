@@ -21,6 +21,8 @@ public:
     void logForward() override;
 
 private:
+    std::vector<std::vector<int>> ballPositionsFromLog;
+    size_t currentBallPositionIndexLog = 0;
     int ballRow = 0;
     int ballCol = 0;
     int rows = -1;

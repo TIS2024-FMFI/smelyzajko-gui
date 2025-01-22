@@ -38,14 +38,21 @@ public:
     void setupShortcuts() override;
     void drawMenuBar();
     TemplateManager templateManager;
-    std::vector<std::thread> graphicModuleThreads;
     void startGraphicModuleThreads();
+    void stopGraphicModuleThreads();
     void loadLogData();
+
 
 
 private:
     int currentTemplateIndex = 0;
+
     void runGraphicModule(GraphicModule* module);
+    std::atomic<bool> isPlaying{true};
+    std::atomic<bool> isPaused{false};
+    std::condition_variable cv;
+    std::mutex cv_m;
+    std::vector<std::thread> graphicModuleThreads;
 
     void switchTemplate(int direction);
     void checkIfLogDirectoryExists();
@@ -66,7 +73,6 @@ private:
        // Manages templates and elements
     //std::vector<std::pair<float, json>> replayData;  // Replay data: <timestamp, data>
     size_t currentFrame = 0;           // Current playback frame
-    bool isPlaying = false;            // Playback state
     float playbackSpeed = 1.0f;        // Playback speed
     std::chrono::time_point<std::chrono::steady_clock> lastUpdate; // Time of the last update
     std::string logDirectory;          // Path to the log directory

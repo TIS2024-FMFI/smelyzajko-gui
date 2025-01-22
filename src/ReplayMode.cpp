@@ -6,10 +6,6 @@
 #include <regex>
 #include "ImGuiFileDialog.h"
 
-
-
-
-
 int ReplayMode::run() {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -24,11 +20,8 @@ int ReplayMode::run() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        shortcutsManager.processShortcuts();
-        toastManager.renderNotifications();
-//processLogDirectoryDialog
-//        drawMenuBar();
-        processLogDirectoryDialog();
+
+
         ImGui::SetNextWindowPos(ImVec2(0, 0)); // Top-left corner of the screen
         ImGui::SetNextWindowSize(io.DisplaySize); // Fullscreen size
 
@@ -40,7 +33,14 @@ int ReplayMode::run() {
                      ImGuiWindowFlags_NoBringToFrontOnFocus | // Prevent window focus changes
                      ImGuiWindowFlags_NoScrollbar    // Disable scrollbar (optional)
         );
+        if (!templateManager.getActiveTemplateModules().empty()) {
+            moduleManager.setActiveModuleAndDraw(templateManager.getActiveTemplateModules(),io);
+        }
+        shortcutsManager.processShortcuts();
+        toastManager.renderNotifications();
 
+        drawMenuBar();
+        processLogDirectoryDialog();
 
         ImGui::End();
         ImGui::Render();
@@ -64,72 +64,80 @@ int ReplayMode::run() {
         delete module;
     }
     cleanupImGui();
+    stopGraphicModuleThreads();
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
 }
+
 void ReplayMode::startGraphicModuleThreads() {
+    isPlaying = true;
     for (GraphicModule* module : moduleManager.getGraphicModules()) {
+        module->logFromJson();
         graphicModuleThreads.emplace_back(&ReplayMode::runGraphicModule, this, module);
     }
 }
-void ReplayMode::runGraphicModule(GraphicModule* module) {
-    // Implement the logic to run in the thread for each GraphicModule
-    int frequency = module->getGraphicsFrequency();
-    std::chrono::milliseconds interval;
+void ReplayMode::stopGraphicModuleThreads() {
+    isPlaying = false;
+    for (std::thread& thread : graphicModuleThreads) {
+        if (thread.joinable()) {
+            thread.join();
+        }
+    }
+    graphicModuleThreads.clear();
+}
 
+void ReplayMode::runGraphicModule(GraphicModule* module) {
+    int frequency = module->getGraphicsFrequency();
+    std::cout<<module->getModuleName()<<std::endl;
+    std::cout<<frequency<<std::endl;
+    std::chrono::milliseconds interval;
 
     if (frequency > 0) {
         interval = std::chrono::milliseconds(60000 / frequency);
     } else {
-        interval = std::chrono::milliseconds(0);
+
+        std::cerr << "Invalid frequency for module " << module->getModuleName() << std::endl;
+        return;
     }
 
     while (isPlaying) {
-        // Call a method on the module
+        std::unique_lock<std::mutex> lock(cv_m);
+        cv.wait(lock, [this] { return !isPaused; });
+
         module->logForward();
-        // Add a sleep or wait mechanism to control the thread execution
+
         if (interval.count() > 0) {
             std::this_thread::sleep_for(interval);
         } else {
-            std::this_thread::yield(); // Yield to other threads if frequency is 0
+            std::this_thread::yield();
         }
     }
 }
 
-//void ReplayMode::processLogFile(const fs::path& filePath, const std::string& moduleName) {
-//    std::ifstream inFile(filePath);
-//    if (!inFile.is_open()) {
-//        std::cerr << "Error: Could not open file " << filePath << std::endl;
-//        return;
-//    }
-//
-//    json logJson;
-//    inFile >> logJson;
-//
-//    if (logJson.contains("frames")) {
-//        for (const auto& frame : logJson["frames"]) {
-//            float timestamp = frame["timestamp"].get<float>();
-//            json data = frame["data"];
-//            data["module"] = moduleName;
-//            replayData.emplace_back(timestamp, data);
-//        }
-//    }
-//}
-//
-//void ReplayMode::drawMenuBar() {
-//    if (ImGui::BeginMainMenuBar()) {
-//        if (ImGui::BeginMenu("Playback")) {
-//            if (ImGui::MenuItem("Play", nullptr, isPlaying)) play();
-//            if (ImGui::MenuItem("Pause", nullptr, !isPlaying)) pause();
-//            if (ImGui::MenuItem("Stop")) stop();
-//            ImGui::EndMenu();
-//        }
-//        ImGui::EndMainMenuBar();
-//    }
-//}
-//
-//
+void ReplayMode::drawMenuBar() {
+    if (ImGui::BeginMainMenuBar()) {
+
+        if (ImGui::BeginMenu("Templates")) {
+            for (const Template& aTemplate : templateManager.getAllTemplates()) {
+                if (ImGui::MenuItem(aTemplate.getName().c_str())) {
+                    templateManager.setActiveTemplate(aTemplate);
+                    std::string activeTemplateName = templateManager.getActiveTemplateName();
+                    std::string windowTitle = std::string("GUI") + " - " + activeTemplateName;
+                    glfwSetWindowTitle(window, windowTitle.c_str());
+                }
+            }
+
+            ImGui::EndMenu();
+        }
+        if (ImGui::MenuItem("Play", nullptr, isPlaying)) play();
+        if (ImGui::MenuItem("Pause", nullptr, !isPlaying)) pause();
+    }
+    ImGui::EndMainMenuBar();
+
+}
+
+
 //void ReplayMode::handlePlayback() {
 //    if (!isPlaying || replayData.empty()) return;
 //
@@ -145,18 +153,15 @@ void ReplayMode::runGraphicModule(GraphicModule* module) {
 //}
 //
 void ReplayMode::play() {
-    isPlaying = true;
-    lastUpdate = std::chrono::steady_clock::now();
+    isPaused = false;
+    cv.notify_all();
 }
 
 void ReplayMode::pause() {
-    isPlaying = false;
+    isPaused = true;
 }
 
-void ReplayMode::stop() {
-    isPlaying = false;
-    currentFrame = 0;
-}
+
 
 void ReplayMode::setupShortcuts() {
     shortcutsManager.setWindow(window);
@@ -226,9 +231,11 @@ void ReplayMode::loadLogData() {
                 }
                 int graphicElementID = moduleManager.registerGraphicModule(subDirName, moduleName,0);
                 moduleManager.setLogDirectory(0, graphicElementID, moduleDir.path().string());
+
             }
         }
     }
+    startGraphicModuleThreads();
 }
 
 void ReplayMode::checkIfLogDirectoryExists() {
@@ -298,11 +305,4 @@ void ReplayMode::processLogDirectoryDialog() {
 
 
 
-//
-//void ReplayMode::nextFrame() {
-//    if (currentFrame < replayData.size() - 1) currentFrame++;
-//}
-//
-//void ReplayMode::previousFrame() {
-//    if (currentFrame > 0) currentFrame--;
-//}
+
