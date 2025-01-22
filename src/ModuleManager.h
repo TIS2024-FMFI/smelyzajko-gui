@@ -12,6 +12,7 @@
 #include "../TestModules/UltrasonicModuleGraphics.h"
 
 
+
 class ModuleManager  {
 public:
     static ModuleManager& getInstance() {
@@ -47,7 +48,7 @@ public:
 private:
     std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
             {"MapGraphicElement", []() { return new MapModuleGraphics(); }},
-            {"CounterGraphicElement", []() { return new CounterModuleGraphics(); }},
+             {"CounterGraphicElement", []() { return new CounterModuleGraphics(); }},
             {"UltrasonicGraphicElement", []() { return new UltrasonicModuleGraphics(); }},
             {"TextArea", []() { return new TextArea(); }},
     };
