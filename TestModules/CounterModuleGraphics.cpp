@@ -39,6 +39,7 @@ void CounterModuleGraphics::logToJson() {
     std::chrono::duration<float> elapsed = currentTime - lastLogTime;
 
     float frequency = getGraphicsFrequency();
+
     if (frequency > 0) {
         float interval = 60.0f / frequency; // Convert frequency to interval in seconds
         if (elapsed.count() < interval) {

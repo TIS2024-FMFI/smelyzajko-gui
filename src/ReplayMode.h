@@ -6,33 +6,34 @@
 #include <map>
 #include <chrono>
 #include <filesystem>
+#include <condition_variable>
 
 
 class ReplayMode : public GUI {
 public:
-      ReplayMode(YAML::Node configFile): GUI(configFile) {
-            std::vector<std::string> templateNames;
+    ReplayMode(YAML::Node configFile): GUI(configFile) {
+        std::vector<std::string> templateNames;
 
-            if (configFile["templates"]) {
-                for (const auto& templateNode : configFile["templates"]) {
-                    std::string templateName = templateNode.as<std::string>();
-                    templateNames.push_back(templateName);
-                }
-            } else {
-                std::cerr << "No templates found in config file." << std::endl;
+        if (configFile["templates"]) {
+            for (const auto& templateNode : configFile["templates"]) {
+                std::string templateName = templateNode.as<std::string>();
+                templateNames.push_back(templateName);
             }
+        } else {
+            std::cerr << "No templates found in config file." << std::endl;
+        }
 
-            if (templateNames.empty()) {
-                templateManager = TemplateManager(false);
-            } else {
-                templateManager = TemplateManager(templateNames, false);
-            }
-            setupShortcuts() ;
+        if (templateNames.empty()) {
+            templateManager = TemplateManager(false);
+        } else {
+            templateManager = TemplateManager(templateNames, false);
+        }
+        setupShortcuts() ;
 
-            templateManager.setActiveTemplate(templateManager.getAllTemplates().front());
-            std::string activeTemplateName = templateManager.getActiveTemplateName();
-            std::string windowTitle = std::string("GUI") + " - " + activeTemplateName;
-            glfwSetWindowTitle(window, windowTitle.c_str());
+        templateManager.setActiveTemplate(templateManager.getAllTemplates().front());
+        std::string activeTemplateName = templateManager.getActiveTemplateName();
+        std::string windowTitle = std::string("GUI") + " - " + activeTemplateName;
+        glfwSetWindowTitle(window, windowTitle.c_str());
     };
     int run() override;
     void setupShortcuts() override;
@@ -66,11 +67,11 @@ private:
 
     void handlePlayback();
 
-                          // Stop playback
+    // Stop playback
     void nextFrame();                  // Move to the next frame
     void previousFrame();              // Move to the previous frame
 
-       // Manages templates and elements
+    // Manages templates and elements
     //std::vector<std::pair<float, json>> replayData;  // Replay data: <timestamp, data>
     size_t currentFrame = 0;           // Current playback frame
     float playbackSpeed = 1.0f;        // Playback speed

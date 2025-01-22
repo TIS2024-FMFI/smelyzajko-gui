@@ -12,6 +12,7 @@ public:
     virtual void logToJson() = 0;
     virtual void logFromJson() = 0;
     virtual void logForward() = 0;
+    virtual void logBackwards() = 0;
 
     // Position and size settings
     ImVec2 getSize() ;

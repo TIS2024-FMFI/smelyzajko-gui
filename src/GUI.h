@@ -4,6 +4,8 @@
 #include "imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
 #include "vector"
+
+#define YAML_CPP_STATIC_DEFINE
 #include "yaml-cpp/yaml.h"
 
 #include "ModuleManager.h"

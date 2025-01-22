@@ -257,7 +257,7 @@ void ReplayMode::checkIfLogDirectoryExists() {
 }
 
 bool ReplayMode::isValidLogDirectory(const std::string& dirName) {
-    std::regex pattern(R"(\d{4}-\d{2}-\d{2}_\d{2}:\d{2}:\d{2})");
+    std::regex pattern(R"(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})");
     return std::regex_match(dirName, pattern);
 }
 
@@ -301,8 +301,3 @@ void ReplayMode::processLogDirectoryDialog() {
         }
     }
 }
-
-
-
-
-

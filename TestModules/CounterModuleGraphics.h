@@ -25,6 +25,8 @@ private:
     std::mutex logMutex;
     std::thread generatorThread;
 
+
+
 };
 
 #endif //SMELYZAJKO_GUI_COUNTERMODULEGRAPHICS_H

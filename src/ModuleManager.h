@@ -3,6 +3,8 @@
 #define MODULEMANAGER_H
 #include <vector>
 #include "Module.h"
+
+#define YAML_CPP_STATIC_DEFINE
 #include "yaml-cpp/yaml.h"
 
 #include "../TestModules/MapModuleGraphics.h"
@@ -45,7 +47,7 @@ public:
 private:
     std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
             {"MapGraphicElement", []() { return new MapModuleGraphics(); }},
-             {"CounterGraphicElement", []() { return new CounterModuleGraphics(); }},
+            {"CounterGraphicElement", []() { return new CounterModuleGraphics(); }},
             {"UltrasonicGraphicElement", []() { return new UltrasonicModuleGraphics(); }},
             {"TextArea", []() { return new TextArea(); }},
     };
