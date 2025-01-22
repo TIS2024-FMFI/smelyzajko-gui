@@ -10,7 +10,7 @@
 #include <iostream>
 
 MapModule::MapModule(ModuleManager* moduleManager) : moduleManager(*moduleManager), running(false), deltaTime(0.0f){ // Initialize rows and cols
-    setModuleName("Map Module") ;
+    setModuleName("MapModule") ;
     graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Map Graphic Element",moduleName, moduleId));
     graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Text Area",moduleName, moduleId));
     graphicModuleId.push_back(this->moduleManager.registerGraphicModule("Counter Graphic Element",moduleName, moduleId));
@@ -24,9 +24,12 @@ MapModule::MapModule(ModuleManager* moduleManager) : moduleManager(*moduleManage
         generatePath();
     }
 
-    saveMapToJson();
     running = true;
     mapThread = std::thread(&MapModule::run, this);
+    std::vector<int> rowCol = {rows, cols,-1};
+    moduleManager->updateValueOfModule(moduleId, graphicModuleId[0], rowCol);
+    moduleManager->updateValueOfModule(moduleId, graphicModuleId[0], map);
+
 }
 MapModule:: ~MapModule() {
     running = false;
@@ -206,42 +209,7 @@ void MapModule::registerShortcuts(ShortcutsManager& shortcutsManager, ToastNotif
 }
 
 
-void MapModule::saveMapToJson() {
-    std::ofstream outFile("../TestModules/map.json");
-    if (outFile.is_open()) {
-        nlohmann::json j;
-        j["rows"] = rows;
-        j["cols"] = cols;
-        j["map"] = nlohmann::json::array();
-        for (int row = 0; row < rows; ++row) {
-            j["map"][row] = nlohmann::json::array();
-            for (int col = 0; col < cols; ++col) {
-                j["map"][row][col] = map[row][col];
-            }
-        }
-        outFile << j.dump(4);
-        outFile.close();
-    }
-    std::ofstream outFile2("../TestModules/logs/map.json");
-    if (!outFile2.is_open()) {
-        std::cerr << "Error: Could not open map.json for writing.\n";
-        return;
-    }
-    if (outFile2.is_open()) {
-        nlohmann::json j;
-        j["rows"] = rows;
-        j["cols"] = cols;
-        j["map"] = nlohmann::json::array();
-        for (int row = 0; row < rows; ++row) {
-            j["map"][row] = nlohmann::json::array();
-            for (int col = 0; col < cols; ++col) {
-                j["map"][row][col] = map[row][col];
-            }
-        }
-        outFile2 << j.dump(4);
-        outFile2.close();
-    }
-}
+
 
 void MapModule::setValueFromInputElements(std::string elementName, std::string value) {
     if (elementName == "Reset") {

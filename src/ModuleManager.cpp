@@ -1,5 +1,7 @@
 #include "ModuleManager.h"
 #include <iostream>
+#include <algorithm>
+
 
 int ModuleManager::registerModule(const std::string &name, Module *module) {
     modules.push_back(module);
@@ -35,6 +37,13 @@ void ModuleManager::updateValueOfModule(int moduleID,int graphicModuleID, int va
     }
 }
 void ModuleManager::updateValueOfModule(int moduleID, int graphicModuleID, const std::vector<float>& value) {
+    for (GraphicModule *module : graphicModules) {
+        if (module->getGraphicModuleID() == graphicModuleID && module->getModuleID() == moduleID) {
+            module->updateValueOfModule(value);
+        }
+    }
+}
+void ModuleManager::updateValueOfModule(int moduleID, int graphicModuleID, const std::vector<std::vector<int>> &value) {
     for (GraphicModule *module : graphicModules) {
         if (module->getGraphicModuleID() == graphicModuleID && module->getModuleID() == moduleID) {
             module->updateValueOfModule(value);
@@ -81,36 +90,121 @@ void ModuleManager::setValueFromInputElements(const std::string& moduleName, con
     for (Module *module : modules) {
         if (module->getModuleName() == moduleName) {
             module->setValueFromInputElements(elementName, value);
+            return;
         }
     }
+    std::cerr << "Module not found: " << moduleName << std::endl;
 }
 
 void ModuleManager::setValueFromInputElements(const std::string& moduleName, const std::string& elementName, bool value) {
     for (Module *module : modules) {
         if (module->getModuleName() == moduleName) {
             module->setValueFromInputElements(elementName, value);
+            return;
         }
     }
+    std::cerr << "Module not found: " << moduleName << std::endl;
 }
 void ModuleManager::setValueFromInputElements(const std::string& moduleName, const std::string& elementName, int value) {
     for (Module *module : modules) {
         if (module->getModuleName() == moduleName) {
             module->setValueFromInputElements(elementName, value);
+            return;
         }
     }
+    std::cerr << "Module not found: " << moduleName << std::endl;
 }
 void ModuleManager::setValueFromInputElements(const std::string& moduleName, const std::string& elementName, float value) {
     for (Module *module : modules) {
         if (module->getModuleName() == moduleName) {
             module->setValueFromInputElements(elementName, value);
+            return;
         }
     }
+    std::cerr << "Module not found: " << moduleName << std::endl;
+
 }
-void ModuleManager::setLogDirectory(std::string &logDirectory_) {
-    logDirectory = logDirectory_;
+
+void ModuleManager::logSettings(YAML::Node configFile) {
+
+    if (!configFile["logDirectory"]) {
+        std::cerr << "[ERROR] No log directory specified in the configuration file." << std::endl;
+        return;
+    }
+    std::string logDirectory;
+    if (configFile["logDirectory"] && configFile["logDirectory"].as<std::string>().empty()) {
+        logDirectory = configFile["logDirectory"].as<std::string>();
+    } else {
+        logDirectory = "../logs";
+    }
+
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H:%M:%S");
+    std::string timestamp = ss.str();
+    std::filesystem::path newLogDir = std::filesystem::path(logDirectory) / timestamp;
+
+    bool atLeastOneModuleLogEnabled = false;
     for (GraphicModule *module : graphicModules) {
-        std::string dir = logDirectory + "/"+module->getModuleName();
-        module->setLogDirectory(dir);
+        for (const auto& moduleNode : configFile["modules"]) {
+            if (!moduleNode.IsMap() || moduleNode.size() != 1) {
+                std::cerr << "Invalid module format. Each module should be a map with one key-value pair." << std::endl;
+                continue;
+            }
+
+            std::string moduleName = moduleNode.begin()->first.as<std::string>();
+            YAML::Node moduleParams = moduleNode.begin()->second;
+            if (!moduleParams.IsMap()){
+                std::cerr<< "Invalid module format. Each module should be a map with one key-value pair."<<std::endl;
+            }
+            if (moduleName.empty()) {
+                std::cerr << "Empty module name found. Skipping." << std::endl;
+                continue;
+            }
+
+            if (moduleName == module->getModuleName()) {
+                module->setGraphicsFrequency(moduleParams["graphicsFrequency"].as<float>());
+                module->setGraphicsLogEnabled(moduleParams["graphicsLogEnabled"].as<bool>());
+                module->setTextFrequency(moduleParams["textFrequency"].as<float>());
+                module->setTextLogEnabled(moduleParams["textLogEnabled"].as<bool>());
+                std::string newLogDirForGraphicElement = newLogDir.string() + "/" + moduleName;
+                module->setLogDirectory(newLogDirForGraphicElement);
+            }
+            if (!atLeastOneModuleLogEnabled&&(moduleParams["graphicsLogEnabled"].as<bool>() || moduleParams["textLogEnabled"].as<bool>())) {
+                atLeastOneModuleLogEnabled = true;
+                // Ensure the directory is writable
+                if (std::filesystem::exists(newLogDir) && !std::filesystem::is_directory(newLogDir)) {
+                    std::cerr << "[ERROR] Path exists and is not a directory: " << newLogDir << std::endl;
+                    return;
+                }
+
+                try {
+                    std::filesystem::create_directories(newLogDir);
+                } catch (const std::filesystem::filesystem_error& e) {
+                    std::cerr << "[ERROR] Could not create directory: " << e.what() << std::endl;
+                    return;
+                }
+            }
+            if (moduleParams["graphicsLogEnabled"].as<bool>() || moduleParams["textLogEnabled"].as<bool>()) {
+                std::filesystem::path moduleLogDir = std::filesystem::path(newLogDir) / moduleName;
+                if (!std::filesystem::exists(moduleLogDir)) {
+                    try {
+                        std::filesystem::create_directories(moduleLogDir);
+                    } catch (const std::filesystem::filesystem_error& e) {
+                        std::cerr << "[ERROR] Could not create module directory: " << e.what() << std::endl;
+                        return;
+                    }
+                }
+
+            }
+
+
+        }
+
+
     }
 }
+
 

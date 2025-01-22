@@ -22,6 +22,7 @@ public:
     virtual void updateValueOfModule(int value) ;
     virtual void updateValueOfModule(std::vector<int> value) ;
     virtual void updateValueOfModule(std::vector<float> value) ;
+    virtual void updateValueOfModule(std::vector<std::vector<int>> value) ;
 
     // Modules settings
     std::string getModuleName() const ;

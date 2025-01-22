@@ -81,6 +81,9 @@ void UltrasonicModuleGraphics::logToJson() {
 
 
     nlohmann::json j;
+    if (!j.contains("frequency")) {
+        j["frequency"] = getGraphicsFrequency();
+    }
     std::ifstream inFile(filename);
 
     if (inFile.is_open()) {

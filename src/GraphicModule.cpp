@@ -49,6 +49,10 @@ void GraphicModule::updateValueOfModule(std::vector<int> value) {
 void GraphicModule::updateValueOfModule(std::vector<float> value) {
     std::cerr << "Not Implemented" << std::endl;
 }
+void GraphicModule::updateValueOfModule(std::vector<std::vector<int>> value) {
+    std::cerr << "Not Implemented" << std::endl;
+}
+
 
 // Position and size settings
 ImVec2 GraphicModule::getSize() {return size;}
@@ -132,3 +136,4 @@ void GraphicModule::setLogDirectory(std::string name) {
 std::string GraphicModule::getLogDirectory() const {
     return logFileDirectory;
 }
+

@@ -7,7 +7,7 @@
 MapModuleGraphics::MapModuleGraphics()
          { // Initialize TextArea with default dimensions
     setGraphicElementName("Map Graphic Element");
-    loadMap();
+    //loadMap();
 }
 
 void MapModuleGraphics::loadMap() {
@@ -36,7 +36,6 @@ void MapModuleGraphics::loadMap() {
 }
 
 void MapModuleGraphics::draw(ImGuiIO &io) {
-    loadMap();
     cellSize = std::min(size.x / cols, size.y / rows);
 
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -70,6 +69,10 @@ void MapModuleGraphics::draw(ImGuiIO &io) {
 
 void MapModuleGraphics::updateValueOfModule(std::vector<int> value) {
     logToJson();
+    if (value.size() == 3) {
+        rows = value[0];
+        cols = value[1];
+    }
     if (value.size() == 2) {
         ballRow = value[0];
         ballCol = value[1];
@@ -83,7 +86,7 @@ void MapModuleGraphics::logToJson() {
     if (!isGraphicsLogEnabled()) {
         return;
     }
-
+    saveMapToJson();
     static auto lastLogTime = std::chrono::steady_clock::now();
     auto currentTime = std::chrono::steady_clock::now();
     std::chrono::duration<float> elapsed = currentTime - lastLogTime;
@@ -107,6 +110,9 @@ void MapModuleGraphics::logToJson() {
     }
 
     nlohmann::json j;
+    if (!j.contains("frequency")) {
+        j["frequency"] = getGraphicsFrequency();
+    }
     j["rows"] = rows;
     j["cols"] = cols;
     j["map"] = nlohmann::json::array();
@@ -119,4 +125,30 @@ void MapModuleGraphics::logToJson() {
 
     outFile << std::setw(4) << j << std::endl;
     outFile.close();
+}
+
+void MapModuleGraphics::updateValueOfModule(std::vector<std::vector<int>> value) {
+    map = value;
+}
+
+void MapModuleGraphics::saveMapToJson() {
+    std::ofstream outFile2(logFileDirectory+"/map.json");
+    if (!outFile2.is_open()) {
+        std::cerr << "Error: Could not open map.json for writing.\n";
+        return;
+    }
+    if (outFile2.is_open()) {
+        nlohmann::json j;
+        j["rows"] = rows;
+        j["cols"] = cols;
+        j["map"] = nlohmann::json::array();
+        for (int row = 0; row < rows; ++row) {
+            j["map"][row] = nlohmann::json::array();
+            for (int col = 0; col < cols; ++col) {
+                j["map"][row][col] = map[row][col];
+            }
+        }
+        outFile2 << j.dump(4);
+        outFile2.close();
+    }
 }

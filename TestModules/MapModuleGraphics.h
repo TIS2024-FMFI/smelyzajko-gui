@@ -15,17 +15,17 @@ public:
     void draw(ImGuiIO &io) override;
     void logToJson() override;
     void updateValueOfModule(std::vector<int> value) override;
+    void updateValueOfModule(std::vector<std::vector<int>> value) override;
+    void saveMapToJson();
 
 private:
     int ballRow = 0;
     int ballCol = 0;
-    int rows = 10;
-    int cols = 10;
+    int rows = -1;
+    int cols = -1;
     std::vector<std::vector<int>> map;
     float cellSize = 40.0f;
     std::mutex logMutex;
-
-
 
     // Private methods
     void loadMap(); // Load map data from a file
