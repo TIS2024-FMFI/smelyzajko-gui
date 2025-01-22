@@ -27,8 +27,6 @@ private:
     float cellSize = 40.0f;
     std::mutex logMutex;
 
-
-
     // Private methods
     void loadMap(); // Load map data from a file
 };

@@ -69,7 +69,7 @@ void MapModuleGraphics::draw(ImGuiIO &io) {
 
 void MapModuleGraphics::updateValueOfModule(std::vector<int> value) {
     logToJson();
-    if (rows == -1 || cols == -1) {
+    if (value.size() == 3) {
         rows = value[0];
         cols = value[1];
     }

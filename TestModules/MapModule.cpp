@@ -26,7 +26,7 @@ MapModule::MapModule(ModuleManager* moduleManager) : moduleManager(*moduleManage
 
     running = true;
     mapThread = std::thread(&MapModule::run, this);
-    std::vector<int> rowCol = {rows, cols};
+    std::vector<int> rowCol = {rows, cols,-1};
     moduleManager->updateValueOfModule(moduleId, graphicModuleId[0], rowCol);
     moduleManager->updateValueOfModule(moduleId, graphicModuleId[0], map);
 

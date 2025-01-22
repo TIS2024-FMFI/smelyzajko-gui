@@ -71,6 +71,7 @@ public:
     void openLogDirectoryDialog();
     void processLogDirectoryDialog();
     void updateLogDirectoryInConfig(const std::string& logDir);
+    void setLogSettings();
 
     void processFileDialog();
     ImVec2 getPosition(ImVec2 elementSize);
