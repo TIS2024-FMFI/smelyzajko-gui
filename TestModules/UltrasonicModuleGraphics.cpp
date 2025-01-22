@@ -122,3 +122,7 @@ void UltrasonicModuleGraphics::logFromJson() {
 void UltrasonicModuleGraphics::logForward() {
 
 }
+
+void UltrasonicModuleGraphics::logBackwards() {
+
+}

@@ -217,3 +217,7 @@ void MapModuleGraphics::logForward() {
     } else {
     }
 }
+
+void MapModuleGraphics::logBackwards() {
+
+}

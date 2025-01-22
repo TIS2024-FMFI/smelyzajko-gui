@@ -40,6 +40,7 @@ private:
     };
 
 
+    void logBackwards();
 };
 
 #endif // SMELYZAJKO_GUI_ULTRASONICMODULEGRAPHICS_H

@@ -161,9 +161,48 @@ void TextArea::logToJson() {
 }
 
 void TextArea::logFromJson() {
+    std::lock_guard<std::mutex> lock(logMutex);
 
+    std::string filename = logFileDirectory + "/TextArea.json";
+    std::ifstream inFile(filename);
+
+    if (!inFile.is_open()) {
+        std::cerr << "[ERROR] Could not open file: " << filename << std::endl;
+        return;
+    }
+
+    try {
+        nlohmann::json j;
+        inFile >> j;
+        inFile.close();
+
+        if (j.contains("logs") && j["logs"].is_array()) {
+            logs.clear(); // Clear existing logs
+            for (const auto& logEntry : j["logs"]) {
+                logs.push_back(logEntry);
+            }
+            std::cout << "[INFO] Successfully loaded logs from JSON." << std::endl;
+        } else {
+            std::cerr << "[ERROR] Invalid JSON structure in file: " << filename << std::endl;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
+    }
 }
+
 void TextArea::logForward() {
-    
+    std::lock_guard<std::mutex> lock(logMutex);
+
+    if (!logs.empty()) {
+        // Remove the first log and simulate displaying the next log
+        logs.erase(logs.begin());
+        std::cout << "[INFO] Displayed next log entry." << std::endl;
+    } else {
+        std::cerr << "[INFO] No more log entries to display." << std::endl;
+    }
+}
+
+void TextArea::logBackwards() {
+
 }
 

@@ -86,12 +86,63 @@ void CounterModuleGraphics::logToJson() {
 }
 
 void CounterModuleGraphics::logFromJson() {
+    std::lock_guard<std::mutex> lock(logMutex);
 
+    std::string filename = logFileDirectory + "/CounterGraphicElement.json";
+    std::ifstream inFile(filename);
 
+    if (!inFile.is_open()) {
+        std::cerr << "[ERROR] Could not open file: " << filename << std::endl;
+        return;
+    }
+
+    try {
+        nlohmann::json j;
+        inFile >> j;
+        inFile.close();
+
+        if (j.contains("counter_values") && j["counter_values"].is_array()) {
+            logData.clear();
+            for (const auto& value : j["counter_values"]) {
+                logData.push_back(value);
+            }
+            currentLogIndex = 0; // Reset log index
+        } else {
+            std::cerr << "[ERROR] Invalid JSON structure in file: " << filename << std::endl;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
+    }
 }
 
 void CounterModuleGraphics::logForward() {
+    if (logData.empty()) {
+        std::cerr << "[ERROR] No log data loaded." << std::endl;
+        return;
+    }
 
+    if (currentLogIndex + 1 < logData.size()) {
+        ++currentLogIndex;
+        counter = logData[currentLogIndex];
+    } else {
+        std::cerr << "[INFO] Already at the last log entry." << std::endl;
+    }
 }
 
+void CounterModuleGraphics::logBackwards() {
+    std::lock_guard<std::mutex> lock(logMutex);
+
+    if (logData.empty()) {
+        std::cerr << "[ERROR] No log data loaded." << std::endl;
+        return;
+    }
+
+    if (currentLogIndex > 0) {
+        --currentLogIndex;
+        counter = logData[currentLogIndex];
+        std::cout << "[INFO] Moved to previous log entry. Counter: " << counter << std::endl;
+    } else {
+        std::cerr << "[INFO] Already at the first log entry." << std::endl;
+    }
+}
 

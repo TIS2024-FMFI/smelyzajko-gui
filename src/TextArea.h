@@ -31,6 +31,7 @@ private:
     std::vector<std::string> logs;    // Logs displayed in the text area
     bool autoscrollEnabled = true;           // Autoscroll toggle
     std::mutex logMutex;              // Mutex for thread-safe log updates
+    void logBackwards();
 };
 
 #endif // SMELYZAJKO_GUI_TEXTAREA_H

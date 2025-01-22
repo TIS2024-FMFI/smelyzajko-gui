@@ -34,6 +34,7 @@ private:
 
     // Private methods
     void loadMap(); // Load map data from a file
+    void logBackwards();
 };
 
 #endif // SMELYZAJKO_GUI_MAPMODULEGRAPHICS_H
