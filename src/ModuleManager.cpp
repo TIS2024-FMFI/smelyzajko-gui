@@ -43,6 +43,13 @@ void ModuleManager::updateValueOfModule(int moduleID, int graphicModuleID, const
         }
     }
 }
+void ModuleManager::updateValueOfModule(int moduleID, int graphicModuleID, const std::vector<std::vector<int>> &value) {
+    for (GraphicModule *module : graphicModules) {
+        if (module->getGraphicModuleID() == graphicModuleID && module->getModuleID() == moduleID) {
+            module->updateValueOfModule(value);
+        }
+    }
+}
 int ModuleManager::registerGraphicModule(const std::string &graphicElementName,const std::string &moduleName, int moduleID) {
     GraphicModule *graphicModule = moduleConstructors.at(graphicElementName)();
     graphicModule->setGraphicModuleID(graphicModules.size());
@@ -83,30 +90,39 @@ void ModuleManager::setValueFromInputElements(const std::string& moduleName, con
     for (Module *module : modules) {
         if (module->getModuleName() == moduleName) {
             module->setValueFromInputElements(elementName, value);
+            return;
         }
     }
+    std::cerr << "Module not found: " << moduleName << std::endl;
 }
 
 void ModuleManager::setValueFromInputElements(const std::string& moduleName, const std::string& elementName, bool value) {
     for (Module *module : modules) {
         if (module->getModuleName() == moduleName) {
             module->setValueFromInputElements(elementName, value);
+            return;
         }
     }
+    std::cerr << "Module not found: " << moduleName << std::endl;
 }
 void ModuleManager::setValueFromInputElements(const std::string& moduleName, const std::string& elementName, int value) {
     for (Module *module : modules) {
         if (module->getModuleName() == moduleName) {
             module->setValueFromInputElements(elementName, value);
+            return;
         }
     }
+    std::cerr << "Module not found: " << moduleName << std::endl;
 }
 void ModuleManager::setValueFromInputElements(const std::string& moduleName, const std::string& elementName, float value) {
     for (Module *module : modules) {
         if (module->getModuleName() == moduleName) {
             module->setValueFromInputElements(elementName, value);
+            return;
         }
     }
+    std::cerr << "Module not found: " << moduleName << std::endl;
+
 }
 
 void ModuleManager::logSettings(YAML::Node configFile) {
@@ -190,3 +206,5 @@ void ModuleManager::logSettings(YAML::Node configFile) {
 
     }
 }
+
+

@@ -4,12 +4,12 @@ modules:
        graphicsLogEnabled: false
        graphicsFrequency: 0
        textLogEnabled: false
-       textFrequency: 0
+       textFrequency: 10
   - MapModule:
         graphicsLogEnabled: false
         graphicsFrequency: 0
         textLogEnabled: false
-        textFrequency: 0
+        textFrequency: 30
   - CounterModule:
        graphicsLogEnabled: false
        graphicsFrequency: 0

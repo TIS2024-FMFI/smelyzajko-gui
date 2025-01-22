@@ -20,7 +20,6 @@ public:
     ~MapModule() ;
     void run() override;
     void generatePassableMap();
-    void saveMapToJson();
     void generatePath();
     ModuleManager& moduleManager;
     std::vector<int> graphicModuleId;

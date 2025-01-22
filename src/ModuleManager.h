@@ -25,6 +25,7 @@ public:
     void updateValueOfModule(int moduleID,int graphicModuleID, int value);
     void updateValueOfModule(int moduleID,int graphicModuleID, const std::vector<int>& value);
     void updateValueOfModule(int moduleID,int graphicModuleID, const std::vector<float>& value);
+    void updateValueOfModule(int moduleID,int graphicModuleID, const std::vector<std::vector<int>>& value);
 
 
     void setValueFromInputElements(const std::string& moduleName, const std::string& elementName, const std::string& value);

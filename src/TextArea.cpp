@@ -7,6 +7,7 @@ TextArea::TextArea()
 }
 
 void TextArea::draw(ImGuiIO& io) {
+
     ImDrawList* draw_list = ImGui::GetForegroundDrawList();
 
     // Define text area boundaries
@@ -21,7 +22,6 @@ void TextArea::draw(ImGuiIO& io) {
     float total_log_height = 0.0f;
     std::vector<std::string> wrapped_logs;
     {
-        std::lock_guard<std::mutex> lock(logMutex);
         for (const std::string& log : logs) {
             ImVec2 log_text_size = ImGui::CalcTextSize(log.c_str());
             if (log_text_size.x > size.x - 2 * inner_padding) {
@@ -59,7 +59,6 @@ void TextArea::draw(ImGuiIO& io) {
     draw_list->PushClipRect(text_area_min, text_area_max, true);
 
     {
-        std::lock_guard<std::mutex> lock(logMutex);
         for (const std::string& log : wrapped_logs) {
             ImVec2 log_text_size = ImGui::CalcTextSize(log.c_str());
             if (log_y_offset + log_text_size.y >= text_area_min.y &&
@@ -88,11 +87,11 @@ void TextArea::draw(ImGuiIO& io) {
 }
 
 void TextArea::updateValueOfModule(std::string value) {
-    std::lock_guard<std::mutex> lock(logMutex);
     logs.push_back(value);
+    logToJson();
 }
 void TextArea::clearLogs() {
-    std::lock_guard<std::mutex> lock(logMutex);
+
     logs.clear();
 }
 
@@ -105,13 +104,12 @@ bool TextArea::isAutoscrollEnabled() const {
     return autoscrollEnabled;
 }
 
-
 void TextArea::logToJson() {
     if (!isTextLogEnabled()) {
         return;
     }
 
-    static auto lastLogTime = std::chrono::steady_clock::now();
+    static auto lastLogTime = std::chrono::steady_clock::now() - std::chrono::hours(1); // Initialize to a time in the past
     auto currentTime = std::chrono::steady_clock::now();
     std::chrono::duration<float> elapsed = currentTime - lastLogTime;
 
@@ -127,7 +125,7 @@ void TextArea::logToJson() {
 
     std::lock_guard<std::mutex> lock(logMutex); // Protect writing
 
-    std::string filename = logFileDirectory+"text_area_"+moduleName+"_log.json";
+    std::string filename = logFileDirectory + "/text_area_" + moduleName + "_log.json";
     nlohmann::json j;
 
     // Load existing content
@@ -135,21 +133,22 @@ void TextArea::logToJson() {
     if (inFile.is_open()) {
         try {
             inFile >> j;
-        } catch (const std::exception& e) {
+        } catch (const std::exception &e) {
             std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
         }
         inFile.close();
     }
-
+    if (!j.contains("frequency")) {
+        j["frequency"] = getTextFrequency();
+    }
     // Initialize the file if empty
     if (!j.contains("logs")) {
         j["logs"] = nlohmann::json::array();
     }
 
     // Add new logs
-    for (const std::string& log : logs) {
-        j["logs"].push_back(log);
-    }
+    j["logs"].push_back(logs.back());
+
 
     // Overwrite the file with updated content
     std::ofstream outFile(filename);

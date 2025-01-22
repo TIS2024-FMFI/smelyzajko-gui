@@ -7,7 +7,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
-            "moduleName": "Map Module",
+            "moduleName": "MapModule",
             "position": [
                 1020.0,
                 79.0
@@ -26,7 +26,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
-            "moduleName": "Map Module",
+            "moduleName": "MapModule",
             "position": [
                 180.0,
                 79.0
