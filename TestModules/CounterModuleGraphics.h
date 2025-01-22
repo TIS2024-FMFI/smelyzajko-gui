@@ -15,6 +15,8 @@ public:
     CounterModuleGraphics();
     void draw(ImGuiIO &io) override;
     void logToJson() override;
+    void logFromJson() override;
+    void logForward() override;
     void updateValueOfModule(int value) override;
 
 private:

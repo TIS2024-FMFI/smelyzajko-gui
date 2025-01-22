@@ -85,6 +85,9 @@ void ModuleManager::setActiveModuleAndDraw(const std::vector<GraphicModule *>& g
 std::vector<Module *> ModuleManager::getModules() const {
     return modules;
 }
+std::vector<GraphicModule *> ModuleManager::getGraphicModules() const {
+    return graphicModules;
+}
 
 void ModuleManager::setValueFromInputElements(const std::string& moduleName, const std::string& elementName, const std::string& value) {
     for (Module *module : modules) {
@@ -204,6 +207,14 @@ void ModuleManager::logSettings(YAML::Node configFile) {
         }
 
 
+    }
+}
+
+void ModuleManager::setLogDirectory(int moduleID, int graphicModuleID, const std::string &logDir) {
+    for (GraphicModule *module : graphicModules) {
+        if (module->getGraphicModuleID() == graphicModuleID && module->getModuleID() == moduleID) {
+            module->setLogDirectory(logDir);
+        }
     }
 }
 

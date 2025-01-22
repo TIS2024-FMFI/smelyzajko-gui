@@ -26,7 +26,7 @@ public:
     int speed = 200;
 
     std::vector<std::string> getPossibleGraphicsElement() override {
-        return {"Counter Graphic Element","Text Area","Ultrasonic Graphic Element"};
+        return {"CounterGraphicElement","TextArea","UltrasonicGraphicElement"};
     }
 
     std::unordered_map<std::string,std::vector<std::string>> getPossibleInputElements() override {

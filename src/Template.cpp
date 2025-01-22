@@ -117,6 +117,10 @@ void Template::from_json(const nlohmann::json& j) {
                 ModuleManager moduleManager;
                 std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = moduleManager.getModuleConstructors();
                 auto it = moduleConstructors.find(graphicElementName);
+                if (it == moduleConstructors.end()) {
+                    std::cerr << "Error: Unknown module type in JSON: " << graphicElementName << std::endl;
+                    continue;
+                }
                 if (configurationMode) {
                     // Create a Rectangle based on parameters in the template
                     Rectangle* rectangle = new Rectangle();
@@ -133,6 +137,7 @@ void Template::from_json(const nlohmann::json& j) {
                     throw std::invalid_argument("Unknown module type in JSON:  " + graphicElementName);
                 }
             }
+
         }
     }
     if (rightFlag < 1){

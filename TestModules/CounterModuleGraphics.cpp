@@ -3,7 +3,7 @@
 
 CounterModuleGraphics::CounterModuleGraphics()
         : counter(0) {
-    setGraphicElementName("Counter Graphic Element");
+    setGraphicElementName("CounterGraphicElement");
 }
 
 void CounterModuleGraphics::draw(ImGuiIO &io) {
@@ -50,7 +50,7 @@ void CounterModuleGraphics::logToJson() {
 
     std::lock_guard<std::mutex> lock(logMutex); // Protect writing
 
-    std::string filename = logFileDirectory+"/counter_log.json";
+    std::string filename = logFileDirectory+"/CounterGraphicElement.json";
     nlohmann::json j;
 
     // Load existing content
@@ -83,6 +83,15 @@ void CounterModuleGraphics::logToJson() {
     } else {
         std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
     }
+}
+
+void CounterModuleGraphics::logFromJson() {
+
+
+}
+
+void CounterModuleGraphics::logForward() {
+
 }
 
 

@@ -17,6 +17,8 @@ public:
     void updateValueOfModule(std::vector<int> value) override;
     void updateValueOfModule(std::vector<std::vector<int>> value) override;
     void saveMapToJson();
+    void logFromJson() override;
+    void logForward() override;
 
 private:
     int ballRow = 0;
@@ -26,6 +28,7 @@ private:
     std::vector<std::vector<int>> map;
     float cellSize = 40.0f;
     std::mutex logMutex;
+    bool mapSaved = false;
 
     // Private methods
     void loadMap(); // Load map data from a file

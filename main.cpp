@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 
     ImGui::CreateContext();
     ImGui::SetCurrentContext(ImGui::GetCurrentContext());
-
+    config["mode"] = mode;
     // Spustenie podľa režimu
     if (mode == "--config") {
         ConfigurationMode gui(config);
@@ -58,8 +58,6 @@ int main(int argc, char* argv[]) {
         operatingMode.run();
     } else if (mode == "--replay") {
         ReplayMode replayMode(config);
-
-        // Ak je načítaná správna konfigurácia, spustí sa ReplayMode
         replayMode.run();
     } else {
         std::cerr << "Invalid flag. Use --config, --operate, or --replay.\n";

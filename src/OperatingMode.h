@@ -7,7 +7,6 @@ public:
 
     OperatingMode(YAML::Node configFile) : GUI(configFile) {
         std::vector<std::string> templateNames;
-
         if (configFile["templates"]) {
             for (const auto& templateNode : configFile["templates"]) {
                 std::string templateName = templateNode.as<std::string>();
@@ -16,12 +15,13 @@ public:
         } else {
             std::cerr << "No templates found in config file." << std::endl;
         }
-
+        std::cout<<templateNames.size()<<std::endl;
         if (templateNames.empty()) {
             templateManager = TemplateManager(false);
         } else {
             templateManager = TemplateManager(templateNames, false);
         }
+        std::cout << "OperatingMode constructor" << std::endl;
 
         setupShortcuts();
 

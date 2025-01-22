@@ -36,7 +36,7 @@ private:
                 };
     }
     std::vector<std::string> getPossibleGraphicsElement() override {
-        return {"Ultrasonic Graphic Element","Text Area","Counter Graphic Element"};
+        return {"UltrasonicGraphicElement","TextArea","CounterGraphicElement"};
     }
 
 public:

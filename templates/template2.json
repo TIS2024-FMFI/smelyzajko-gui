@@ -107,7 +107,7 @@
     "graphicModules": [
         {
             "graphicElementId": 1,
-            "graphicElementName": "Text Area",
+            "graphicElementName": "TextArea",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 2,
@@ -126,7 +126,7 @@
         },
         {
             "graphicElementId": 2,
-            "graphicElementName": "Counter Graphic Element",
+            "graphicElementName": "CounterGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
@@ -145,7 +145,7 @@
         },
         {
             "graphicElementId": 0,
-            "graphicElementName": "Map Graphic Element",
+            "graphicElementName": "MapGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
@@ -164,7 +164,7 @@
         },
         {
             "graphicElementId": 0,
-            "graphicElementName": "Ultrasonic Graphic Element",
+            "graphicElementName": "UltrasonicGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 2,
@@ -183,7 +183,7 @@
         },
         {
             "graphicElementId": 2,
-            "graphicElementName": "Counter Graphic Element",
+            "graphicElementName": "CounterGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 2,
@@ -202,7 +202,7 @@
         },
         {
             "graphicElementId": 0,
-            "graphicElementName": "Counter Graphic Element",
+            "graphicElementName": "CounterGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 1,
@@ -221,7 +221,7 @@
         },
         {
             "graphicElementId": 1,
-            "graphicElementName": "Text Area",
+            "graphicElementName": "TextArea",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 1,
@@ -240,7 +240,7 @@
         },
         {
             "graphicElementId": 1,
-            "graphicElementName": "Text Area",
+            "graphicElementName": "TextArea",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
@@ -259,7 +259,7 @@
         },
         {
             "graphicElementId": 2,
-            "graphicElementName": "Ultrasonic Graphic Element",
+            "graphicElementName": "UltrasonicGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 1,

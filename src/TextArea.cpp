@@ -3,7 +3,7 @@
 #include "sstream"
 TextArea::TextArea()
         : scrollbar(0.0f, 0.0f) {
-    setGraphicElementName("Text Area");
+    setGraphicElementName("TextArea");
 }
 
 void TextArea::draw(ImGuiIO& io) {
@@ -125,7 +125,7 @@ void TextArea::logToJson() {
 
     std::lock_guard<std::mutex> lock(logMutex); // Protect writing
 
-    std::string filename = logFileDirectory + "/text_area_" + moduleName + "_log.json";
+    std::string filename = logFileDirectory + "/TextArea"   + ".json";
     nlohmann::json j;
 
     // Load existing content
@@ -158,5 +158,12 @@ void TextArea::logToJson() {
     } else {
         std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
     }
+}
+
+void TextArea::logFromJson() {
+
+}
+void TextArea::logForward() {
+    
 }
 

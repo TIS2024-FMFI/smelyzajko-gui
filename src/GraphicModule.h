@@ -10,6 +10,8 @@ public:
     virtual void draw(ImGuiIO &io) = 0;
 
     virtual void logToJson() = 0;
+    virtual void logFromJson() = 0;
+    virtual void logForward() = 0;
 
     // Position and size settings
     ImVec2 getSize() ;

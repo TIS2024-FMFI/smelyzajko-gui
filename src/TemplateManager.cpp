@@ -39,11 +39,13 @@ void TemplateManager::loadAllTemplates() {
         std::cout << "No JSON files found in the 'templates' directory." << std::endl;
     } else {
         for (const auto& path : jsonFiles) {
+
             Template aTemplate(path,configMode);
             allTemplates.push_back(aTemplate);
         }
 
     }
+
 }
 
 void TemplateManager::loadTemplates(const std::vector<std::string>& templateNames) {

@@ -36,9 +36,10 @@
     "graphicModules": [
         {
             "graphicElementId": 0,
-            "graphicElementName": "Ultrasonic Graphic Element",
+            "graphicElementName": "UltrasonicGraphicElement",
             "graphicsFrequency": 0,
-            "graphicsLogEnabled": false,
+            "graphicsLogEnabled": true,
+            "label": "UltrasonicGraphicElement\nUltrasonicModule",
             "moduleId": 2,
             "moduleName": "UltrasonicModule",
             "position": [
@@ -50,14 +51,15 @@
                 481.0
             ],
             "textFrequency": 0,
-            "textLogEnabled": false,
+            "textLogEnabled": true,
             "type": "rectangle"
         },
         {
             "graphicElementId": 1,
-            "graphicElementName": "Text Area",
+            "graphicElementName": "TextArea",
             "graphicsFrequency": 0,
-            "graphicsLogEnabled": false,
+            "graphicsLogEnabled": true,
+            "label": "TextArea\nMapModule",
             "moduleId": 0,
             "moduleName": "MapModule",
             "position": [
@@ -69,14 +71,15 @@
                 242.0
             ],
             "textFrequency": 0,
-            "textLogEnabled": false,
+            "textLogEnabled": true,
             "type": "rectangle"
         },
         {
             "graphicElementId": 1,
-            "graphicElementName": "Text Area",
+            "graphicElementName": "TextArea",
             "graphicsFrequency": 0,
-            "graphicsLogEnabled": false,
+            "graphicsLogEnabled": true,
+            "label": "Text Area\nUltrasonicModule",
             "moduleId": 2,
             "moduleName": "UltrasonicModule",
             "position": [
@@ -88,14 +91,35 @@
                 239.0
             ],
             "textFrequency": 0,
+            "textLogEnabled": true,
+            "type": "rectangle"
+        },
+        {
+            "graphicElementId": 1,
+            "graphicElementName": "TextArea",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "label": "TextArea\nUltrasonicModule",
+            "moduleId": 0,
+            "moduleName": "UltrasonicModule",
+            "position": [
+                1289.0,
+                78.0
+            ],
+            "size": [
+                314.0,
+                792.0
+            ],
+            "textFrequency": 0,
             "textLogEnabled": false,
             "type": "rectangle"
         },
         {
             "graphicElementId": 0,
-            "graphicElementName": "Map Graphic Element",
+            "graphicElementName": "MapGraphicElement",
             "graphicsFrequency": 0,
-            "graphicsLogEnabled": false,
+            "graphicsLogEnabled": true,
+            "label": "MapGraphicElement\nMapModule",
             "moduleId": 0,
             "moduleName": "MapModule",
             "position": [
@@ -107,7 +131,7 @@
                 480.0
             ],
             "textFrequency": 0,
-            "textLogEnabled": false,
+            "textLogEnabled": true,
             "type": "rectangle"
         }
     ],

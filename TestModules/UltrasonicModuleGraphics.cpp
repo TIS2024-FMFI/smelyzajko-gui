@@ -7,7 +7,7 @@
 
 
 UltrasonicModuleGraphics::UltrasonicModuleGraphics(){ // Initialize TextArea with default dimensions
-    setGraphicElementName("Ultrasonic Graphic Element");
+    setGraphicElementName("UltrasonicGraphicElement");
 
 }
 
@@ -76,7 +76,7 @@ void UltrasonicModuleGraphics::logToJson() {
 
     std::lock_guard<std::mutex> lock(logMutex);
 
-    std::string filename = logFileDirectory + "/ultrasonic_module_log.json";
+    std::string filename = logFileDirectory + "/UltrasonicGraphicElement.json";
 
 
 
@@ -113,4 +113,12 @@ void UltrasonicModuleGraphics::logToJson() {
     } else {
         std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
     }
+}
+
+void UltrasonicModuleGraphics::logFromJson() {
+
+}
+
+void UltrasonicModuleGraphics::logForward() {
+
 }

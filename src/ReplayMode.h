@@ -1,5 +1,4 @@
 #pragma once
-
 #include "GUI.h"
 #include "TemplateManager.h"
 #include <vector>
@@ -8,30 +7,64 @@
 #include <chrono>
 #include <filesystem>
 
-using json = nlohmann::json;
 
 class ReplayMode : public GUI {
 public:
-    ReplayMode(YAML::Node configFile);  // Constructor
-    int run() override;                 // Main run method
+      ReplayMode(YAML::Node configFile): GUI(configFile) {
+            std::vector<std::string> templateNames;
 
-    void loadLogData(const std::string& directoryPath);  // Load log data from directory
+            if (configFile["templates"]) {
+                for (const auto& templateNode : configFile["templates"]) {
+                    std::string templateName = templateNode.as<std::string>();
+                    templateNames.push_back(templateName);
+                }
+            } else {
+                std::cerr << "No templates found in config file." << std::endl;
+            }
+
+            if (templateNames.empty()) {
+                templateManager = TemplateManager(false);
+            } else {
+                templateManager = TemplateManager(templateNames, false);
+            }
+            setupShortcuts() ;
+
+            templateManager.setActiveTemplate(templateManager.getAllTemplates().front());
+            std::string activeTemplateName = templateManager.getActiveTemplateName();
+            std::string windowTitle = std::string("GUI") + " - " + activeTemplateName;
+            glfwSetWindowTitle(window, windowTitle.c_str());
+    };
+    int run() override;
+    void setupShortcuts() override;
+    void drawMenuBar();
+    TemplateManager templateManager;
+    std::vector<std::thread> graphicModuleThreads;
+    void startGraphicModuleThreads();
+    void loadLogData();
+
 
 private:
-    void drawMenuBar();                // Render the playback menu
-    void drawElements();               // Render elements on the screen
-    void setupShortcuts() override;    // Set up keyboard shortcuts
-    void handlePlayback();             // Handle playback logic
-    void processLogFile(const std::filesystem::path& filePath, const std::string& moduleName); // Process a single log file
+    int currentTemplateIndex = 0;
+    void runGraphicModule(GraphicModule* module);
 
-    void play();                       // Start playback
-    void pause();                      // Pause playback
-    void stop();                       // Stop playback
+    void switchTemplate(int direction);
+    void checkIfLogDirectoryExists();
+    bool isValidLogDirectory(const std::string& directoryPath);
+    void openLogDirectoryDialog();
+
+    void processLogDirectoryDialog();
+    void play();
+    void pause();
+    void stop();
+
+    void handlePlayback();
+
+                          // Stop playback
     void nextFrame();                  // Move to the next frame
     void previousFrame();              // Move to the previous frame
 
-    TemplateManager templateManager;   // Manages templates and elements
-    std::vector<std::pair<float, json>> replayData;  // Replay data: <timestamp, data>
+       // Manages templates and elements
+    //std::vector<std::pair<float, json>> replayData;  // Replay data: <timestamp, data>
     size_t currentFrame = 0;           // Current playback frame
     bool isPlaying = false;            // Playback state
     float playbackSpeed = 1.0f;        // Playback speed
@@ -39,6 +72,5 @@ private:
     std::string logDirectory;          // Path to the log directory
     std::vector<std::string> modules;  // List of modules to process
 
-    static constexpr float MIN_PLAYBACK_SPEED = 0.1f;
-    static constexpr float MAX_PLAYBACK_SPEED = 5.0f;
+
 };

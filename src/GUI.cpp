@@ -24,7 +24,11 @@ GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()), configFile(configFile) {
     glfwMakeContextCurrent(window);
 
     setupImGui();
-    loadModules(configFile["modules"]);
+    if (configFile["mode"].as<std::string>() != "--replay"){
+
+        loadModules(configFile["modules"]);
+    }
+    configFile.remove("mode");
 }
 
 void GUI::setupImGui() {
