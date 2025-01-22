@@ -4,7 +4,7 @@
             "label": "Interval",
             "maxValue": 500,
             "minValue": 1,
-            "moduleName": "Ultrasonic Module",
+            "moduleName": "UltrasonicModule",
             "position": [
                 663.0,
                 585.0
@@ -20,7 +20,7 @@
             "label": "Speed",
             "maxValue": 10.0,
             "minValue": 1.0,
-            "moduleName": "Map Module",
+            "moduleName": "MapModule",
             "position": [
                 60.0,
                 582.0
@@ -40,7 +40,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 2,
-            "moduleName": "Ultrasonic Module",
+            "moduleName": "UltrasonicModule",
             "position": [
                 660.0,
                 79.0
@@ -59,7 +59,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
-            "moduleName": "Map Module",
+            "moduleName": "MapModule",
             "position": [
                 60.0,
                 619.0
@@ -78,7 +78,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 2,
-            "moduleName": "Ultrasonic Module",
+            "moduleName": "UltrasonicModule",
             "position": [
                 660.0,
                 619.0
@@ -97,7 +97,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
-            "moduleName": "Map Module",
+            "moduleName": "MapModule",
             "position": [
                 60.0,
                 79.0

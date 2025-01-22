@@ -63,6 +63,9 @@ void CounterModuleGraphics::logToJson() {
         }
         inFile.close();
     }
+    if (!j.contains("frequency")) {
+        j["frequency"] = getGraphicsFrequency();
+    }
 
     // Initialize the file if empty
     if (!j.contains("counter_values")) {

@@ -4,7 +4,7 @@
             "label": "Hodnota 2",
             "maxValue": 7,
             "minValue": 0,
-            "moduleName": "Counter Module",
+            "moduleName": "CounterModule",
             "position": [
                 50.0,
                 519.0
@@ -20,7 +20,7 @@
             "label": "Speed",
             "maxValue": 10.0,
             "minValue": 0.10000000149011612,
-            "moduleName": "Map Module",
+            "moduleName": "MapModule",
             "position": [
                 853.0,
                 82.0
@@ -36,7 +36,7 @@
             "label": "Hodnota 1",
             "maxValue": 7,
             "minValue": 0,
-            "moduleName": "Counter Module",
+            "moduleName": "CounterModule",
             "position": [
                 50.0,
                 469.0
@@ -52,7 +52,7 @@
             "label": "Interval",
             "maxValue": 10,
             "minValue": 0,
-            "moduleName": "Ultrasonic Module",
+            "moduleName": "UltrasonicModule",
             "position": [
                 900.0,
                 469.0
@@ -66,7 +66,7 @@
         },
         {
             "label": "Stop",
-            "moduleName": "Ultrasonic Module",
+            "moduleName": "UltrasonicModule",
             "position": [
                 900.0,
                 499.0
@@ -79,7 +79,7 @@
         },
         {
             "label": "Start",
-            "moduleName": "Ultrasonic Module",
+            "moduleName": "UltrasonicModule",
             "position": [
                 1080.0,
                 499.0
@@ -92,7 +92,7 @@
         },
         {
             "label": "Reset",
-            "moduleName": "Map Module",
+            "moduleName": "MapModule",
             "position": [
                 480.0,
                 439.0
@@ -111,7 +111,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 2,
-            "moduleName": "Ultrasonic Module",
+            "moduleName": "UltrasonicModule",
             "position": [
                 900.0,
                 619.0
@@ -130,7 +130,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
-            "moduleName": "Map Module",
+            "moduleName": "MapModule",
             "position": [
                 480.0,
                 559.0
@@ -149,7 +149,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
-            "moduleName": "Map Module",
+            "moduleName": "MapModule",
             "position": [
                 480.0,
                 79.0
@@ -168,7 +168,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 2,
-            "moduleName": "Ultrasonic Module",
+            "moduleName": "UltrasonicModule",
             "position": [
                 900.0,
                 79.0
@@ -187,7 +187,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 2,
-            "moduleName": "Ultrasonic Module",
+            "moduleName": "UltrasonicModule",
             "position": [
                 900.0,
                 559.0
@@ -206,7 +206,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 1,
-            "moduleName": "Counter Module",
+            "moduleName": "CounterModule",
             "position": [
                 60.0,
                 559.0
@@ -225,7 +225,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 1,
-            "moduleName": "Counter Module",
+            "moduleName": "CounterModule",
             "position": [
                 60.0,
                 619.0
@@ -244,7 +244,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
-            "moduleName": "Map Module",
+            "moduleName": "MapModule",
             "position": [
                 480.0,
                 619.0
@@ -263,7 +263,7 @@
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 1,
-            "moduleName": "Counter Module",
+            "moduleName": "CounterModule",
             "position": [
                 60.0,
                 79.0

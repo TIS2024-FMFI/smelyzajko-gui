@@ -3,6 +3,7 @@
 #define MODULEMANAGER_H
 #include <vector>
 #include "Module.h"
+#include "yaml-cpp/yaml.h"
 
 #include "../TestModules/MapModuleGraphics.h"
 #include "../TestModules/CounterModuleGraphics.h"
@@ -18,12 +19,13 @@ public:
 
     int registerModule(const std::string& name, Module *module);
     int registerGraphicModule(const std::string& graphicElementName,const std::string& moduleName,  int moduleID);
-    void setLogDirectory( std::string& logDirectory_);
+    void logSettings(YAML::Node configFile);
 
     void updateValueOfModule(int moduleID,int graphicModuleID, const std::string& value);
     void updateValueOfModule(int moduleID,int graphicModuleID, int value);
     void updateValueOfModule(int moduleID,int graphicModuleID, const std::vector<int>& value);
     void updateValueOfModule(int moduleID,int graphicModuleID, const std::vector<float>& value);
+    void updateValueOfModule(int moduleID,int graphicModuleID, const std::vector<std::vector<int>>& value);
 
 
     void setValueFromInputElements(const std::string& moduleName, const std::string& elementName, const std::string& value);

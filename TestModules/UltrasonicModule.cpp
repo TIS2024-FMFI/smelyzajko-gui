@@ -6,7 +6,7 @@
 
 UltrasonicModule::UltrasonicModule(ModuleManager* moduleManager)
         : moduleManager(moduleManager), running(true), deltaTime(0.0f) {
-    setModuleName("Ultrasonic Module");
+    setModuleName("UltrasonicModule");
     for (const std::string& element : this->getPossibleGraphicsElement()) {
         graphicElementIds.push_back(this->moduleManager->registerGraphicModule(element, moduleName, moduleId));
     }

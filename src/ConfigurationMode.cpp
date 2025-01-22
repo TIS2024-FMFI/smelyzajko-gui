@@ -226,6 +226,7 @@ void ConfigurationMode::drawElementsWithSnappingOn() {
 
 void ConfigurationMode::handleElementClick(Element *element,int i) {
     if (element->getPendingChooseWhatToDo()) {
+        setLogSettings();
         ImGui::SetNextWindowPos(element->getPopupPosition(), ImGuiCond_Always);
         ImGui::OpenPopup("Element Options");
 
@@ -300,7 +301,70 @@ void ConfigurationMode::handleElementClick(Element *element,int i) {
                     }
                 }, setting.value);
             }
+
             if (ImGui::Button("Close")) {
+                Rectangle* rectangle = dynamic_cast<Rectangle*>(element);
+                if (rectangle){
+                    for (const auto& moduleNode : configFile["modules"]){
+                        if (!moduleNode.IsMap() || moduleNode.size() != 1) {
+                            std::cerr << "Invalid module format. Each module should be a map with one key-value pair." << std::endl;
+                            continue;
+                        }
+                        std::string moduleName = moduleNode.begin()->first.as<std::string>();
+                        YAML::Node moduleParams = moduleNode.begin()->second;
+                        if (!moduleParams.IsMap()){
+                            std::cerr<< "Invalid module format. Each module should be a map with one key-value pair."<<std::endl;
+                        }
+                        if (moduleName.empty()) {
+                            std::cerr << "Empty module name found. Skipping." << std::endl;
+                            continue;
+                        }
+                        if (moduleName != element->getModuleName()){
+                            continue;
+                        }
+                        auto settings = element->getSettings();
+                        float graphicsFrequency = 0.0f;
+                        bool graphicsLogEnabled = false;
+                        float textFrequency = 0.0f;
+                        bool textLogEnabled = false;
+
+                        for (const auto& setting : settings) {
+                            if (setting.name == "graphicsFrequency") {
+                                graphicsFrequency = std::get<int>(setting.value);
+                            } else if (setting.name == "graphicsLogEnabled") {
+                                graphicsLogEnabled = std::get<bool>(setting.value);
+                            } else if (setting.name == "textFrequency") {
+                                textFrequency = std::get<int>(setting.value);
+                            } else if (setting.name == "textLogEnabled") {
+                                textLogEnabled = std::get<bool>(setting.value);
+                            }
+                        }
+                        //Save the settings to the config file if they are different
+                        if (moduleParams["graphicsFrequency"].as<int>() != graphicsFrequency ||
+                            moduleParams["graphicsLogEnabled"].as<bool>() != graphicsLogEnabled ||
+                            moduleParams["textFrequency"].as<int>() != textFrequency ||
+                            moduleParams["textLogEnabled"].as<bool>() != textLogEnabled
+                            )
+                            {
+                            moduleParams["graphicsFrequency"] = static_cast<int>(graphicsFrequency);
+                            moduleParams["graphicsLogEnabled"] = static_cast<bool>(graphicsLogEnabled);
+                            moduleParams["textFrequency"] = static_cast<int>(textFrequency);
+                            moduleParams["textLogEnabled"] = static_cast<bool>(textLogEnabled);
+
+
+                            std::string configFilePath = configFile["configFile"].as<std::string>();
+                            // Remove the configFile path entry
+                            configFile.remove("configFile");
+                            // Save the updated config back to the file
+                            std::ofstream fout(configFilePath);
+                            fout << configFile;
+                            // Restore the configFile path entry
+                            configFile["configFile"] = configFilePath;
+                            setLogSettings();
+                        }
+                    }
+
+                }
                 element->setPendingEdit(false);
                 ImGui::CloseCurrentPopup();
 
@@ -910,4 +974,40 @@ ImVec2 ConfigurationMode::getPosition(ImVec2 elementSize) {
         position = ImVec2(0.0f, menuBarHeight);
     }
     return position;
+}
+
+void ConfigurationMode::setLogSettings() {
+    for (Element* element : templateManager.getActiveTemplateElements()) {
+        Rectangle* rectangle = dynamic_cast<Rectangle*>(element);
+        if (rectangle) {
+            for (const auto& moduleNode : configFile["modules"]) {
+                if (!moduleNode.IsMap() || moduleNode.size() != 1) {
+                    std::cerr << "Invalid module format. Each module should be a map with one key-value pair." << std::endl;
+                    continue;
+                }
+
+                std::string configModuleName = moduleNode.begin()->first.as<std::string>();
+                YAML::Node moduleParams = moduleNode.begin()->second;
+                if (!moduleParams.IsMap()) {
+                    std::cerr << "Invalid module format. Each module should be a map with one key-value pair." << std::endl;
+                    continue;
+                }
+
+                if (configModuleName == rectangle->getModuleName()) {
+                    auto settings = rectangle->getSettings();
+                    for (auto& setting : settings) {
+                        if (setting.name == "graphicsFrequency") {
+                            setting.setter(moduleParams["graphicsFrequency"].as<int>());
+                        } else if (setting.name == "graphicsLogEnabled") {
+                            setting.setter(moduleParams["graphicsLogEnabled"].as<bool>());
+                        } else if (setting.name == "textFrequency") {
+                            setting.setter(moduleParams["textFrequency"].as<int>());
+                        } else if (setting.name == "textLogEnabled") {
+                            setting.setter(moduleParams["textLogEnabled"].as<bool>());
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -3,8 +3,19 @@ templates:
   - template4.json
   - template5.json
 modules:
-  - UltrasonicModule
-  - MapModule
-  - CounterModule
-
+  - UltrasonicModule:
+      graphicsLogEnabled: false
+      graphicsFrequency: 0
+      textLogEnabled: false
+      textFrequency: 0
+  - MapModule:
+      graphicsLogEnabled: false
+      graphicsFrequency: 0
+      textLogEnabled: false
+      textFrequency: 0
+  - CounterModule:
+      graphicsLogEnabled: false
+      graphicsFrequency: 0
+      textLogEnabled: false
+      textFrequency: 0
 logDirectory:
