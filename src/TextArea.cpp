@@ -161,9 +161,69 @@ void TextArea::logToJson() {
 }
 
 void TextArea::logFromJson() {
+    std::lock_guard<std::mutex> lock(logMutex);
 
+    std::string filename = logFileDirectory + "/TextArea.json";
+    std::ifstream inFile(filename);
+
+    if (!inFile.is_open()) {
+        std::cerr << "[ERROR] Could not open file: " << filename << std::endl;
+        return;
+    }
+
+    try {
+        nlohmann::json j;
+        inFile >> j;
+        inFile.close();
+
+        if (j.contains("logs") && j["logs"].is_array()) {
+            logs.clear(); // Clear existing logs
+            for (const auto& logEntry : j["logs"]) {
+                logs.push_back(logEntry);
+            }
+            std::cout << "[INFO] Successfully loaded logs from JSON." << std::endl;
+        } else {
+            std::cerr << "[ERROR] Invalid JSON structure in file: " << filename << std::endl;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
+    }
 }
+
 void TextArea::logForward() {
-    
+    std::lock_guard<std::mutex> lock(logMutex);
+
+    if (!logs.empty()) {
+        // Remove the first log and simulate displaying the next log
+        logs.erase(logs.begin());
+        std::cout << "[INFO] Displayed next log entry." << std::endl;
+    } else {
+        std::cerr << "[INFO] No more log entries to display." << std::endl;
+    }
+}
+
+void TextArea::logBackwards() {
+    std::lock_guard<std::mutex> lock(logMutex);
+
+    if (logs.empty()) {
+        std::cerr << "[ERROR] No log data available to move backward." << std::endl;
+        return;
+    }
+
+    int frequency = getTextFrequency();
+    if (frequency <= 0) {
+        std::cerr << "[ERROR] Invalid frequency. Cannot calculate backward steps." << std::endl;
+        return;
+    }
+
+    int stepsToMove = static_cast<int>(std::ceil(50.0 / frequency));
+
+    if (logs.size() > stepsToMove) {
+        logs.erase(logs.end() - stepsToMove, logs.end());
+        std::cout << "[INFO] Moved back 5 seconds in logs. Remaining logs: " << logs.size() << std::endl;
+    } else {
+        logs.clear();
+        std::cout << "[INFO] Reached the beginning of the logs. Logs cleared." << std::endl;
+    }
 }
 

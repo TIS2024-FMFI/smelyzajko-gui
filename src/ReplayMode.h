@@ -42,6 +42,7 @@ public:
     void startGraphicModuleThreads();
     void stopGraphicModuleThreads();
     void loadLogData();
+    void back();
 
 
 

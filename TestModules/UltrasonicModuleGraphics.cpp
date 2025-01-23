@@ -84,6 +84,9 @@ void UltrasonicModuleGraphics::logToJson() {
     std::lock_guard<std::mutex> lock(logMutex);
 
     std::string filename = logFileDirectory + "/UltrasonicGraphicElement.json";
+
+
+
     nlohmann::json j;
 
     if (!j.contains("graphicsFrequency")) {
@@ -247,3 +250,6 @@ void UltrasonicModuleGraphics::logBackwards() {
     logToJson();
 }
 
+void UltrasonicModuleGraphics::logBackwards() {
+
+}

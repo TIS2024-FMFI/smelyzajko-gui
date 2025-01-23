@@ -19,6 +19,7 @@ public:
     void saveMapToJson();
     void logFromJson() override;
     void logForward() override;
+    void logBackwards() override;
 
 private:
     std::vector<std::vector<int>> ballPositionsFromLog;

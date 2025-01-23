@@ -135,12 +135,15 @@ void ReplayMode::drawMenuBar() {
 
             ImGui::EndMenu();
         }
+
         if (ImGui::MenuItem("Play", nullptr, isPlaying)) play();
         if (ImGui::MenuItem("Pause", nullptr, !isPlaying)) pause();
+        if (ImGui::MenuItem("Back")) back(); // New backward navigation
     }
     ImGui::EndMainMenuBar();
 
 }
+
 
 
 //void ReplayMode::handlePlayback() {
@@ -306,3 +309,19 @@ void ReplayMode::processLogDirectoryDialog() {
         }
     }
 }
+
+void ReplayMode::back() {
+    isPaused = true; // Pause playback to allow precise navigation
+
+    for (GraphicModule* module : moduleManager.getGraphicModules()) {
+        module->logBackwards();
+    }
+
+    std::cout << "[INFO] Moved all modules backward." << std::endl;
+}
+
+
+
+
+
+
