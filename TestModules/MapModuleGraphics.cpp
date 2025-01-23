@@ -220,4 +220,15 @@ void MapModuleGraphics::logForward() {
 
 void MapModuleGraphics::logBackwards() {
 
+    if (ballPositionsFromLog.empty()) {
+        std::cerr << "Error: No ball positions loaded.\n";
+        return;
+    }
+
+    if (currentBallPositionIndexLog > 0) {
+        currentBallPositionIndexLog--;
+        ballRow = ballPositionsFromLog[currentBallPositionIndexLog][0];
+        ballCol = ballPositionsFromLog[currentBallPositionIndexLog][1];
+    } else {
+    }
 }

@@ -58,6 +58,10 @@ private:
     std::unordered_map<GraphicModule*, std::condition_variable> cvs;
     std::unordered_map<GraphicModule*, std::mutex> cv_ms;
 
+
+    int fixedTimeStep = 500;
+    std::unordered_map<GraphicModule*, int> accumulatedTime;
+
     void switchTemplate(int direction);
     void checkIfLogDirectoryExists();
     bool isValidLogDirectory(const std::string& directoryPath);

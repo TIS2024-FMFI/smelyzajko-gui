@@ -63,8 +63,14 @@ int ReplayMode::run() {
     for (GraphicModule* module : templateManager.getActiveTemplateModules()) {
         delete module;
     }
-    cleanupImGui();
+    for (Module* module : moduleManager.getModules()) {
+        delete module;
+    }
+    for (GraphicModule* module : moduleManager.getGraphicModules()) {
+        delete module;
+    }
     stopGraphicModuleThreads();
+    cleanupImGui();
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
@@ -86,14 +92,8 @@ void ReplayMode::startGraphicModuleThreads() {
 
 
 void ReplayMode::runGraphicModule(GraphicModule* module) {
-    int frequency;
+    int frequency = (module->getModuleName() == "TextArea") ? module->getTextFrequency() : module->getGraphicsFrequency();
 
-    if (module->getModuleName() == "TextArea"){
-        frequency = module->getTextFrequency();
-    }
-    else {
-        frequency = module->getGraphicsFrequency();
-    }
     std::cout << module->getModuleName() << std::endl;
     std::cout << frequency << std::endl;
     std::chrono::milliseconds interval;
@@ -149,8 +149,17 @@ void ReplayMode::drawMenuBar() {
         if (ImGui::MenuItem("Play", nullptr, isPlaying)) play();
         if (ImGui::MenuItem("Pause", nullptr, !isPlaying)) pause();
         if (ImGui::MenuItem("Back")) back(); // New backward navigation
+        if (ImGui::MenuItem("Stop")) stopGraphicModuleThreads();
+        if (ImGui::MenuItem("Config")) {
+            //TODO implement @Zuzka
+        }
+
+
     }
     ImGui::EndMainMenuBar();
+
+
+
 }
 
 
@@ -254,6 +263,9 @@ void ReplayMode::loadLogData() {
             }
         }
     }
+    for (GraphicModule* module : moduleManager.getGraphicModules()) {
+        accumulatedTime[module] = 0;
+    }
     startGraphicModuleThreads();
 }
 
@@ -325,10 +337,18 @@ void ReplayMode::back() {
     isPaused = true; // Pause playback to allow precise navigation
 
     for (GraphicModule* module : moduleManager.getGraphicModules()) {
-        module->logBackwards();
+        int frequency = (module->getModuleName() == "TextArea") ? module->getTextFrequency() : module->getGraphicsFrequency();
+        int interval = 60000 / frequency;
+        // Update accumulated time for the module
+        accumulatedTime[module] += fixedTimeStep;
+
+        // Check if accumulated time exceeds the interval
+        if (accumulatedTime[module] >= interval) {
+            module->logBackwards();
+            accumulatedTime[module] -= interval; // Reset accumulated time
+        }
     }
 
-    std::cout << "[INFO] Moved all modules backward." << std::endl;
 }
 
 
