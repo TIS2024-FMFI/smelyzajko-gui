@@ -72,8 +72,13 @@ int ReplayMode::run() {
 
 void ReplayMode::startGraphicModuleThreads() {
     isPlaying = true;
+    // First, load the logs for all modules
     for (GraphicModule* module : moduleManager.getGraphicModules()) {
         module->logFromJson();
+    }
+
+    // Then, start the threads
+    for (GraphicModule* module : moduleManager.getGraphicModules()) {
         graphicModuleThreads.emplace_back(&ReplayMode::runGraphicModule, this, module);
     }
 }
