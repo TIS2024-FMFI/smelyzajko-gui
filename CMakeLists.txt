@@ -34,7 +34,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/src
 )
 
-add_subdirectory(libs/glfw)
+
 add_subdirectory(libs/yaml-cpp)
 
 add_executable(smelyzajko-gui

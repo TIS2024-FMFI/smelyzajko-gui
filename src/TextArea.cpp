@@ -138,8 +138,8 @@ void TextArea::logToJson() {
         }
         inFile.close();
     }
-    if (!j.contains("frequency")) {
-        j["frequency"] = getTextFrequency();
+    if (!j.contains("textFrequency")) {
+        j["textFrequency"] = frequency;
     }
     // Initialize the file if empty
     if (!j.contains("logs")) {
@@ -176,6 +176,13 @@ void TextArea::logFromJson() {
         inFile >> j;
         inFile.close();
 
+        // Load log frequency
+        if (j.contains("textFrequency")) {
+            textFrequency = j["textFrequency"];
+        } else {
+            std::cerr << "Error: No text Frequency found in JSON.\n";
+        }
+
         if (j.contains("logs") && j["logs"].is_array()) {
             logs.clear(); // Clear existing logs
             for (const auto& logEntry : j["logs"]) {
@@ -207,20 +214,8 @@ void TextArea::logBackwards() {
         return;
     }
 
-    int frequency = getTextFrequency();
-    if (frequency <= 0) {
-        std::cerr << "[ERROR] Invalid frequency. Cannot calculate backward steps." << std::endl;
-        return;
-    }
-
-    int stepsToMove = static_cast<int>(std::ceil(50.0 / frequency));
-
-    if (logs.size() > stepsToMove) {
-        logs.erase(logs.end() - stepsToMove, logs.end());
-        std::cout << "[INFO] Moved back 5 seconds in logs. Remaining logs: " << logs.size() << std::endl;
-    } else {
-        logs.clear();
-        std::cout << "[INFO] Reached the beginning of the logs. Logs cleared." << std::endl;
-    }
+    // Remove the last log entry to move one step back
+    logs.pop_back();
+    std::cout << "[INFO] Moved one step back in logs. Remaining logs: " << logs.size() << std::endl;
 }
 

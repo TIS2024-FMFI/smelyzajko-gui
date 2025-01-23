@@ -188,7 +188,6 @@ void UltrasonicModuleGraphics::logForward() {
 
     // Check if we've reached the end of the log
     if (currentSensorIndexLog >= sensorsFromLog.size()) {
-        std::cerr << "All sensor data has been logged. Stopping." << std::endl;
         return;  // Stop if we've processed all chunks
     }
 

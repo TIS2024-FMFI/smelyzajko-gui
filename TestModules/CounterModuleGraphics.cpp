@@ -101,7 +101,7 @@ void CounterModuleGraphics::logFromJson() {
         inFile >> j;
         inFile.close();
         if (j.contains("graphicsFrequency")) {
-            setGraphicsFrequency(j["graphicsFrequency"]);
+            graphicsFrequency = j["graphicsFrequency"];
         }
         if (j.contains("counter_values") && j["counter_values"].is_array()) {
             logData.clear();
@@ -114,6 +114,8 @@ void CounterModuleGraphics::logFromJson() {
     } catch (const std::exception& e) {
         std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
     }
+
+
 }
 
 void CounterModuleGraphics::logForward() {
@@ -136,21 +138,11 @@ void CounterModuleGraphics::logBackwards() {
         return;
     }
 
-    int frequency = getGraphicsFrequency(); // Retrieve the logging frequency (in Hz)
-    if (frequency <= 0) {
-        std::cerr << "[ERROR] Invalid frequency. Cannot calculate backward step." << std::endl;
-        return;
-    }
-
-    // Calculate how many steps correspond to 5 seconds
-    int stepsToMove = static_cast<int>(std::ceil(50.0 / frequency));
-
-    if (currentLogIndex >= stepsToMove) {
-        currentLogIndex -= stepsToMove;
+    if (currentLogIndex > 0) {
+        --currentLogIndex;
         counter = logData[currentLogIndex]; // Update counter to the previous value
     } else {
-        currentLogIndex = 0; // If fewer logs exist, go to the start
-        counter = logData[currentLogIndex];
+        std::cerr << "[INFO] Already at the beginning of the logs." << std::endl;
     }
 }
 
