@@ -127,7 +127,7 @@
         {
             "graphicElementId": 2,
             "graphicElementName": "CounterGraphicElement",
-            "graphicsFrequency": 0,
+            "graphicsFrequency": 120,
             "graphicsLogEnabled": false,
             "moduleId": 0,
             "moduleName": "MapModule",
@@ -184,7 +184,7 @@
         {
             "graphicElementId": 2,
             "graphicElementName": "CounterGraphicElement",
-            "graphicsFrequency": 0,
+            "graphicsFrequency": 120,
             "graphicsLogEnabled": false,
             "moduleId": 2,
             "moduleName": "UltrasonicModule",
@@ -196,14 +196,14 @@
                 364.0,
                 63.0
             ],
-            "textFrequency": 0,
+            "textFrequency": 60,
             "textLogEnabled": false,
             "type": "rectangle"
         },
         {
             "graphicElementId": 0,
             "graphicElementName": "CounterGraphicElement",
-            "graphicsFrequency": 0,
+            "graphicsFrequency": 120,
             "graphicsLogEnabled": false,
             "moduleId": 1,
             "moduleName": "CounterModule",
@@ -212,6 +212,7 @@
                 559.0
             ],
             "size": [
+                364.0,
                 364.0,
                 61.0
             ],
@@ -222,7 +223,7 @@
         {
             "graphicElementId": 1,
             "graphicElementName": "TextArea",
-            "graphicsFrequency": 0,
+            "graphicsFrequency": 60,
             "graphicsLogEnabled": false,
             "moduleId": 1,
             "moduleName": "CounterModule",
@@ -260,8 +261,8 @@
         {
             "graphicElementId": 2,
             "graphicElementName": "UltrasonicGraphicElement",
-            "graphicsFrequency": 0,
-            "graphicsLogEnabled": false,
+            "graphicsFrequency": 120,
+            "graphicsLogEnabled": true,
             "moduleId": 1,
             "moduleName": "CounterModule",
             "position": [
