@@ -57,8 +57,8 @@ int ModuleManager::registerGraphicModule(const std::string &graphicElementName,c
     graphicModule->setLogDirectory(logDir);
 
     // Set the element logging settings
-//    graphicModule->setGraphicsFrequency(20);
-//    graphicModule->setGraphicsLogEnabled(true);
+    graphicModule->setGraphicsFrequency(20);
+    graphicModule->setGraphicsLogEnabled(true);
 
     graphicModule->setModuleName(moduleName);
     graphicModule->setModuleID(moduleID);
@@ -145,7 +145,7 @@ void ModuleManager::logSettings(YAML::Node configFile) {
     auto in_time_t = std::chrono::system_clock::to_time_t(now);
 
     std::stringstream ss;
-    ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H:%M:%S");
+    ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M-%S");
     std::string timestamp = ss.str();
     std::filesystem::path newLogDir = std::filesystem::path(logDirectory) / timestamp;
 

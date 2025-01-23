@@ -6,6 +6,7 @@
 #include <map>
 #include <chrono>
 #include <filesystem>
+#include <condition_variable>
 
 
 class ReplayMode : public GUI {
@@ -41,6 +42,7 @@ public:
     void startGraphicModuleThreads();
     void stopGraphicModuleThreads();
     void loadLogData();
+    void back();
 
 
 

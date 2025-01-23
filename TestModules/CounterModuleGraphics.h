@@ -17,14 +17,16 @@ public:
     void logToJson() override;
     void logFromJson() override;
     void logForward() override;
+    void logBackwards() override;
     void updateValueOfModule(int value) override;
 
 private:
-    int counter;
-    std::atomic<bool> stopGeneration;
-    std::mutex logMutex;
-    std::thread generatorThread;
-
+    int counter;                              // Counter value
+    std::vector<int> logData;                 // Loaded log data
+    size_t currentLogIndex = 0;               // Current log index
+    std::atomic<bool> stopGeneration;         // Flag for stopping threads
+    std::mutex logMutex;                      // Mutex for log access
+    std::thread generatorThread;              // Thread for asynchronous tasks
 };
 
-#endif //SMELYZAJKO_GUI_COUNTERMODULEGRAPHICS_H
+#endif // SMELYZAJKO_GUI_COUNTERMODULEGRAPHICS_H

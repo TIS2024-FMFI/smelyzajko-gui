@@ -23,6 +23,7 @@ public:
     void logToJson() override;
     void logFromJson() override;
     void logForward() override;
+    void logBackwards() override;
 
     void updateValueOfModule(int value) override;
     void updateValueOfModule(std::vector<float>) override;

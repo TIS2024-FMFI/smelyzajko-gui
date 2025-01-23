@@ -86,12 +86,72 @@ void CounterModuleGraphics::logToJson() {
 }
 
 void CounterModuleGraphics::logFromJson() {
+    std::lock_guard<std::mutex> lock(logMutex);
 
+    std::string filename = logFileDirectory + "/CounterGraphicElement.json";
+    std::ifstream inFile(filename);
 
+    if (!inFile.is_open()) {
+        std::cerr << "[ERROR] Could not open file: " << filename << std::endl;
+        return;
+    }
+
+    try {
+        nlohmann::json j;
+        inFile >> j;
+        inFile.close();
+
+        if (j.contains("counter_values") && j["counter_values"].is_array()) {
+            logData.clear();
+            for (const auto& value : j["counter_values"]) {
+                logData.push_back(value);
+            }
+            currentLogIndex = 0; // Reset log index
+        } else {
+            std::cerr << "[ERROR] Invalid JSON structure in file: " << filename << std::endl;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
+    }
 }
 
 void CounterModuleGraphics::logForward() {
+    if (logData.empty()) {
+        std::cerr << "[ERROR] No log data loaded." << std::endl;
+        return;
+    }
 
+    if (currentLogIndex + 1 < logData.size()) {
+        ++currentLogIndex;
+        counter = logData[currentLogIndex];
+    }
 }
+
+void CounterModuleGraphics::logBackwards() {
+    std::lock_guard<std::mutex> lock(logMutex);
+
+    if (logData.empty()) {
+        std::cerr << "[ERROR] No log data loaded." << std::endl;
+        return;
+    }
+
+    int frequency = getGraphicsFrequency(); // Retrieve the logging frequency (in Hz)
+    if (frequency <= 0) {
+        std::cerr << "[ERROR] Invalid frequency. Cannot calculate backward step." << std::endl;
+        return;
+    }
+
+    // Calculate how many steps correspond to 5 seconds
+    int stepsToMove = static_cast<int>(std::ceil(50.0 / frequency));
+
+    if (currentLogIndex >= stepsToMove) {
+        currentLogIndex -= stepsToMove;
+        counter = logData[currentLogIndex]; // Update counter to the previous value
+    } else {
+        currentLogIndex = 0; // If fewer logs exist, go to the start
+        counter = logData[currentLogIndex];
+    }
+}
+
 
 
