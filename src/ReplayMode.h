@@ -1,3 +1,4 @@
+// File: ReplayMode.h
 #pragma once
 #include "GUI.h"
 #include "TemplateManager.h"
@@ -8,10 +9,9 @@
 #include <filesystem>
 #include <condition_variable>
 
-
 class ReplayMode : public GUI {
 public:
-    ReplayMode(YAML::Node configFile): GUI(configFile) {
+    ReplayMode(YAML::Node configFile) : GUI(configFile) {
         std::vector<std::string> templateNames;
 
         if (configFile["templates"]) {
@@ -28,7 +28,7 @@ public:
         } else {
             templateManager = TemplateManager(templateNames, false);
         }
-        setupShortcuts() ;
+        setupShortcuts();
 
         templateManager.setActiveTemplate(templateManager.getAllTemplates().front());
         std::string activeTemplateName = templateManager.getActiveTemplateName();
@@ -44,8 +44,6 @@ public:
     void loadLogData();
     void back();
 
-
-
 private:
     int currentTemplateIndex = 0;
     std::string logDirectory;
@@ -58,8 +56,8 @@ private:
     std::unordered_map<GraphicModule*, std::condition_variable> cvs;
     std::unordered_map<GraphicModule*, std::mutex> cv_ms;
 
-
     int fixedTimeStep = 500;
+
     std::unordered_map<GraphicModule*, int> accumulatedTime;
 
     void switchTemplate(int direction);
@@ -71,38 +69,4 @@ private:
     void play();
     void pause();
     void stop();
-
-    void handlePlayback();
-
-//    void stop();
-//
-//    void handlePlayback();
-//
-//                          // Stop playback
-//    void nextFrame();                  // Move to the next frame
-//    void previousFrame();              // Move to the previous frame
-//
-//       // Manages templates and elements
-//    //std::vector<std::pair<float, json>> replayData;  // Replay data: <timestamp, data>
-//    size_t currentFrame = 0;           // Current playback frame
-//    float playbackSpeed = 1.0f;        // Playback speed
-//    std::chrono::time_point<std::chrono::steady_clock> lastUpdate; // Time of the last update
-//          // Path to the log directory
-//    std::vector<std::string> modules;  // List of modules to process
-    // Stop playback
-
-
-    //----------------z
-//    void nextFrame();                  // Move to the next frame
-//    void previousFrame();              // Move to the previous frame
-//
-//    // Manages templates and elements
-//    //std::vector<std::pair<float, json>> replayData;  // Replay data: <timestamp, data>
-//    size_t currentFrame = 0;           // Current playback frame
-//    float playbackSpeed = 1.0f;        // Playback speed
-//    std::chrono::time_point<std::chrono::steady_clock> lastUpdate; // Time of the last update
-//    std::string logDirectory;          // Path to the log directory
-//    std::vector<std::string> modules;  // List of modules to process
-
-
 };

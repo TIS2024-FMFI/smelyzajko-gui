@@ -222,31 +222,24 @@ void UltrasonicModuleGraphics::logBackwards() {
         return;
     }
 
-    // Check if we've already processed all chunks (we're at the first chunk)
     if (currentSensorIndexLog == 0) {
-        std::cerr << "Already at the beginning of sensor data. Stopping." << std::endl;
         return;  // Stop if we're already at the first chunk
     }
 
-    // Get the previous chunk of 8 sensors
     const auto& currentChunk = sensorsFromLog[currentSensorIndexLog - 1];
 
-    // Ensure the chunk size is exactly 8, as expected
     if (currentChunk.size() != 8) {
         std::cerr << "Unexpected chunk size. Expected 8, but got " << currentChunk.size() << std::endl;
         return;
     }
 
-    // Update the sensor data (in this case, updating each sensor's angle and distance)
     for (size_t i = 0; i < currentChunk.size(); ++i) {
         sensors[i].angle = currentChunk[i].first;
         sensors[i].distance = currentChunk[i].second;
     }
 
-    // Move to the previous chunk of 8 sensors
     currentSensorIndexLog--;
 
-    // Optional: Log the current data to JSON after moving backwards
     logToJson();
 }
 

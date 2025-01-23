@@ -133,6 +133,7 @@ void ReplayMode::stopGraphicModuleThreads() {
 void ReplayMode::drawMenuBar() {
     if (ImGui::BeginMainMenuBar()) {
 
+        // Templates Dropdown
         if (ImGui::BeginMenu("Templates")) {
             for (const Template& aTemplate : templateManager.getAllTemplates()) {
                 if (ImGui::MenuItem(aTemplate.getName().c_str())) {
@@ -142,25 +143,31 @@ void ReplayMode::drawMenuBar() {
                     glfwSetWindowTitle(window, windowTitle.c_str());
                 }
             }
-
             ImGui::EndMenu();
         }
 
+        // Control Options
         if (ImGui::MenuItem("Play", nullptr, isPlaying)) play();
         if (ImGui::MenuItem("Pause", nullptr, !isPlaying)) pause();
-        if (ImGui::MenuItem("Back")) back(); // New backward navigation
+        if (ImGui::MenuItem("Back")) back();
         if (ImGui::MenuItem("Stop")) stopGraphicModuleThreads();
-        if (ImGui::MenuItem("Config")) {
-            //TODO implement @Zuzka or @Matej
+
+        // Config Dropdown
+        if (ImGui::BeginMenu("Config")) {
+            ImGui::Text("Set Fixed Time Step"); // Label for the dropdown
+
+            // Input field for manual time step adjustment
+            ImGui::InputInt("Time Step (ms)", &fixedTimeStep);
+
+            // Slider for easier adjustment within a range
+            ImGui::SliderInt("Adjust Time Step", &fixedTimeStep, 50, 2000, "%d ms");
+            ImGui::EndMenu();
         }
 
-
+        ImGui::EndMainMenuBar();
     }
-    ImGui::EndMainMenuBar();
-
-
-
 }
+
 
 
 
