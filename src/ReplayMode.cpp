@@ -151,7 +151,7 @@ void ReplayMode::drawMenuBar() {
         if (ImGui::MenuItem("Back")) back(); // New backward navigation
         if (ImGui::MenuItem("Stop")) stopGraphicModuleThreads();
         if (ImGui::MenuItem("Config")) {
-            //TODO implement @Zuzka
+            //TODO implement @Zuzka or @Matej
         }
 
 

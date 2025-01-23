@@ -196,9 +196,6 @@ void TextArea::logForward() {
     if (!logs.empty()) {
         // Remove the first log and simulate displaying the next log
         logs.erase(logs.begin());
-        std::cout << "[INFO] Displayed next log entry." << std::endl;
-    } else {
-        std::cerr << "[INFO] No more log entries to display." << std::endl;
     }
 }
 
