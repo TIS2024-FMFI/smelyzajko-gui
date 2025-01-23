@@ -250,6 +250,3 @@ void UltrasonicModuleGraphics::logBackwards() {
     logToJson();
 }
 
-void UltrasonicModuleGraphics::logBackwards() {
-
-}
