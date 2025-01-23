@@ -101,6 +101,7 @@ void ReplayMode::runGraphicModule(GraphicModule* module) {
     if (frequency > 0) {
         interval = std::chrono::milliseconds(60000 / frequency);
     } else {
+
         std::cerr << "Invalid frequency for module " << module->getModuleName() << std::endl;
         return;
     }

@@ -3,11 +3,14 @@
 #define MODULEMANAGER_H
 #include <vector>
 #include "Module.h"
+
+#define YAML_CPP_STATIC_DEFINE
 #include "yaml-cpp/yaml.h"
 
 #include "../TestModules/MapModuleGraphics.h"
 #include "../TestModules/CounterModuleGraphics.h"
 #include "../TestModules/UltrasonicModuleGraphics.h"
+
 
 
 class ModuleManager  {

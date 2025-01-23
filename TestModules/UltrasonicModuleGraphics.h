@@ -34,6 +34,9 @@ public:
 private:
     std::mutex logMutex;
 
+    std::vector<std::vector<std::pair<float, float>>> sensorsFromLog; // 8 sensors per chunk
+    size_t currentSensorIndexLog = 0;  // Index to track the current chunk
+
     // Sensor data
     std::vector<UltrasonicSensorData> sensors = {
             {0, 5}, {45, 7}, {90, 4}, {135, 8},

@@ -214,5 +214,3 @@ void ModuleManager::setLogDirectory(int moduleID, int graphicModuleID, const std
         }
     }
 }
-
-

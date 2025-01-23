@@ -43,16 +43,22 @@ void UltrasonicModuleGraphics::draw(ImGuiIO& io) {
 
 
 void UltrasonicModuleGraphics::updateValueOfModule(std::vector<float> value) {
-    logToJson();
-
-    sensors[i].distance = value[0];
-    sensors[i].angle = value[1];
+    if (value.size() == 2) {
+        sensors[i].distance = value[0];
+        sensors[i].angle = value[1];
+        logToJson();
+    } else {
+        std::cerr << "[ERROR] Invalid input for updateValueOfModule (vector<float>)." << std::endl;
+    }
 }
 
 void UltrasonicModuleGraphics::updateValueOfModule(int value) {
-    logToJson();
-
-    i = value;
+    if (value >= 0 && value < sensors.size()) {
+        i = value;
+        logToJson();
+    } else {
+        std::cerr << "[ERROR] Invalid index for updateValueOfModule (int)." << std::endl;
+    }
 }
 
 void UltrasonicModuleGraphics::logToJson() {
@@ -65,6 +71,7 @@ void UltrasonicModuleGraphics::logToJson() {
     std::chrono::duration<float> elapsed = currentTime - lastLogTime;
 
     float frequency = getGraphicsFrequency();
+
     if (frequency > 0) {
         float interval = 60.0f / frequency;
         if (elapsed.count() < interval) {
@@ -81,8 +88,9 @@ void UltrasonicModuleGraphics::logToJson() {
 
 
     nlohmann::json j;
-    if (!j.contains("frequency")) {
-        j["frequency"] = getGraphicsFrequency();
+
+    if (!j.contains("graphicsFrequency")) {
+        j["graphicsFrequency"] = getGraphicsFrequency();
     }
     std::ifstream inFile(filename);
 
@@ -116,13 +124,129 @@ void UltrasonicModuleGraphics::logToJson() {
 }
 
 void UltrasonicModuleGraphics::logFromJson() {
+    std::cout << "logFromJson " << logFileDirectory << std::endl;
+    std::string filename = logFileDirectory + "/UltrasonicGraphicElement.json";
+    nlohmann::json j;
 
+    // Load existing content
+    std::ifstream inFile(filename);
+
+    // Check if the file is open
+    if (inFile.is_open()) {
+        try {
+            // Parse the JSON file
+            inFile >> j;
+
+            // Clear existing data from sensorsFromLog
+            sensorsFromLog.clear();
+
+            // Load sensor data in chunks of 8
+            if (j.contains("sensor_data") && j["sensor_data"].is_array()) {
+                std::vector<std::pair<float, float>> chunk;
+                for (const auto& sensorEntry : j["sensor_data"]) {
+                    if (sensorEntry.contains("angle") && sensorEntry.contains("distance")) {
+                        chunk.push_back({sensorEntry["angle"], sensorEntry["distance"]});
+                    }
+
+                    // Every 8 sensors, push the chunk to the vector and reset the chunk
+                    if (chunk.size() == 8) {
+                        sensorsFromLog.push_back(chunk);
+                        chunk.clear();
+                    }
+                }
+
+                // Handle case where the last chunk has less than 8 elements
+                if (!chunk.empty()) {
+                    sensorsFromLog.push_back(chunk);
+                }
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
+        }
+        inFile.close();
+    } else {
+        std::cerr << "[ERROR] Could not open file for reading: UltrasonicGraphicElement.json" << std::endl;
+    }
+
+    // Load log frequency
+    if (j.contains("graphicsFrequency")) {
+        graphicsFrequency = j["graphicsFrequency"];
+    } else {
+        std::cerr << "Error: No graphicsFrequency found in JSON.\n";
+    }
 }
+
+
+
 
 void UltrasonicModuleGraphics::logForward() {
+    // Check if we have any log data
+    if (sensorsFromLog.empty()) {
+        std::cerr << "No sensor data to log forward." << std::endl;
+        return;
+    }
 
+    // Check if we've reached the end of the log
+    if (currentSensorIndexLog >= sensorsFromLog.size()) {
+        std::cerr << "All sensor data has been logged. Stopping." << std::endl;
+        return;  // Stop if we've processed all chunks
+    }
+
+    // Get the current chunk of 8 sensors
+    const auto& currentChunk = sensorsFromLog[currentSensorIndexLog];
+
+    if (currentChunk.size() != 8) {
+        std::cerr << "Unexpected chunk size. Expected 8, but got " << currentChunk.size() << std::endl;
+        return;
+    }
+
+
+    // Update the sensor data (in this case, updating each sensor's angle and distance)
+    for (size_t i = 0; i < currentChunk.size(); ++i) {
+        sensors[i].angle = currentChunk[i].first;
+        sensors[i].distance = currentChunk[i].second;
+    }
+
+    // Move to the next chunk of 8 sensors
+    currentSensorIndexLog++;
+
+    // Optional: Log the current data to JSON after advancing
+    logToJson();
 }
+
 
 void UltrasonicModuleGraphics::logBackwards() {
+    // Check if we have any log data
+    if (sensorsFromLog.empty()) {
+        std::cerr << "No sensor data to log backwards." << std::endl;
+        return;
+    }
 
+    // Check if we've already processed all chunks (we're at the first chunk)
+    if (currentSensorIndexLog == 0) {
+        std::cerr << "Already at the beginning of sensor data. Stopping." << std::endl;
+        return;  // Stop if we're already at the first chunk
+    }
+
+    // Get the previous chunk of 8 sensors
+    const auto& currentChunk = sensorsFromLog[currentSensorIndexLog - 1];
+
+    // Ensure the chunk size is exactly 8, as expected
+    if (currentChunk.size() != 8) {
+        std::cerr << "Unexpected chunk size. Expected 8, but got " << currentChunk.size() << std::endl;
+        return;
+    }
+
+    // Update the sensor data (in this case, updating each sensor's angle and distance)
+    for (size_t i = 0; i < currentChunk.size(); ++i) {
+        sensors[i].angle = currentChunk[i].first;
+        sensors[i].distance = currentChunk[i].second;
+    }
+
+    // Move to the previous chunk of 8 sensors
+    currentSensorIndexLog--;
+
+    // Optional: Log the current data to JSON after moving backwards
+    logToJson();
 }
+
