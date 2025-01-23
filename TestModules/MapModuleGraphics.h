@@ -19,6 +19,7 @@ public:
     void saveMapToJson();
     void logFromJson() override;
     void logForward() override;
+    void logBackwards() override;
 
 private:
     std::vector<std::vector<int>> ballPositionsFromLog;
@@ -34,7 +35,6 @@ private:
 
     // Private methods
     void loadMap(); // Load map data from a file
-    void logBackwards();
 };
 
 #endif // SMELYZAJKO_GUI_MAPMODULEGRAPHICS_H

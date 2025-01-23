@@ -17,7 +17,7 @@ public:
     void logToJson() override;
     void logFromJson() override;
     void logForward() override;
-    void logBackwards(); // Navigate logs backward
+    void logBackwards() override;
     void updateValueOfModule(int value) override;
 
 private:
