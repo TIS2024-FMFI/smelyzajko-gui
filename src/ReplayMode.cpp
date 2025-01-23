@@ -70,40 +70,44 @@ int ReplayMode::run() {
     return 0;
 }
 
+
+
 void ReplayMode::startGraphicModuleThreads() {
     isPlaying = true;
-    for (GraphicModule* module : moduleManager.getGraphicModules()) {
+    auto modules = moduleManager.getGraphicModules();
+
+    for (GraphicModule* module : modules) {
         module->logFromJson();
         graphicModuleThreads.emplace_back(&ReplayMode::runGraphicModule, this, module);
+        std::cout << "startGraphicModuleThreads" << std::endl;
     }
-}
-void ReplayMode::stopGraphicModuleThreads() {
-    isPlaying = false;
-    for (std::thread& thread : graphicModuleThreads) {
-        if (thread.joinable()) {
-            thread.join();
-        }
-    }
-    graphicModuleThreads.clear();
 }
 
+
+
 void ReplayMode::runGraphicModule(GraphicModule* module) {
-    int frequency = module->getGraphicsFrequency();
-    std::cout<<module->getModuleName()<<std::endl;
-    std::cout<<frequency<<std::endl;
+    int frequency;
+
+    if (module->getModuleName() == "TextArea"){
+        frequency = module->getTextFrequency();
+    }
+    else {
+        frequency = module->getGraphicsFrequency();
+    }
+    std::cout << module->getModuleName() << std::endl;
+    std::cout << frequency << std::endl;
     std::chrono::milliseconds interval;
 
     if (frequency > 0) {
         interval = std::chrono::milliseconds(60000 / frequency);
     } else {
-
         std::cerr << "Invalid frequency for module " << module->getModuleName() << std::endl;
         return;
     }
 
     while (isPlaying) {
-        std::unique_lock<std::mutex> lock(cv_m);
-        cv.wait(lock, [this] { return !isPaused; });
+        std::unique_lock<std::mutex> lock(cv_ms[module]);
+        cvs[module].wait(lock, [this] { return !isPaused.load(); });
 
         module->logForward();
 
@@ -113,6 +117,16 @@ void ReplayMode::runGraphicModule(GraphicModule* module) {
             std::this_thread::yield();
         }
     }
+}
+
+void ReplayMode::stopGraphicModuleThreads() {
+    isPlaying = false;
+    for (std::thread& thread : graphicModuleThreads) {
+        if (thread.joinable()) {
+            thread.join();
+        }
+    }
+    graphicModuleThreads.clear();
 }
 
 void ReplayMode::drawMenuBar() {
@@ -156,7 +170,9 @@ void ReplayMode::drawMenuBar() {
 //
 void ReplayMode::play() {
     isPaused = false;
-    cv.notify_all();
+    for (auto& [module, cv] : cvs){
+        cv.notify_all();
+    }
 }
 
 void ReplayMode::pause() {

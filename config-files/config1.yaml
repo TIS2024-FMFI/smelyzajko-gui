@@ -1,8 +1,9 @@
 templates:
+  - template6.json
 modules:
   - UltrasonicModule:
-      graphicsLogEnabled: false
-      graphicsFrequency: 60
+      graphicsLogEnabled: true
+      graphicsFrequency: 120
       textLogEnabled: false
       textFrequency: 60
   - MapModule:
@@ -11,8 +12,8 @@ modules:
       textLogEnabled: false
       textFrequency: 60
   - CounterModule:
-      graphicsLogEnabled: false
-      graphicsFrequency: 60
+      graphicsLogEnabled: true
+      graphicsFrequency: 120
       textLogEnabled: false
       textFrequency: 60
 logDirectory:

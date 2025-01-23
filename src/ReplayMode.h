@@ -9,6 +9,7 @@
 #include <condition_variable>
 
 
+
 class ReplayMode : public GUI {
 public:
       ReplayMode(YAML::Node configFile): GUI(configFile) {
@@ -48,13 +49,13 @@ public:
 
 private:
     int currentTemplateIndex = 0;
-
+    std::string logDirectory;
     void runGraphicModule(GraphicModule* module);
-    std::atomic<bool> isPlaying{true};
+    std::atomic<bool> isPlaying{false};
     std::atomic<bool> isPaused{false};
-    std::condition_variable cv;
-    std::mutex cv_m;
     std::vector<std::thread> graphicModuleThreads;
+    std::unordered_map<GraphicModule*, std::condition_variable> cvs;
+    std::unordered_map<GraphicModule*, std::mutex> cv_ms;
 
     void switchTemplate(int direction);
     void checkIfLogDirectoryExists();
@@ -64,21 +65,23 @@ private:
     void processLogDirectoryDialog();
     void play();
     void pause();
-    void stop();
 
-    void handlePlayback();
 
-                          // Stop playback
-    void nextFrame();                  // Move to the next frame
-    void previousFrame();              // Move to the previous frame
-
-       // Manages templates and elements
-    //std::vector<std::pair<float, json>> replayData;  // Replay data: <timestamp, data>
-    size_t currentFrame = 0;           // Current playback frame
-    float playbackSpeed = 1.0f;        // Playback speed
-    std::chrono::time_point<std::chrono::steady_clock> lastUpdate; // Time of the last update
-    std::string logDirectory;          // Path to the log directory
-    std::vector<std::string> modules;  // List of modules to process
+//    void stop();
+//
+//    void handlePlayback();
+//
+//                          // Stop playback
+//    void nextFrame();                  // Move to the next frame
+//    void previousFrame();              // Move to the previous frame
+//
+//       // Manages templates and elements
+//    //std::vector<std::pair<float, json>> replayData;  // Replay data: <timestamp, data>
+//    size_t currentFrame = 0;           // Current playback frame
+//    float playbackSpeed = 1.0f;        // Playback speed
+//    std::chrono::time_point<std::chrono::steady_clock> lastUpdate; // Time of the last update
+//          // Path to the log directory
+//    std::vector<std::string> modules;  // List of modules to process
 
 
 };

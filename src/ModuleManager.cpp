@@ -56,9 +56,6 @@ int ModuleManager::registerGraphicModule(const std::string &graphicElementName,c
     std::string logDir = logDirectory + "/" + moduleName;
     graphicModule->setLogDirectory(logDir);
 
-    // Set the element logging settings
-    graphicModule->setGraphicsFrequency(20);
-    graphicModule->setGraphicsLogEnabled(true);
 
     graphicModule->setModuleName(moduleName);
     graphicModule->setModuleID(moduleID);
