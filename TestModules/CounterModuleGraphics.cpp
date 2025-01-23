@@ -124,8 +124,6 @@ void CounterModuleGraphics::logForward() {
     if (currentLogIndex + 1 < logData.size()) {
         ++currentLogIndex;
         counter = logData[currentLogIndex];
-    } else {
-        std::cerr << "[INFO] Already at the last log entry." << std::endl;
     }
 }
 
@@ -137,12 +135,23 @@ void CounterModuleGraphics::logBackwards() {
         return;
     }
 
-    if (currentLogIndex > 0) {
-        --currentLogIndex;
-        counter = logData[currentLogIndex];
-        std::cout << "[INFO] Moved to previous log entry. Counter: " << counter << std::endl;
+    int frequency = getGraphicsFrequency(); // Retrieve the logging frequency (in Hz)
+    if (frequency <= 0) {
+        std::cerr << "[ERROR] Invalid frequency. Cannot calculate backward step." << std::endl;
+        return;
+    }
+
+    // Calculate how many steps correspond to 5 seconds
+    int stepsToMove = static_cast<int>(std::ceil(50.0 / frequency));
+
+    if (currentLogIndex >= stepsToMove) {
+        currentLogIndex -= stepsToMove;
+        counter = logData[currentLogIndex]; // Update counter to the previous value
     } else {
-        std::cerr << "[INFO] Already at the first log entry." << std::endl;
+        currentLogIndex = 0; // If fewer logs exist, go to the start
+        counter = logData[currentLogIndex];
     }
 }
+
+
 

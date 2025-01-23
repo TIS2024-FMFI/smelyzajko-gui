@@ -203,6 +203,27 @@ void TextArea::logForward() {
 }
 
 void TextArea::logBackwards() {
+    std::lock_guard<std::mutex> lock(logMutex);
 
+    if (logs.empty()) {
+        std::cerr << "[ERROR] No log data available to move backward." << std::endl;
+        return;
+    }
+
+    int frequency = getTextFrequency();
+    if (frequency <= 0) {
+        std::cerr << "[ERROR] Invalid frequency. Cannot calculate backward steps." << std::endl;
+        return;
+    }
+
+    int stepsToMove = static_cast<int>(std::ceil(50.0 / frequency));
+
+    if (logs.size() > stepsToMove) {
+        logs.erase(logs.end() - stepsToMove, logs.end());
+        std::cout << "[INFO] Moved back 5 seconds in logs. Remaining logs: " << logs.size() << std::endl;
+    } else {
+        logs.clear();
+        std::cout << "[INFO] Reached the beginning of the logs. Logs cleared." << std::endl;
+    }
 }
 
