@@ -40,12 +40,11 @@ void CounterModuleGraphics::logToJson() {
 
     float frequency = getGraphicsFrequency();
 
-    if (frequency > 0) {
-        float interval = 60.0f / frequency; // Convert frequency to interval in seconds
-        if (elapsed.count() < interval) {
-            return;
-        }
+    float interval = 60.0f / frequency;
+    if (elapsed.count() < interval) {
+        return;
     }
+
 
     lastLogTime = currentTime;
 
@@ -64,8 +63,8 @@ void CounterModuleGraphics::logToJson() {
         }
         inFile.close();
     }
-    if (!j.contains("frequency")) {
-        j["frequency"] = getGraphicsFrequency();
+    if (!j.contains("graphicsFrequency")) {
+        j["graphicsFrequency"] = getGraphicsFrequency();
     }
 
     // Initialize the file if empty
@@ -101,13 +100,14 @@ void CounterModuleGraphics::logFromJson() {
         nlohmann::json j;
         inFile >> j;
         inFile.close();
-
+        if (j.contains("graphicsFrequency")) {
+            setGraphicsFrequency(j["graphicsFrequency"]);
+        }
         if (j.contains("counter_values") && j["counter_values"].is_array()) {
             logData.clear();
             for (const auto& value : j["counter_values"]) {
                 logData.push_back(value);
             }
-            currentLogIndex = 0; // Reset log index
         } else {
             std::cerr << "[ERROR] Invalid JSON structure in file: " << filename << std::endl;
         }
