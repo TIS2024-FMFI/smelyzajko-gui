@@ -85,24 +85,21 @@ void ReplayMode::startGraphicModuleThreads() {
     for (GraphicModule* module : modules) {
         module->logFromJson();
         graphicModuleThreads.emplace_back(&ReplayMode::runGraphicModule, this, module);
-        std::cout << "startGraphicModuleThreads" << std::endl;
     }
 }
 
 
 
 void ReplayMode::runGraphicModule(GraphicModule* module) {
-    int frequency = (module->getModuleName() == "TextArea") ? module->getTextFrequency() : module->getGraphicsFrequency();
+    int frequency = (module->getGraphicElementName() == "TextArea") ? module->getTextFrequency() : module->getGraphicsFrequency();
 
-    std::cout << module->getModuleName() << std::endl;
-    std::cout << frequency << std::endl;
     std::chrono::milliseconds interval;
 
     if (frequency > 0) {
         interval = std::chrono::milliseconds(60000 / frequency);
     } else {
 
-        std::cerr << "Invalid frequency for module " << module->getModuleName() << std::endl;
+        std::cerr << "Invalid frequency for module " << module->getModuleName() <<" and for graphic element: "<<module->getGraphicElementName()<< std::endl;
         return;
     }
 
@@ -249,7 +246,6 @@ void ReplayMode::loadLogData() {
     if (!configFile["logDirectory"] || configFile["logDirectory"].as<std::string>().empty()) {
         throw std::runtime_error("Log directory not specified in the configuration file.");
     }
-    std::cout<<"loadLogData"<<std::endl;
     std::filesystem::path logDirPath = configFile["logDirectory"].as<std::string>();
 
     if (!std::filesystem::exists(logDirPath) || !std::filesystem::is_directory(logDirPath)) {
@@ -277,7 +273,6 @@ void ReplayMode::loadLogData() {
 }
 
 void ReplayMode::checkIfLogDirectoryExists() {
-    std::cout<<"checkIfLogDirectoryExists"<<std::endl;
     if (configFile["logDirectory"]) {
         logDirectory = configFile["logDirectory"].as<std::string>();
         std::filesystem::path logDirPath(logDirectory);
@@ -344,18 +339,18 @@ void ReplayMode::back() {
     isPaused = true; // Pause playback to allow precise navigation
 
     for (GraphicModule* module : moduleManager.getGraphicModules()) {
-        int frequency = (module->getModuleName() == "TextArea") ? module->getTextFrequency() : module->getGraphicsFrequency();
+        int frequency = (module->getGraphicElementName() == "TextArea") ? module->getTextFrequency() : module->getGraphicsFrequency();
         int interval = 60000 / frequency;
         // Update accumulated time for the module
         accumulatedTime[module] += fixedTimeStep;
 
-        // Check if accumulated time exceeds the interval
-        if (accumulatedTime[module] >= interval) {
+        if (interval > 0) {
+        while (accumulatedTime[module] >= interval) {
             module->logBackwards();
             accumulatedTime[module] -= interval; // Reset accumulated time
         }
+        }
     }
-
 }
 
 

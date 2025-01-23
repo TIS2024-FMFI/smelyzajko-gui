@@ -75,11 +75,11 @@ protected:
     ImVec2 size;
 
     // Graphics settings
-    float graphicsFrequency;
+    int graphicsFrequency;
     bool graphicsLogEnabled;
 
     // Text settings
-    float textFrequency;
+    int textFrequency;
     bool textLogEnabled;
 
     std::string logFileDirectory;

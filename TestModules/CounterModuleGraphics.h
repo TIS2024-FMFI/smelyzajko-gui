@@ -21,12 +21,18 @@ public:
     void updateValueOfModule(int value) override;
 
 private:
+    void startLoggingThread();
+    void stopLoggingThread();
+    void loggingThreadFunction();
+
     int counter;                              // Counter value
     std::vector<int> logData;                 // Loaded log data
     size_t currentLogIndex = 0;               // Current log index
     std::atomic<bool> stopGeneration;         // Flag for stopping threads
     std::mutex logMutex;                      // Mutex for log access
     std::thread generatorThread;              // Thread for asynchronous tasks
+    std::atomic<bool> loggingThreadRunning;
+    std::thread loggingThread;
 };
 
 #endif // SMELYZAJKO_GUI_COUNTERMODULEGRAPHICS_H

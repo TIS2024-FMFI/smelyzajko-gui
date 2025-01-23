@@ -12,6 +12,7 @@ UltrasonicModuleGraphics::UltrasonicModuleGraphics(){ // Initialize TextArea wit
 }
 
 void UltrasonicModuleGraphics::draw(ImGuiIO& io) {
+    logToJson();
     ImVec2 center = ImVec2(position.x + size.x / 2, position.y + size.y / 2);
     float radius = std::min(size.x, size.y) / 2.0f; // Use half of the smaller dimension
 
@@ -46,7 +47,7 @@ void UltrasonicModuleGraphics::updateValueOfModule(std::vector<float> value) {
     if (value.size() == 2) {
         sensors[i].distance = value[0];
         sensors[i].angle = value[1];
-        logToJson();
+
     } else {
         std::cerr << "[ERROR] Invalid input for updateValueOfModule (vector<float>)." << std::endl;
     }
@@ -55,7 +56,6 @@ void UltrasonicModuleGraphics::updateValueOfModule(std::vector<float> value) {
 void UltrasonicModuleGraphics::updateValueOfModule(int value) {
     if (value >= 0 && value < sensors.size()) {
         i = value;
-        logToJson();
     } else {
         std::cerr << "[ERROR] Invalid index for updateValueOfModule (int)." << std::endl;
     }
@@ -72,12 +72,11 @@ void UltrasonicModuleGraphics::logToJson() {
 
     float frequency = getGraphicsFrequency();
 
-    if (frequency > 0) {
-        float interval = 60.0f / frequency;
-        if (elapsed.count() < interval) {
-            return;
-        }
+    float interval = 60.0f / frequency;
+    if (elapsed.count() < interval) {
+        return;
     }
+
 
     lastLogTime = currentTime;
 
@@ -172,7 +171,7 @@ void UltrasonicModuleGraphics::logFromJson() {
     if (j.contains("graphicsFrequency")) {
         graphicsFrequency = j["graphicsFrequency"];
     } else {
-        std::cerr << "Error: No graphicsFrequency found in JSON.\n";
+        std::cerr << "Error: No graphicsFrequency found in JSON. In " <<moduleName<<" and Graphic element: "<<graphicElementName<< std::endl;
     }
 }
 

@@ -20,7 +20,6 @@ file(GLOB PROJECT_SOURCES
         src/*.cpp
         TestModules/*.cpp
 )
-
 add_library(imgui STATIC ${IMGUI_SRC} ${IMGUI_HEADERS} ${PROJECT_SOURCES})
 
 include_directories(
@@ -43,6 +42,7 @@ add_executable(smelyzajko-gui
 )
 
 if(APPLE)
+    add_subdirectory(libs/glfw)
     add_definitions(-DGL_SILENCE_DEPRECATION)
     find_library(OPENGL_FRAMEWORK OpenGL)
     target_link_libraries(smelyzajko-gui PRIVATE imgui ${OPENGL_FRAMEWORK} glfw yaml-cpp)

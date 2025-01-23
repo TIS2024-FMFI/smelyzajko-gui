@@ -4,9 +4,12 @@
 CounterModuleGraphics::CounterModuleGraphics()
         : counter(0) {
     setGraphicElementName("CounterGraphicElement");
+    startLoggingThread();
+
 }
 
 void CounterModuleGraphics::draw(ImGuiIO &io) {
+    logToJson();
     ImDrawList* draw_list = ImGui::GetForegroundDrawList();
     ImU32 text_color = IM_COL32(255, 255, 255, 255);
 
@@ -25,32 +28,16 @@ void CounterModuleGraphics::draw(ImGuiIO &io) {
 }
 
 void CounterModuleGraphics::updateValueOfModule(int value) {
-    logToJson();
     counter = value;
 }
 
 void CounterModuleGraphics::logToJson() {
-    if (!isGraphicsLogEnabled()) {
-        return;
-    }
-
-    static auto lastLogTime = std::chrono::steady_clock::now();
-    auto currentTime = std::chrono::steady_clock::now();
-    std::chrono::duration<float> elapsed = currentTime - lastLogTime;
-
-    float frequency = getGraphicsFrequency();
-
-    float interval = 60.0f / frequency;
-    if (elapsed.count() < interval) {
-        return;
-    }
 
 
-    lastLogTime = currentTime;
 
     std::lock_guard<std::mutex> lock(logMutex); // Protect writing
 
-    std::string filename = logFileDirectory+"/CounterGraphicElement.json";
+    std::string filename = logFileDirectory + "/CounterGraphicElement.json";
     nlohmann::json j;
 
     // Load existing content
@@ -82,6 +69,30 @@ void CounterModuleGraphics::logToJson() {
         outFile.close();
     } else {
         std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
+    }
+}
+
+
+void CounterModuleGraphics::startLoggingThread() {
+    loggingThread = std::thread(&CounterModuleGraphics::loggingThreadFunction, this);
+}
+void CounterModuleGraphics::stopLoggingThread() {
+    loggingThreadRunning = false;
+    if (loggingThread.joinable()) {
+        loggingThread.join();
+    }
+}
+void CounterModuleGraphics::loggingThreadFunction() {
+    std::chrono::milliseconds interval;
+
+    if (graphicsFrequency > 0) {
+        interval = std::chrono::milliseconds(60000 / graphicsFrequency);
+    } else {
+        return;
+    }
+    while (loggingThreadRunning) {
+        logToJson();
+        std::this_thread::sleep_for(interval);
     }
 }
 
