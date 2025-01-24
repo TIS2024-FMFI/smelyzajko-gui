@@ -136,4 +136,6 @@ void GraphicModule::setLogDirectory(std::string name) {
 std::string GraphicModule::getLogDirectory() const {
     return logFileDirectory;
 }
-
+void GraphicModule::startLoggingThread() {
+    std::cerr << "Not Implemented" << std::endl;
+}

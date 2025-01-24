@@ -188,7 +188,6 @@ void TextArea::logFromJson() {
             for (const auto& logEntry : j["logs"]) {
                 logs.push_back(logEntry);
             }
-            std::cout << "[INFO] Successfully loaded logs from JSON." << std::endl;
         } else {
             std::cerr << "[ERROR] Invalid JSON structure in file: " << filename << std::endl;
         }
@@ -216,6 +215,5 @@ void TextArea::logBackwards() {
 
     // Remove the last log entry to move one step back
     logs.pop_back();
-    std::cout << "[INFO] Moved one step back in logs. Remaining logs: " << logs.size() << std::endl;
 }
 

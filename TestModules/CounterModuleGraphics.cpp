@@ -4,12 +4,10 @@
 CounterModuleGraphics::CounterModuleGraphics()
         : counter(0) {
     setGraphicElementName("CounterGraphicElement");
-    startLoggingThread();
 
 }
 
 void CounterModuleGraphics::draw(ImGuiIO &io) {
-    logToJson();
     ImDrawList* draw_list = ImGui::GetForegroundDrawList();
     ImU32 text_color = IM_COL32(255, 255, 255, 255);
 
@@ -32,9 +30,9 @@ void CounterModuleGraphics::updateValueOfModule(int value) {
 }
 
 void CounterModuleGraphics::logToJson() {
-
-
-
+    if (!graphicsLogEnabled){
+        return;
+    }
     std::lock_guard<std::mutex> lock(logMutex); // Protect writing
 
     std::string filename = logFileDirectory + "/CounterGraphicElement.json";
@@ -74,6 +72,11 @@ void CounterModuleGraphics::logToJson() {
 
 
 void CounterModuleGraphics::startLoggingThread() {
+    if (!graphicsLogEnabled) {
+        return;
+    }
+    loggingThreadRunning = true;
+
     loggingThread = std::thread(&CounterModuleGraphics::loggingThreadFunction, this);
 }
 void CounterModuleGraphics::stopLoggingThread() {
@@ -83,6 +86,7 @@ void CounterModuleGraphics::stopLoggingThread() {
     }
 }
 void CounterModuleGraphics::loggingThreadFunction() {
+
     std::chrono::milliseconds interval;
 
     if (graphicsFrequency > 0) {

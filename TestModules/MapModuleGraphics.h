@@ -8,6 +8,8 @@
 #include <vector>
 #include <string>
 #include <mutex>
+#include <thread>
+
 
 class MapModuleGraphics : public GraphicModule {
 public:
@@ -20,8 +22,15 @@ public:
     void logFromJson() override;
     void logForward() override;
     void logBackwards() override;
+    void startLoggingThread() override;
+
 
 private:
+    void stopLoggingThread();
+    void loggingThreadFunction();
+    std::atomic<bool> loggingThreadRunning;
+    std::thread loggingThread;
+
     std::vector<std::vector<int>> ballPositionsFromLog;
     size_t currentBallPositionIndexLog = 0;
     int ballRow = 0;

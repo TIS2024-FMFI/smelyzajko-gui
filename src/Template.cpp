@@ -43,7 +43,6 @@ nlohmann::json Template::to_json() const {
         json elementJson;
 
         element->to_json(elementJson);
-        std::cout<<elementJson["type"]<<std::endl;
         if (elementJson["type"] == "rectangle"){
             j["graphicModules"].push_back(elementJson);
         }else {

@@ -8,6 +8,8 @@
 #include <string>
 #include <mutex>
 #include <chrono>
+#include <thread>
+
 
 struct UltrasonicSensorData {
     float angle;    // Angle of the sensor
@@ -27,12 +29,17 @@ public:
 
     void updateValueOfModule(int value) override;
     void updateValueOfModule(std::vector<float>) override;
+    void startLoggingThread() override;
+
 
 
 
     int i;
 private:
-    std::mutex logMutex;
+    void stopLoggingThread();
+    void loggingThreadFunction();
+    std::thread loggingThread;
+    std::atomic<bool> loggingThreadRunning;
 
     std::vector<std::vector<std::pair<float, float>>> sensorsFromLog; // 8 sensors per chunk
     size_t currentSensorIndexLog = 0;  // Index to track the current chunk
@@ -42,6 +49,8 @@ private:
             {0, 5}, {45, 7}, {90, 4}, {135, 8},
             {180, 6}, {225, 3}, {270, 2}, {315, 5}
     };
+    std::mutex logMutex;
+
 
 
 };
