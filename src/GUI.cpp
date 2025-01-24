@@ -9,6 +9,7 @@ GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()), configFile(configFile) {
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // Disable window resizing
 
     primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* videoMode = glfwGetVideoMode(primaryMonitor);
@@ -16,7 +17,7 @@ GUI::GUI(YAML::Node configFile) : io(ImGui::GetIO()), configFile(configFile) {
     monitorWidth = videoMode->width;
     monitorHeight = videoMode->height;
 
-    window = glfwCreateWindow(monitorWidth, monitorHeight, "GUI", nullptr, nullptr);
+    window = glfwCreateWindow(monitorWidth, monitorHeight, "GUI", primaryMonitor, nullptr);
     if (!window) {
         throw std::runtime_error("Error at window creation");
     }

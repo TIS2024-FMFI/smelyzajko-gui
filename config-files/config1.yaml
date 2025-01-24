@@ -1,12 +1,4 @@
 templates:
-  - template2.json
-  - template6.json
-  - template1.json
-
-#  - template3.json
-#  - template4.json
-#  - template5.json
-  - Template.json
 modules:
   - UltrasonicModule:
       graphicsLogEnabled: true

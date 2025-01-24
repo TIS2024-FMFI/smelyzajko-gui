@@ -9,7 +9,7 @@ TextArea::TextArea()
 }
 
 void TextArea::startLoggingThread() {
-    if (!graphicsLogEnabled){
+    if (!textFrequency){
         return;
     }
     loggingThreadRunning = true;
@@ -28,8 +28,8 @@ void TextArea::loggingThreadFunction() {
 
 
     std::chrono::milliseconds interval;
-    if (graphicsFrequency > 0) {
-        interval = std::chrono::milliseconds(60000 / graphicsFrequency);
+    if (textLogEnabled > 0) {
+        interval = std::chrono::milliseconds(60000 / textFrequency);
     } else {
 
         return;
@@ -69,8 +69,11 @@ void TextArea::draw(ImGuiIO& io) {
                     if (test_line_size.x > size.x - 2 * inner_padding) {
                         wrapped_logs.push_back(current_line);
                         current_line = word;
+                        log_text_size.y += test_line_size.y + inner_padding;
+
                     } else {
                         current_line = test_line;
+
                     }
                 }
                 if (!current_line.empty()) {
@@ -122,7 +125,6 @@ void TextArea::draw(ImGuiIO& io) {
 
 void TextArea::updateValueOfModule(std::string value) {
     logs.push_back(value);
-    logToJson();
 }
 void TextArea::clearLogs() {
 
@@ -283,7 +285,7 @@ void TextArea::logBackwards() {
         --currentLogIndex;
     }
 
-    std::cout << "[INFO] Removed log: " << removedLog << std::endl;
+    //std::cout << "[INFO] Removed log: " << removedLog << std::endl;
 }
 
 
