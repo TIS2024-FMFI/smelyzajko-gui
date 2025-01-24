@@ -9,6 +9,7 @@
 #include <mutex>
 #include <chrono>
 #include <thread>
+#include <atomic>
 
 
 struct UltrasonicSensorData {

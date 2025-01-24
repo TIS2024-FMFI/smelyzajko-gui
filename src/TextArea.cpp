@@ -1,9 +1,43 @@
 #include "TextArea.h"
 #include "fstream"
 #include "sstream"
+
+
 TextArea::TextArea()
-        : scrollbar(0.0f, 0.0f) {
+: scrollbar(0.0f, 0.0f) {
     setGraphicElementName("TextArea");
+}
+
+void TextArea::startLoggingThread() {
+    if (!graphicsLogEnabled){
+        return;
+    }
+    loggingThreadRunning = true;
+    loggingThread = std::thread(&TextArea::loggingThreadFunction, this);
+
+}
+void TextArea::stopLoggingThread() {
+    loggingThreadRunning = false;
+    if (loggingThread.joinable()) {
+        loggingThread.join();
+    }
+}
+
+
+void TextArea::loggingThreadFunction() {
+
+
+    std::chrono::milliseconds interval;
+    if (graphicsFrequency > 0) {
+        interval = std::chrono::milliseconds(60000 / graphicsFrequency);
+    } else {
+
+        return;
+    }
+    while (loggingThreadRunning) {
+        logToJson();
+        std::this_thread::sleep_for(interval);
+    }
 }
 
 void TextArea::draw(ImGuiIO& io) {
@@ -105,27 +139,9 @@ bool TextArea::isAutoscrollEnabled() const {
 }
 
 void TextArea::logToJson() {
-    if (!isTextLogEnabled()) {
-        return;
-    }
-
-    static auto lastLogTime = std::chrono::steady_clock::now() - std::chrono::hours(1); // Initialize to a time in the past
-    auto currentTime = std::chrono::steady_clock::now();
-    std::chrono::duration<float> elapsed = currentTime - lastLogTime;
-
-    float frequency = getTextFrequency();
-    if (frequency > 0) {
-        float interval = 60.0f / frequency; // Convert frequency to interval in seconds
-        if (elapsed.count() < interval) {
-            return;
-        }
-    }
-
-    lastLogTime = currentTime;
-
     std::lock_guard<std::mutex> lock(logMutex); // Protect writing
 
-    std::string filename = logFileDirectory + "/TextArea"   + ".json";
+    std::string filename = logFileDirectory + "/TextArea.json";
     nlohmann::json j;
 
     // Load existing content
@@ -138,17 +154,27 @@ void TextArea::logToJson() {
         }
         inFile.close();
     }
+
     if (!j.contains("textFrequency")) {
-        j["textFrequency"] = frequency;
+        j["textFrequency"] = getTextFrequency();
     }
+
     // Initialize the file if empty
     if (!j.contains("logs")) {
         j["logs"] = nlohmann::json::array();
     }
 
-    // Add new logs
-    j["logs"].push_back(logs.back());
+    // Get the current log entry (text area content)
+    std::string currentLog = logs.empty() ? "EMPTY" : logs.back();
 
+    // Compare with the last logged entry (if any)
+    if (!j["logs"].empty() && j["logs"].back() == currentLog) {
+        // If the content is the same, log "EMPTY"
+        j["logs"].push_back("EMPTY");
+    } else {
+        // Otherwise, log the new content
+        j["logs"].push_back(currentLog);
+    }
 
     // Overwrite the file with updated content
     std::ofstream outFile(filename);
@@ -159,6 +185,7 @@ void TextArea::logToJson() {
         std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
     }
 }
+
 
 void TextArea::logFromJson() {
     std::lock_guard<std::mutex> lock(logMutex);
@@ -180,7 +207,7 @@ void TextArea::logFromJson() {
         if (j.contains("textFrequency")) {
             textFrequency = j["textFrequency"];
         } else {
-            std::cerr << "Error: No text Frequency found in JSON.\n";
+            std::cerr << "Error: No textFrequency found in JSON.\n";
         }
 
         if (j.contains("logs") && j["logs"].is_array()) {
@@ -188,6 +215,7 @@ void TextArea::logFromJson() {
             for (const auto& logEntry : j["logs"]) {
                 logs.push_back(logEntry);
             }
+            std::cout << "[INFO] Successfully loaded logs from JSON." << std::endl;
         } else {
             std::cerr << "[ERROR] Invalid JSON structure in file: " << filename << std::endl;
         }
@@ -195,25 +223,49 @@ void TextArea::logFromJson() {
         std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
     }
 }
-
 void TextArea::logForward() {
-    std::lock_guard<std::mutex> lock(logMutex);
+    std::lock_guard<std::mutex> lock(logMutex); // Ensure thread-safe access to logs
 
-    if (!logs.empty()) {
-        // Remove the first log and simulate displaying the next log
-        logs.erase(logs.begin());
+    // Static variable to track the current log index
+    static size_t currentIndex = 0;
+
+    // Check if we are at the end of the logs
+    if (currentIndex >= logs.size()) {
+        return; // Nothing more to show
+    }
+
+    // Move to the next non-"EMPTY" log
+    while (currentIndex < logs.size() && logs[currentIndex] == "EMPTY") {
+        ++currentIndex;
+    }
+
+    // If a valid log is found, append it
+    if (currentIndex < logs.size()) {
+        logs.push_back(logs[currentIndex]);
+        ++currentIndex; // Increment index for the next logForward call
     }
 }
+
 
 void TextArea::logBackwards() {
     std::lock_guard<std::mutex> lock(logMutex);
 
     if (logs.empty()) {
-        std::cerr << "[ERROR] No log data available to move backward." << std::endl;
+        std::cerr << "[INFO] No logs available to move backward." << std::endl;
         return;
     }
 
-    // Remove the last log entry to move one step back
-    logs.pop_back();
+    // Start from the end of the logs vector and find the last valid log (not "EMPTY")
+    for (auto it = logs.rbegin(); it != logs.rend(); ++it) {
+        if (*it != "EMPTY") {
+            // Remove the valid log
+            logs.erase(std::next(it).base());
+            std::cout << "[INFO] Removed log: " << *it << std::endl;
+            return;
+        }
+    }
+
+    // If no valid log is found
+    std::cerr << "[INFO] No valid log entries to move backward." << std::endl;
 }
 

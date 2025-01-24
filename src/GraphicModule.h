@@ -7,6 +7,11 @@
 
 class GraphicModule {
 public:
+
+
+    virtual ~GraphicModule() = default;
+
+
     virtual void draw(ImGuiIO &io) = 0;
 
     virtual void logToJson() = 0;
