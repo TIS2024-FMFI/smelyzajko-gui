@@ -149,31 +149,31 @@ void TextArea::logToJson() {
     if (inFile.is_open()) {
         try {
             inFile >> j;
-        } catch (const std::exception &e) {
+        } catch (const std::exception& e) {
             std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
         }
         inFile.close();
     }
 
+    // Ensure the structure is initialized
     if (!j.contains("textFrequency")) {
         j["textFrequency"] = getTextFrequency();
     }
-
-    // Initialize the file if empty
     if (!j.contains("logs")) {
         j["logs"] = nlohmann::json::array();
     }
 
-    // Get the current log entry (text area content)
+    // Get the current log entry
     std::string currentLog = logs.empty() ? "EMPTY" : logs.back();
 
-    // Compare with the last logged entry (if any)
-    if (!j["logs"].empty() && j["logs"].back() == currentLog) {
-        // If the content is the same, log "EMPTY"
-        j["logs"].push_back("EMPTY");
-    } else {
-        // Otherwise, log the new content
+    // Compare with the last logged entry
+    bool isNewLog = j["logs"].empty() || j["logs"].back() != currentLog;
+
+    // Log "EMPTY" or the new log entry
+    if (isNewLog) {
         j["logs"].push_back(currentLog);
+    } else {
+        j["logs"].push_back("EMPTY");
     }
 
     // Overwrite the file with updated content
@@ -185,6 +185,7 @@ void TextArea::logToJson() {
         std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
     }
 }
+
 
 
 void TextArea::logFromJson() {
