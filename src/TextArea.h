@@ -19,6 +19,7 @@ public:
     void logFromJson() override;
     void logForward() override;
     void logBackwards() override;
+
     // Manage logs
     void updateValueOfModule(std::string value ) override;
     void clearLogs();

@@ -7,7 +7,7 @@
 MapModuleGraphics::MapModuleGraphics()
          { // Initialize TextArea with default dimensions
     setGraphicElementName("MapGraphicElement");
-    //loadMap();
+
 }
 
 void MapModuleGraphics::loadMap() {
@@ -78,28 +78,41 @@ void MapModuleGraphics::updateValueOfModule(std::vector<int> value) {
     } else {
         std::cerr << "Invalid value for MapModuleGraphics." << std::endl;
     }
-    logToJson();
 
 }
+void MapModuleGraphics::startLoggingThread() {
+    if (!graphicsLogEnabled){
+        return;
+    }
+    loggingThreadRunning = true;
+
+    loggingThread = std::thread(&MapModuleGraphics::loggingThreadFunction, this);
+}
+void MapModuleGraphics::stopLoggingThread() {
+    loggingThreadRunning = false;
+    if (loggingThread.joinable()) {
+        loggingThread.join();
+    }
+}
+void MapModuleGraphics::loggingThreadFunction() {
+    std::chrono::milliseconds interval;
+
+    if (graphicsFrequency > 0) {
+        interval = std::chrono::milliseconds(60000 / graphicsFrequency);
+    } else {
+        return;
+    }
+    while (loggingThreadRunning) {
+        logToJson();
+        std::this_thread::sleep_for(interval);
+    }
+}
+
 
 void MapModuleGraphics::logToJson() {
-    if (!isGraphicsLogEnabled()) {
+    if (!graphicsLogEnabled){
         return;
     }
-    static auto lastLogTime = std::chrono::steady_clock::now();
-    auto currentTime = std::chrono::steady_clock::now();
-    std::chrono::duration<float> elapsed = currentTime - lastLogTime;
-
-    float frequency = getGraphicsFrequency();
-
-    float interval = 60.0f / frequency; // Convert frequency to interval in seconds
-    if (elapsed.count() < interval) {
-        return;
-    }
-
-
-    lastLogTime = currentTime;
-
     std::lock_guard<std::mutex> lock(logMutex);
 
     std::string filename = logFileDirectory + "/MapGraphicElement.json";
@@ -153,7 +166,6 @@ void MapModuleGraphics::updateValueOfModule(std::vector<std::vector<int>> value)
 }
 
 void MapModuleGraphics::logFromJson() {
-    std::cout << "logFromJson " << logFileDirectory << std::endl;
     std::string filename = logFileDirectory + "/MapGraphicElement.json";
     nlohmann::json j;
 

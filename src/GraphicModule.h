@@ -61,6 +61,9 @@ public:
 
     void setLogDirectory(std::string name);
     std::string getLogDirectory() const;
+
+    virtual void startLoggingThread();
+
 protected:
     // Graphic module element settings
     int graphicElementId;

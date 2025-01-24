@@ -19,9 +19,9 @@ public:
     void logForward() override;
     void logBackwards() override;
     void updateValueOfModule(int value) override;
-
+    void startLoggingThread() override;
 private:
-    void startLoggingThread();
+
     void stopLoggingThread();
     void loggingThreadFunction();
 

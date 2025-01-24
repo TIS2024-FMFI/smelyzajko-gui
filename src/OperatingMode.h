@@ -15,13 +15,11 @@ public:
         } else {
             std::cerr << "No templates found in config file." << std::endl;
         }
-        std::cout<<templateNames.size()<<std::endl;
         if (templateNames.empty()) {
             templateManager = TemplateManager(false);
         } else {
             templateManager = TemplateManager(templateNames, false);
         }
-        std::cout << "OperatingMode constructor" << std::endl;
 
         setupShortcuts();
 

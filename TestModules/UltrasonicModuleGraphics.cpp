@@ -12,7 +12,6 @@ UltrasonicModuleGraphics::UltrasonicModuleGraphics(){ // Initialize TextArea wit
 }
 
 void UltrasonicModuleGraphics::draw(ImGuiIO& io) {
-    logToJson();
     ImVec2 center = ImVec2(position.x + size.x / 2, position.y + size.y / 2);
     float radius = std::min(size.x, size.y) / 2.0f; // Use half of the smaller dimension
 
@@ -61,24 +60,40 @@ void UltrasonicModuleGraphics::updateValueOfModule(int value) {
     }
 }
 
+void UltrasonicModuleGraphics::startLoggingThread() {
+    if (!graphicsLogEnabled){
+        return;
+    }
+    loggingThreadRunning = true;
+    loggingThread = std::thread(&UltrasonicModuleGraphics::loggingThreadFunction, this);
+
+}
+void UltrasonicModuleGraphics::stopLoggingThread() {
+    loggingThreadRunning = false;
+    if (loggingThread.joinable()) {
+        loggingThread.join();
+    }
+}
+void UltrasonicModuleGraphics::loggingThreadFunction() {
+
+
+    std::chrono::milliseconds interval;
+    if (graphicsFrequency > 0) {
+        interval = std::chrono::milliseconds(60000 / graphicsFrequency);
+    } else {
+
+        return;
+    }
+    while (loggingThreadRunning) {
+        logToJson();
+        std::this_thread::sleep_for(interval);
+    }
+}
+
 void UltrasonicModuleGraphics::logToJson() {
-    if (!isGraphicsLogEnabled()) {
+    if (!graphicsLogEnabled){
         return;
     }
-
-    static auto lastLogTime = std::chrono::steady_clock::now();
-    auto currentTime = std::chrono::steady_clock::now();
-    std::chrono::duration<float> elapsed = currentTime - lastLogTime;
-
-    float frequency = getGraphicsFrequency();
-
-    float interval = 60.0f / frequency;
-    if (elapsed.count() < interval) {
-        return;
-    }
-
-
-    lastLogTime = currentTime;
 
     std::lock_guard<std::mutex> lock(logMutex);
 
@@ -123,7 +138,6 @@ void UltrasonicModuleGraphics::logToJson() {
 }
 
 void UltrasonicModuleGraphics::logFromJson() {
-    std::cout << "logFromJson " << logFileDirectory << std::endl;
     std::string filename = logFileDirectory + "/UltrasonicGraphicElement.json";
     nlohmann::json j;
 
@@ -209,7 +223,6 @@ void UltrasonicModuleGraphics::logForward() {
     currentSensorIndexLog++;
 
     // Optional: Log the current data to JSON after advancing
-    logToJson();
 }
 
 
@@ -238,6 +251,5 @@ void UltrasonicModuleGraphics::logBackwards() {
 
     currentSensorIndexLog--;
 
-    logToJson();
 }
 

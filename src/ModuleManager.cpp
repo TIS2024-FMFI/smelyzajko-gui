@@ -171,6 +171,7 @@ void ModuleManager::logSettings(YAML::Node configFile) {
                 module->setTextLogEnabled(moduleParams["textLogEnabled"].as<bool>());
                 std::string newLogDirForGraphicElement = newLogDir.string() + "/" + moduleName;
                 module->setLogDirectory(newLogDirForGraphicElement);
+                module->startLoggingThread();
             }
             if (!atLeastOneModuleLogEnabled&&(moduleParams["graphicsLogEnabled"].as<bool>() || moduleParams["textLogEnabled"].as<bool>())) {
                 atLeastOneModuleLogEnabled = true;
