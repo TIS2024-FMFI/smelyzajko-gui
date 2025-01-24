@@ -97,7 +97,6 @@ void CounterModuleGraphics::loggingThreadFunction() {
 }
 
 void CounterModuleGraphics::logFromJson() {
-    std::lock_guard<std::mutex> lock(logMutex);
 
     std::string filename = logFileDirectory + "/CounterGraphicElement.json";
     std::ifstream inFile(filename);
@@ -142,7 +141,6 @@ void CounterModuleGraphics::logForward() {
 }
 
 void CounterModuleGraphics::logBackwards() {
-    std::lock_guard<std::mutex> lock(logMutex);
 
     if (logData.empty()) {
         std::cerr << "[ERROR] No log data loaded." << std::endl;
