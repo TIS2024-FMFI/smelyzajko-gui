@@ -6,8 +6,8 @@
 
 MapModuleGraphics::MapModuleGraphics()
          { // Initialize TextArea with default dimensions
-    setGraphicElementName("Map Graphic Element");
-    //loadMap();
+    setGraphicElementName("MapGraphicElement");
+
 }
 
 void MapModuleGraphics::loadMap() {
@@ -68,77 +68,71 @@ void MapModuleGraphics::draw(ImGuiIO &io) {
 }
 
 void MapModuleGraphics::updateValueOfModule(std::vector<int> value) {
-    logToJson();
     if (value.size() == 3) {
         rows = value[0];
         cols = value[1];
-    }
-    if (value.size() == 2) {
+    }else if (value.size() == 2) {
         ballRow = value[0];
         ballCol = value[1];
         //textArea.addLog("Moved to: (" + std::to_string(ballRow) + ", " + std::to_string(ballCol) + ")");
     } else {
         std::cerr << "Invalid value for MapModuleGraphics." << std::endl;
     }
+
 }
+void MapModuleGraphics::startLoggingThread() {
+    if (!graphicsLogEnabled){
+        return;
+    }
+    loggingThreadRunning = true;
+
+    loggingThread = std::thread(&MapModuleGraphics::loggingThreadFunction, this);
+}
+void MapModuleGraphics::stopLoggingThread() {
+    loggingThreadRunning = false;
+    if (loggingThread.joinable()) {
+        loggingThread.join();
+    }
+}
+void MapModuleGraphics::loggingThreadFunction() {
+    std::chrono::milliseconds interval;
+
+    if (graphicsFrequency > 0) {
+        interval = std::chrono::milliseconds(60000 / graphicsFrequency);
+    } else {
+        return;
+    }
+    while (loggingThreadRunning) {
+        logToJson();
+        std::this_thread::sleep_for(interval);
+    }
+}
+
 
 void MapModuleGraphics::logToJson() {
-    if (!isGraphicsLogEnabled()) {
+    if (!graphicsLogEnabled){
         return;
     }
-    saveMapToJson();
-    static auto lastLogTime = std::chrono::steady_clock::now();
-    auto currentTime = std::chrono::steady_clock::now();
-    std::chrono::duration<float> elapsed = currentTime - lastLogTime;
-
-    float frequency = getGraphicsFrequency();
-    if (frequency > 0) {
-        float interval = 60.0f / frequency; // Convert frequency to interval in seconds
-        if (elapsed.count() < interval) {
-            return;
-        }
-    }
-
-    lastLogTime = currentTime;
-
     std::lock_guard<std::mutex> lock(logMutex);
 
-    std::ofstream outFile(logFileDirectory + "/map_logs.json");
-    if (!outFile.is_open()) {
-        std::cerr << "Error: Could not open map.json for writing.\n";
-        return;
-    }
-
+    std::string filename = logFileDirectory + "/MapGraphicElement.json";
     nlohmann::json j;
-    if (!j.contains("frequency")) {
-        j["frequency"] = getGraphicsFrequency();
-    }
-    j["rows"] = rows;
-    j["cols"] = cols;
-    j["map"] = nlohmann::json::array();
-    for (int row = 0; row < rows; ++row) {
-        j["map"][row] = nlohmann::json::array();
-        for (int col = 0; col < cols; ++col) {
-            j["map"][row][col] = map[row][col];
+
+    // Load existing content
+    std::ifstream inFile(filename);
+    if (inFile.is_open()) {
+        try {
+            inFile >> j;
+        } catch (const std::exception& e) {
+            std::cerr << "Error: Failed to parse JSON: " << e.what() << std::endl;
         }
+        inFile.close();
     }
 
-    outFile << std::setw(4) << j << std::endl;
-    outFile.close();
-}
-
-void MapModuleGraphics::updateValueOfModule(std::vector<std::vector<int>> value) {
-    map = value;
-}
-
-void MapModuleGraphics::saveMapToJson() {
-    std::ofstream outFile2(logFileDirectory+"/map.json");
-    if (!outFile2.is_open()) {
-        std::cerr << "Error: Could not open map.json for writing.\n";
-        return;
-    }
-    if (outFile2.is_open()) {
-        nlohmann::json j;
+    if (!mapSaved) {
+        if (!j.contains("graphicsFrequency")) {
+            j["graphicsFrequency"] = getGraphicsFrequency();
+        }
         j["rows"] = rows;
         j["cols"] = cols;
         j["map"] = nlohmann::json::array();
@@ -148,7 +142,105 @@ void MapModuleGraphics::saveMapToJson() {
                 j["map"][row][col] = map[row][col];
             }
         }
-        outFile2 << j.dump(4);
-        outFile2.close();
+        mapSaved = true;
+    }
+
+    // Log the ball's position
+    if (!j.contains("ball_positions")) {
+        j["ball_positions"] = nlohmann::json::array();
+    }
+    j["ball_positions"].push_back({{"row", ballRow}, {"col", ballCol}});
+
+    // Overwrite the file with updated content
+    std::ofstream outFile(filename);
+    if (outFile.is_open()) {
+        outFile << std::setw(4) << j << std::endl;
+        outFile.close();
+    } else {
+        std::cerr << "Error: Could not open map_logs.json for writing.\n";
+    }
+}
+
+void MapModuleGraphics::updateValueOfModule(std::vector<std::vector<int>> value) {
+    map = value;
+}
+
+void MapModuleGraphics::logFromJson() {
+    std::string filename = logFileDirectory + "/MapGraphicElement.json";
+    nlohmann::json j;
+
+    // Load existing content
+    std::ifstream inFile(filename);
+    if (inFile.is_open()) {
+        try {
+            inFile >> j;
+        } catch (const std::exception& e) {
+            std::cerr << "Error: Failed to parse JSON: " << e.what() << std::endl;
+        }
+        inFile.close();
+    } else {
+        std::cerr << "Error: Could not open " << filename << " for reading.\n";
+        return;
+    }
+
+    // Load ball positions
+    if (j.contains("ball_positions")) {
+        ballPositionsFromLog.clear();
+        for (const auto& pos : j["ball_positions"]) {
+            ballPositionsFromLog.push_back({pos["row"], pos["col"]});
+        }
+    } else {
+        std::cerr << "Error: No ball positions found in JSON.\n";
+    }
+
+    // Load map
+    if (j.contains("rows") && j.contains("cols") && j.contains("map")) {
+        rows = j["rows"];
+        cols = j["cols"];
+        map.resize(rows, std::vector<int>(cols, 0)); // Initialize new cells to 0
+
+        for (int row = 0; row < rows; ++row) {
+            for (int col = 0; col < cols; ++col) {
+                map[row][col] = j["map"][row][col];
+            }
+        }
+    } else {
+        std::cerr << "Error: Invalid map format in JSON file.\n";
+    }
+
+    // Load log frequency
+    if (j.contains("graphicsFrequency")) {
+        graphicsFrequency = j["graphicsFrequency"];
+    } else {
+        std::cerr << "Error: No graphicsFrequency found in JSON.\n";
+    }
+}
+
+void MapModuleGraphics::logForward() {
+    if (ballPositionsFromLog.empty()) {
+        std::cerr << "Error: No ball positions loaded.\n";
+        return;
+    }
+
+    if (currentBallPositionIndexLog + 1 < ballPositionsFromLog.size()) {
+        currentBallPositionIndexLog++;
+        ballRow = ballPositionsFromLog[currentBallPositionIndexLog][0];
+        ballCol = ballPositionsFromLog[currentBallPositionIndexLog][1];
+    } else {
+    }
+}
+
+void MapModuleGraphics::logBackwards() {
+
+    if (ballPositionsFromLog.empty()) {
+        std::cerr << "Error: No ball positions loaded.\n";
+        return;
+    }
+
+    if (currentBallPositionIndexLog > 0) {
+        currentBallPositionIndexLog--;
+        ballRow = ballPositionsFromLog[currentBallPositionIndexLog][0];
+        ballCol = ballPositionsFromLog[currentBallPositionIndexLog][1];
+    } else {
     }
 }

@@ -20,7 +20,6 @@ file(GLOB PROJECT_SOURCES
         src/*.cpp
         TestModules/*.cpp
 )
-
 add_library(imgui STATIC ${IMGUI_SRC} ${IMGUI_HEADERS} ${PROJECT_SOURCES})
 
 include_directories(
@@ -34,7 +33,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/src
 )
 
-add_subdirectory(libs/glfw)
+
 add_subdirectory(libs/yaml-cpp)
 
 add_executable(smelyzajko-gui
@@ -43,11 +42,13 @@ add_executable(smelyzajko-gui
 )
 
 if(APPLE)
+    add_subdirectory(libs/glfw)
     add_definitions(-DGL_SILENCE_DEPRECATION)
     find_library(OPENGL_FRAMEWORK OpenGL)
     target_link_libraries(smelyzajko-gui PRIVATE imgui ${OPENGL_FRAMEWORK} glfw yaml-cpp)
 elseif(WIN32)
-    target_link_libraries(smelyzajko-gui PRIVATE imgui glfw opengl32 yaml-cpp)
+    add_subdirectory(libs/glfw)
+    target_link_libraries(smelyzajko-gui PRIVATE imgui glfw yaml-cpp opengl32)
 else()
     find_package(OpenGL REQUIRED)
     target_link_libraries(smelyzajko-gui PRIVATE imgui glfw yaml-cpp ${OPENGL_LIBRARIES})

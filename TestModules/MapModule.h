@@ -33,7 +33,7 @@ public:
     void setValueFromInputElements(std::string elementName, float value) override ;
     void resetMap();
     std::vector<std::string> getPossibleGraphicsElement() override {
-        return {"Map Graphic Element","Text Area","Counter Graphic Element"};
+        return {"MapGraphicElement","TextArea","CounterGraphicElement"};
     }
     std::unordered_map<std::string,std::vector<std::string>> getPossibleInputElements() override {
         return {{"button", {"Reset"}},

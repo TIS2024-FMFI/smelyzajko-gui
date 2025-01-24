@@ -16,17 +16,7 @@ UltrasonicModule::UltrasonicModule(ModuleManager* moduleManager)
     for (const auto& sensor : sensors) {
         previousDistances.push_back(sensor.distance);
     }
-    std::string filename = "../TestModules/logs/ultrasonic_module_log.json";
-    std::ofstream outFile(filename, std::ios::trunc);
 
-    if (outFile.is_open()) {
-        nlohmann::json j;
-        j["sensor_data"] = nlohmann::json::array();
-        outFile << std::setw(4) << j << std::endl;
-        outFile.close();
-    } else {
-        std::cerr << "[ERROR] Could not initialize log file at: " << filename << std::endl;
-    }
 
     generatorThread = std::thread(&UltrasonicModule::run, this);
 }

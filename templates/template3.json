@@ -3,7 +3,7 @@
     "graphicModules": [
         {
             "graphicElementId": 1,
-            "graphicElementName": "Text Area",
+            "graphicElementName": "TextArea",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
@@ -22,7 +22,7 @@
         },
         {
             "graphicElementId": 0,
-            "graphicElementName": "Map Graphic Element",
+            "graphicElementName": "MapGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,

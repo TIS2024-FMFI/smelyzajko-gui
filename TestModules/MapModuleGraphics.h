@@ -8,6 +8,9 @@
 #include <vector>
 #include <string>
 #include <mutex>
+#include <thread>
+#include <atomic>
+
 
 class MapModuleGraphics : public GraphicModule {
 public:
@@ -17,8 +20,20 @@ public:
     void updateValueOfModule(std::vector<int> value) override;
     void updateValueOfModule(std::vector<std::vector<int>> value) override;
     void saveMapToJson();
+    void logFromJson() override;
+    void logForward() override;
+    void logBackwards() override;
+    void startLoggingThread() override;
+
 
 private:
+    void stopLoggingThread();
+    void loggingThreadFunction();
+    std::atomic<bool> loggingThreadRunning;
+    std::thread loggingThread;
+
+    std::vector<std::vector<int>> ballPositionsFromLog;
+    size_t currentBallPositionIndexLog = 0;
     int ballRow = 0;
     int ballCol = 0;
     int rows = -1;
@@ -26,6 +41,7 @@ private:
     std::vector<std::vector<int>> map;
     float cellSize = 40.0f;
     std::mutex logMutex;
+    bool mapSaved = false;
 
     // Private methods
     void loadMap(); // Load map data from a file

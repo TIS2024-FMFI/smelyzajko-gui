@@ -36,14 +36,16 @@ void TemplateManager::loadAllTemplates() {
 
     // TODO here we only take into consideration templates that are in config file
     if (jsonFiles.empty()) {
-        std::cout << "No JSON files found in the 'templates' directory." << std::endl;
+        std::cerr << "No JSON files found in the 'templates' directory." << std::endl;
     } else {
         for (const auto& path : jsonFiles) {
+
             Template aTemplate(path,configMode);
             allTemplates.push_back(aTemplate);
         }
 
     }
+
 }
 
 void TemplateManager::loadTemplates(const std::vector<std::string>& templateNames) {
@@ -65,7 +67,7 @@ void TemplateManager::loadTemplates(const std::vector<std::string>& templateName
 
     // Load only templates that are listed in the config file
     if (jsonFiles.empty()) {
-        std::cout << "No JSON files found in the 'templates' directory." << std::endl;
+        std::cerr << "No JSON files found in the 'templates' directory." << std::endl;
     } else {
         for (const auto& path : jsonFiles) {
             std::string fileName = path.filename().string();

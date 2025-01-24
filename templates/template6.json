@@ -1,0 +1,70 @@
+{
+    "elements": [],
+    "graphicModules": [
+        {
+            "graphicElementId": 0,
+            "graphicElementName": "MapGraphicElement",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "label": "MapGraphicElement\nMapModule",
+            "moduleId": 0,
+            "moduleName": "MapModule",
+            "position": [
+                670.0,
+                82.0
+            ],
+            "size": [
+                528.0,
+                574.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        },
+        {
+            "graphicElementId": 0,
+            "graphicElementName": "UltrasonicGraphicElement",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "label": "UltrasonicGraphicElement\nUltrasonicModule",
+            "moduleId": 0,
+            "moduleName": "UltrasonicModule",
+            "position": [
+                1244.0,
+                97.0
+            ],
+            "size": [
+                575.0,
+                575.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        },
+        {
+            "graphicElementId": 0,
+            "graphicElementName": "CounterGraphicElement",
+            "graphicsFrequency": 0,
+            "graphicsLogEnabled": false,
+            "label": "CounterGraphicElement\nCounterModule",
+            "moduleId": 0,
+            "moduleName": "CounterModule",
+            "position": [
+                46.0,
+                85.0
+            ],
+            "size": [
+                513.0,
+                549.0
+            ],
+            "textFrequency": 0,
+            "textLogEnabled": false,
+            "type": "rectangle"
+        }
+    ],
+    "name": "template6",
+    "resolution": [
+        1920,
+        1080
+    ]
+}

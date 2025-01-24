@@ -56,9 +56,6 @@ int ModuleManager::registerGraphicModule(const std::string &graphicElementName,c
     std::string logDir = logDirectory + "/" + moduleName;
     graphicModule->setLogDirectory(logDir);
 
-    // Set the element logging settings
-//    graphicModule->setGraphicsFrequency(20);
-//    graphicModule->setGraphicsLogEnabled(true);
 
     graphicModule->setModuleName(moduleName);
     graphicModule->setModuleID(moduleID);
@@ -84,6 +81,9 @@ void ModuleManager::setActiveModuleAndDraw(const std::vector<GraphicModule *>& g
 
 std::vector<Module *> ModuleManager::getModules() const {
     return modules;
+}
+std::vector<GraphicModule *> ModuleManager::getGraphicModules() const {
+    return graphicModules;
 }
 
 void ModuleManager::setValueFromInputElements(const std::string& moduleName, const std::string& elementName, const std::string& value) {
@@ -142,7 +142,7 @@ void ModuleManager::logSettings(YAML::Node configFile) {
     auto in_time_t = std::chrono::system_clock::to_time_t(now);
 
     std::stringstream ss;
-    ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H:%M:%S");
+    ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M-%S");
     std::string timestamp = ss.str();
     std::filesystem::path newLogDir = std::filesystem::path(logDirectory) / timestamp;
 
@@ -171,6 +171,7 @@ void ModuleManager::logSettings(YAML::Node configFile) {
                 module->setTextLogEnabled(moduleParams["textLogEnabled"].as<bool>());
                 std::string newLogDirForGraphicElement = newLogDir.string() + "/" + moduleName;
                 module->setLogDirectory(newLogDirForGraphicElement);
+                module->startLoggingThread();
             }
             if (!atLeastOneModuleLogEnabled&&(moduleParams["graphicsLogEnabled"].as<bool>() || moduleParams["textLogEnabled"].as<bool>())) {
                 atLeastOneModuleLogEnabled = true;
@@ -207,4 +208,10 @@ void ModuleManager::logSettings(YAML::Node configFile) {
     }
 }
 
-
+void ModuleManager::setLogDirectory(int moduleID, int graphicModuleID, const std::string &logDir) {
+    for (GraphicModule *module : graphicModules) {
+        if (module->getGraphicModuleID() == graphicModuleID && module->getModuleID() == moduleID) {
+            module->setLogDirectory(logDir);
+        }
+    }
+}

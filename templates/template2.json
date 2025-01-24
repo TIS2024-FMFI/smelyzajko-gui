@@ -102,12 +102,28 @@
                 120.0
             ],
             "type": "button"
+        },
+        {
+            "label": "Speed",
+            "maxValue": 10,
+            "minValue": 1,
+            "moduleName": "CounterModule",
+            "position": [
+                18.0,
+                79.0
+            ],
+            "size": [
+                20.0,
+                319.0
+            ],
+            "type": "vertical-slider-int",
+            "value": 5
         }
     ],
     "graphicModules": [
         {
             "graphicElementId": 1,
-            "graphicElementName": "Text Area",
+            "graphicElementName": "TextArea",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 2,
@@ -126,7 +142,7 @@
         },
         {
             "graphicElementId": 2,
-            "graphicElementName": "Counter Graphic Element",
+            "graphicElementName": "CounterGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
@@ -145,7 +161,7 @@
         },
         {
             "graphicElementId": 0,
-            "graphicElementName": "Map Graphic Element",
+            "graphicElementName": "MapGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
@@ -164,7 +180,7 @@
         },
         {
             "graphicElementId": 0,
-            "graphicElementName": "Ultrasonic Graphic Element",
+            "graphicElementName": "UltrasonicGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 2,
@@ -183,7 +199,7 @@
         },
         {
             "graphicElementId": 2,
-            "graphicElementName": "Counter Graphic Element",
+            "graphicElementName": "CounterGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 2,
@@ -202,7 +218,7 @@
         },
         {
             "graphicElementId": 0,
-            "graphicElementName": "Counter Graphic Element",
+            "graphicElementName": "CounterGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 1,
@@ -221,7 +237,7 @@
         },
         {
             "graphicElementId": 1,
-            "graphicElementName": "Text Area",
+            "graphicElementName": "TextArea",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 1,
@@ -240,7 +256,7 @@
         },
         {
             "graphicElementId": 1,
-            "graphicElementName": "Text Area",
+            "graphicElementName": "TextArea",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 0,
@@ -259,7 +275,7 @@
         },
         {
             "graphicElementId": 2,
-            "graphicElementName": "Ultrasonic Graphic Element",
+            "graphicElementName": "UltrasonicGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 1,

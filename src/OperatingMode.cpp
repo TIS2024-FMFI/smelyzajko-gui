@@ -31,7 +31,6 @@ int OperatingMode::run() {
                      ImGuiWindowFlags_NoBringToFrontOnFocus | // Prevent window focus changes
                      ImGuiWindowFlags_NoScrollbar    // Disable scrollbar (optional)
         );
-
         if (!templateManager.getActiveTemplateModules().empty()) {
             moduleManager.setActiveModuleAndDraw(templateManager.getActiveTemplateModules(),io);
         }

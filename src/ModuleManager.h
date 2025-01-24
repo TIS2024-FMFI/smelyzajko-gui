@@ -3,11 +3,14 @@
 #define MODULEMANAGER_H
 #include <vector>
 #include "Module.h"
+
+#define YAML_CPP_STATIC_DEFINE
 #include "yaml-cpp/yaml.h"
 
 #include "../TestModules/MapModuleGraphics.h"
 #include "../TestModules/CounterModuleGraphics.h"
 #include "../TestModules/UltrasonicModuleGraphics.h"
+
 
 
 class ModuleManager  {
@@ -20,6 +23,7 @@ public:
     int registerModule(const std::string& name, Module *module);
     int registerGraphicModule(const std::string& graphicElementName,const std::string& moduleName,  int moduleID);
     void logSettings(YAML::Node configFile);
+    void setLogDirectory(int moduleID,int graphicModuleID,const std::string& logDir);
 
     void updateValueOfModule(int moduleID,int graphicModuleID, const std::string& value);
     void updateValueOfModule(int moduleID,int graphicModuleID, int value);
@@ -35,6 +39,7 @@ public:
 
     void setActiveModuleAndDraw(const std::vector<GraphicModule *>& graphicModules_, ImGuiIO &io);
     std::vector<Module*> getModules() const;
+    std::vector<GraphicModule*> getGraphicModules() const;
     const std::unordered_map<std::string, std::function<GraphicModule*()>> &getModuleConstructors() const;
     void clearModules();
     std::vector<GraphicModule*> graphicModules;
@@ -42,10 +47,10 @@ public:
 
 private:
     std::unordered_map<std::string, std::function<GraphicModule*()>> moduleConstructors = {
-            {"Map Graphic Element", []() { return new MapModuleGraphics(); }},
-             {"Counter Graphic Element", []() { return new CounterModuleGraphics(); }},
-            {"Ultrasonic Graphic Element", []() { return new UltrasonicModuleGraphics(); }},
-            {"Text Area", []() { return new TextArea(); }},
+            {"MapGraphicElement", []() { return new MapModuleGraphics(); }},
+             {"CounterGraphicElement", []() { return new CounterModuleGraphics(); }},
+            {"UltrasonicGraphicElement", []() { return new UltrasonicModuleGraphics(); }},
+            {"TextArea", []() { return new TextArea(); }},
     };
     std::string logDirectory;
 

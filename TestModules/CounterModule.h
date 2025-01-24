@@ -21,12 +21,12 @@ public:
 
     ModuleManager& moduleManager;
     std::vector<int> graphicModuleIds;
-    float hodnota1 = 0;
+    float hodnota1 = 5;
     float hodnota2 = 0;
     int speed = 200;
 
     std::vector<std::string> getPossibleGraphicsElement() override {
-        return {"Counter Graphic Element","Text Area","Ultrasonic Graphic Element"};
+        return {"CounterGraphicElement","TextArea","UltrasonicGraphicElement"};
     }
 
     std::unordered_map<std::string,std::vector<std::string>> getPossibleInputElements() override {

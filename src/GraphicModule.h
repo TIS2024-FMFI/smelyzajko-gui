@@ -7,9 +7,18 @@
 
 class GraphicModule {
 public:
+
+
+    virtual ~GraphicModule() = default;
+
+
     virtual void draw(ImGuiIO &io) = 0;
 
     virtual void logToJson() = 0;
+    virtual void logFromJson() = 0;
+    virtual void logForward() = 0;
+    virtual void logBackwards() = 0;
+
 
     // Position and size settings
     ImVec2 getSize() ;
@@ -57,6 +66,9 @@ public:
 
     void setLogDirectory(std::string name);
     std::string getLogDirectory() const;
+
+    virtual void startLoggingThread();
+
 protected:
     // Graphic module element settings
     int graphicElementId;
@@ -71,11 +83,11 @@ protected:
     ImVec2 size;
 
     // Graphics settings
-    float graphicsFrequency;
+    int graphicsFrequency;
     bool graphicsLogEnabled;
 
     // Text settings
-    float textFrequency;
+    int textFrequency;
     bool textLogEnabled;
 
     std::string logFileDirectory;

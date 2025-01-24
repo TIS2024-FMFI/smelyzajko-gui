@@ -3,7 +3,7 @@
     "graphicModules": [
         {
             "graphicElementId": 1,
-            "graphicElementName": "Text Area",
+            "graphicElementName": "TextArea",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 1,
@@ -22,7 +22,7 @@
         },
         {
             "graphicElementId": 2,
-            "graphicElementName": "Ultrasonic Graphic Element",
+            "graphicElementName": "UltrasonicGraphicElement",
             "graphicsFrequency": 0,
             "graphicsLogEnabled": false,
             "moduleId": 1,

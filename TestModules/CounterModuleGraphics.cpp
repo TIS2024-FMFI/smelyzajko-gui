@@ -3,7 +3,8 @@
 
 CounterModuleGraphics::CounterModuleGraphics()
         : counter(0) {
-    setGraphicElementName("Counter Graphic Element");
+    setGraphicElementName("CounterGraphicElement");
+
 }
 
 void CounterModuleGraphics::draw(ImGuiIO &io) {
@@ -25,32 +26,16 @@ void CounterModuleGraphics::draw(ImGuiIO &io) {
 }
 
 void CounterModuleGraphics::updateValueOfModule(int value) {
-    logToJson();
     counter = value;
 }
 
 void CounterModuleGraphics::logToJson() {
-    if (!isGraphicsLogEnabled()) {
+    if (!graphicsLogEnabled){
         return;
     }
-
-    static auto lastLogTime = std::chrono::steady_clock::now();
-    auto currentTime = std::chrono::steady_clock::now();
-    std::chrono::duration<float> elapsed = currentTime - lastLogTime;
-
-    float frequency = getGraphicsFrequency();
-    if (frequency > 0) {
-        float interval = 60.0f / frequency; // Convert frequency to interval in seconds
-        if (elapsed.count() < interval) {
-            return;
-        }
-    }
-
-    lastLogTime = currentTime;
-
     std::lock_guard<std::mutex> lock(logMutex); // Protect writing
 
-    std::string filename = logFileDirectory+"/counter_log.json";
+    std::string filename = logFileDirectory + "/CounterGraphicElement.json";
     nlohmann::json j;
 
     // Load existing content
@@ -63,8 +48,8 @@ void CounterModuleGraphics::logToJson() {
         }
         inFile.close();
     }
-    if (!j.contains("frequency")) {
-        j["frequency"] = getGraphicsFrequency();
+    if (!j.contains("graphicsFrequency")) {
+        j["graphicsFrequency"] = getGraphicsFrequency();
     }
 
     // Initialize the file if empty
@@ -84,5 +69,95 @@ void CounterModuleGraphics::logToJson() {
         std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
     }
 }
+
+
+void CounterModuleGraphics::startLoggingThread() {
+    if (!graphicsLogEnabled) {
+        return;
+    }
+    loggingThreadRunning = true;
+
+    loggingThread = std::thread(&CounterModuleGraphics::loggingThreadFunction, this);
+}
+void CounterModuleGraphics::stopLoggingThread() {
+    loggingThreadRunning = false;
+    if (loggingThread.joinable()) {
+        loggingThread.join();
+    }
+}
+void CounterModuleGraphics::loggingThreadFunction() {
+
+    std::chrono::milliseconds interval;
+
+    if (graphicsFrequency > 0) {
+        interval = std::chrono::milliseconds(60000 / graphicsFrequency);
+    } else {
+        return;
+    }
+    while (loggingThreadRunning) {
+        logToJson();
+        std::this_thread::sleep_for(interval);
+    }
+}
+
+void CounterModuleGraphics::logFromJson() {
+
+    std::string filename = logFileDirectory + "/CounterGraphicElement.json";
+    std::ifstream inFile(filename);
+
+    if (!inFile.is_open()) {
+        std::cerr << "[ERROR] Could not open file: " << filename << std::endl;
+        return;
+    }
+
+    try {
+        nlohmann::json j;
+        inFile >> j;
+        inFile.close();
+        if (j.contains("graphicsFrequency")) {
+            graphicsFrequency = j["graphicsFrequency"];
+        }
+        if (j.contains("counter_values") && j["counter_values"].is_array()) {
+            logData.clear();
+            for (const auto& value : j["counter_values"]) {
+                logData.push_back(value);
+            }
+        } else {
+            std::cerr << "[ERROR] Invalid JSON structure in file: " << filename << std::endl;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
+    }
+
+
+}
+
+void CounterModuleGraphics::logForward() {
+    if (logData.empty()) {
+        std::cerr << "[ERROR] No log data loaded." << std::endl;
+        return;
+    }
+
+    if (currentLogIndex + 1 < logData.size()) {
+        ++currentLogIndex;
+        counter = logData[currentLogIndex];
+    }
+}
+
+void CounterModuleGraphics::logBackwards() {
+
+    if (logData.empty()) {
+        std::cerr << "[ERROR] No log data loaded." << std::endl;
+        return;
+    }
+
+    if (currentLogIndex > 0) {
+        --currentLogIndex;
+        counter = logData[currentLogIndex]; // Update counter to the previous value
+    } else {
+        std::cerr << "[INFO] Already at the beginning of the logs." << std::endl;
+    }
+}
+
 
 
