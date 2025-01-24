@@ -21,7 +21,7 @@ public:
 
     ModuleManager& moduleManager;
     std::vector<int> graphicModuleIds;
-    float hodnota1 = 0;
+    float hodnota1 = 5;
     float hodnota2 = 0;
     int speed = 200;
 
