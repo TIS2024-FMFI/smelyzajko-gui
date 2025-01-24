@@ -45,6 +45,9 @@ private:
     std::vector<std::string> logs;    // Logs displayed in the text area
     bool autoscrollEnabled = true;           // Autoscroll toggle
     std::mutex logMutex;              // Mutex for thread-safe log updates
+    std::vector<std::string> loadedLogs;
+    std::string lastNonEmptyLog;
+    size_t currentLogIndex = 0;
 
 };
 

@@ -139,12 +139,12 @@ bool TextArea::isAutoscrollEnabled() const {
 }
 
 void TextArea::logToJson() {
-    std::lock_guard<std::mutex> lock(logMutex); // Protect writing
+    std::lock_guard<std::mutex> lock(logMutex); // Ensure thread-safe access to logs
 
     std::string filename = logFileDirectory + "/TextArea.json";
     nlohmann::json j;
 
-    // Load existing content
+    // Load existing content from the JSON file
     std::ifstream inFile(filename);
     if (inFile.is_open()) {
         try {
@@ -163,20 +163,30 @@ void TextArea::logToJson() {
         j["logs"] = nlohmann::json::array();
     }
 
-    // Get the current log entry
+    // Check the last non-empty log from JSON and compare it with the last log in logs
+    std::string lastJsonLog = "EMPTY";
+    if (!j["logs"].empty()) {
+        // Find the last non-empty log in the existing JSON
+        for (auto it = j["logs"].rbegin(); it != j["logs"].rend(); ++it) {
+            if (*it != "EMPTY") {
+                lastJsonLog = *it;
+                break;
+            }
+        }
+    }
+
+    // Get the most recent log from logs
     std::string currentLog = logs.empty() ? "EMPTY" : logs.back();
 
-    // Compare with the last logged entry
-    bool isNewLog = j["logs"].empty() || j["logs"].back() != currentLog;
-
-    // Log "EMPTY" or the new log entry
-    if (isNewLog) {
+    // Compare the last non-empty log in JSON with the last log in logs
+    if (lastJsonLog != currentLog) {
+        // If they don't match, add the new log to JSON
         j["logs"].push_back(currentLog);
-    } else {
+    }else{
         j["logs"].push_back("EMPTY");
     }
 
-    // Overwrite the file with updated content
+    // Overwrite the JSON file with updated content
     std::ofstream outFile(filename);
     if (outFile.is_open()) {
         outFile << std::setw(4) << j << std::endl;
@@ -185,6 +195,7 @@ void TextArea::logToJson() {
         std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
     }
 }
+
 
 
 
@@ -211,10 +222,11 @@ void TextArea::logFromJson() {
             std::cerr << "Error: No textFrequency found in JSON.\n";
         }
 
+        // Load logs into loadedLogs instead of logs
         if (j.contains("logs") && j["logs"].is_array()) {
-            logs.clear(); // Clear existing logs
+            loadedLogs.clear(); // Clear existing loaded logs
             for (const auto& logEntry : j["logs"]) {
-                logs.push_back(logEntry);
+                loadedLogs.push_back(logEntry);  // Add to loadedLogs
             }
             std::cout << "[INFO] Successfully loaded logs from JSON." << std::endl;
         } else {
@@ -224,49 +236,54 @@ void TextArea::logFromJson() {
         std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
     }
 }
+
+
 void TextArea::logForward() {
-    std::lock_guard<std::mutex> lock(logMutex); // Ensure thread-safe access to logs
-
-    // Static variable to track the current log index
-    static size_t currentIndex = 0;
-
-    // Check if we are at the end of the logs
-    if (currentIndex >= logs.size()) {
-        return; // Nothing more to show
-    }
-
-    // Move to the next non-"EMPTY" log
-    while (currentIndex < logs.size() && logs[currentIndex] == "EMPTY") {
-        ++currentIndex;
-    }
-
-    // If a valid log is found, append it
-    if (currentIndex < logs.size()) {
-        logs.push_back(logs[currentIndex]);
-        ++currentIndex; // Increment index for the next logForward call
-    }
-}
-
-
-void TextArea::logBackwards() {
-    std::lock_guard<std::mutex> lock(logMutex);
-
-    if (logs.empty()) {
-        std::cerr << "[INFO] No logs available to move backward." << std::endl;
+    // Check if we are at the end of the loaded logs
+    if (currentLogIndex >= loadedLogs.size()) {
         return;
     }
 
-    // Start from the end of the logs vector and find the last valid log (not "EMPTY")
-    for (auto it = logs.rbegin(); it != logs.rend(); ++it) {
-        if (*it != "EMPTY") {
-            // Remove the valid log
-            logs.erase(std::next(it).base());
-            std::cout << "[INFO] Removed log: " << *it << std::endl;
-            return;
-        }
+    // Check the current log at currentLogIndex
+    if (loadedLogs[currentLogIndex] == "EMPTY") {
+
+        ++currentLogIndex;
+        return;
     }
 
-    // If no valid log is found
-    std::cerr << "[INFO] No valid log entries to move backward." << std::endl;
+    // Add the log to logs and increment the index
+
+    logs.push_back(loadedLogs[currentLogIndex]);
+    ++currentLogIndex;
+
 }
+
+
+
+
+void TextArea::logBackwards() {
+    if (logs.empty()) {
+        return;
+    }
+
+    // Check if the last entry in logs is "EMPTY"
+    if (logs.back() == "EMPTY") {
+        if (currentLogIndex > 0) {
+            --currentLogIndex;
+        }
+        return;
+    }
+
+    // Remove the last log from logs
+    std::string removedLog = logs.back();
+    logs.pop_back();
+
+    // Decrement the currentLogIndex only if it is greater than 0
+    if (currentLogIndex > 0) {
+        --currentLogIndex;
+    }
+
+    std::cout << "[INFO] Removed log: " << removedLog << std::endl;
+}
+
 
