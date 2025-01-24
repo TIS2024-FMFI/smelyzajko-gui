@@ -1,9 +1,43 @@
 #include "TextArea.h"
 #include "fstream"
 #include "sstream"
+
+
 TextArea::TextArea()
-        : scrollbar(0.0f, 0.0f) {
+: scrollbar(0.0f, 0.0f) {
     setGraphicElementName("TextArea");
+}
+
+void TextArea::startLoggingThread() {
+    if (!graphicsLogEnabled){
+        return;
+    }
+    loggingThreadRunning = true;
+    loggingThread = std::thread(&TextArea::loggingThreadFunction, this);
+
+}
+void TextArea::stopLoggingThread() {
+    loggingThreadRunning = false;
+    if (loggingThread.joinable()) {
+        loggingThread.join();
+    }
+}
+
+
+void TextArea::loggingThreadFunction() {
+
+
+    std::chrono::milliseconds interval;
+    if (graphicsFrequency > 0) {
+        interval = std::chrono::milliseconds(60000 / graphicsFrequency);
+    } else {
+
+        return;
+    }
+    while (loggingThreadRunning) {
+        logToJson();
+        std::this_thread::sleep_for(interval);
+    }
 }
 
 void TextArea::draw(ImGuiIO& io) {
@@ -105,52 +139,54 @@ bool TextArea::isAutoscrollEnabled() const {
 }
 
 void TextArea::logToJson() {
-    if (!isTextLogEnabled()) {
-        return;
-    }
+    std::lock_guard<std::mutex> lock(logMutex); // Ensure thread-safe access to logs
 
-    static auto lastLogTime = std::chrono::steady_clock::now() - std::chrono::hours(1); // Initialize to a time in the past
-    auto currentTime = std::chrono::steady_clock::now();
-    std::chrono::duration<float> elapsed = currentTime - lastLogTime;
-
-    float frequency = getTextFrequency();
-    if (frequency > 0) {
-        float interval = 60.0f / frequency; // Convert frequency to interval in seconds
-        if (elapsed.count() < interval) {
-            return;
-        }
-    }
-
-    lastLogTime = currentTime;
-
-    std::lock_guard<std::mutex> lock(logMutex); // Protect writing
-
-    std::string filename = logFileDirectory + "/TextArea"   + ".json";
+    std::string filename = logFileDirectory + "/TextArea.json";
     nlohmann::json j;
 
-    // Load existing content
+    // Load existing content from the JSON file
     std::ifstream inFile(filename);
     if (inFile.is_open()) {
         try {
             inFile >> j;
-        } catch (const std::exception &e) {
+        } catch (const std::exception& e) {
             std::cerr << "[ERROR] Failed to parse JSON: " << e.what() << std::endl;
         }
         inFile.close();
     }
+
+    // Ensure the structure is initialized
     if (!j.contains("textFrequency")) {
-        j["textFrequency"] = frequency;
+        j["textFrequency"] = getTextFrequency();
     }
-    // Initialize the file if empty
     if (!j.contains("logs")) {
         j["logs"] = nlohmann::json::array();
     }
 
-    // Add new logs
-    j["logs"].push_back(logs.back());
+    // Check the last non-empty log from JSON and compare it with the last log in logs
+    std::string lastJsonLog = "EMPTY";
+    if (!j["logs"].empty()) {
+        // Find the last non-empty log in the existing JSON
+        for (auto it = j["logs"].rbegin(); it != j["logs"].rend(); ++it) {
+            if (*it != "EMPTY") {
+                lastJsonLog = *it;
+                break;
+            }
+        }
+    }
 
+    // Get the most recent log from logs
+    std::string currentLog = logs.empty() ? "EMPTY" : logs.back();
 
-    // Overwrite the file with updated content
+    // Compare the last non-empty log in JSON with the last log in logs
+    if (lastJsonLog != currentLog) {
+        // If they don't match, add the new log to JSON
+        j["logs"].push_back(currentLog);
+    }else{
+        j["logs"].push_back("EMPTY");
+    }
+
+    // Overwrite the JSON file with updated content
     std::ofstream outFile(filename);
     if (outFile.is_open()) {
         outFile << std::setw(4) << j << std::endl;
@@ -159,6 +195,9 @@ void TextArea::logToJson() {
         std::cerr << "[ERROR] Could not open file for writing: " << filename << std::endl;
     }
 }
+
+
+
 
 void TextArea::logFromJson() {
     std::lock_guard<std::mutex> lock(logMutex);
@@ -180,14 +219,16 @@ void TextArea::logFromJson() {
         if (j.contains("textFrequency")) {
             textFrequency = j["textFrequency"];
         } else {
-            std::cerr << "Error: No text Frequency found in JSON.\n";
+            std::cerr << "Error: No textFrequency found in JSON.\n";
         }
 
+        // Load logs into loadedLogs instead of logs
         if (j.contains("logs") && j["logs"].is_array()) {
-            logs.clear(); // Clear existing logs
+            loadedLogs.clear(); // Clear existing loaded logs
             for (const auto& logEntry : j["logs"]) {
-                logs.push_back(logEntry);
+                loadedLogs.push_back(logEntry);  // Add to loadedLogs
             }
+            std::cout << "[INFO] Successfully loaded logs from JSON." << std::endl;
         } else {
             std::cerr << "[ERROR] Invalid JSON structure in file: " << filename << std::endl;
         }
@@ -196,24 +237,53 @@ void TextArea::logFromJson() {
     }
 }
 
+
 void TextArea::logForward() {
-    std::lock_guard<std::mutex> lock(logMutex);
-
-    if (!logs.empty()) {
-        // Remove the first log and simulate displaying the next log
-        logs.erase(logs.begin());
-    }
-}
-
-void TextArea::logBackwards() {
-    std::lock_guard<std::mutex> lock(logMutex);
-
-    if (logs.empty()) {
-        std::cerr << "[ERROR] No log data available to move backward." << std::endl;
+    // Check if we are at the end of the loaded logs
+    if (currentLogIndex >= loadedLogs.size()) {
         return;
     }
 
-    // Remove the last log entry to move one step back
-    logs.pop_back();
+    // Check the current log at currentLogIndex
+    if (loadedLogs[currentLogIndex] == "EMPTY") {
+
+        ++currentLogIndex;
+        return;
+    }
+
+    // Add the log to logs and increment the index
+
+    logs.push_back(loadedLogs[currentLogIndex]);
+    ++currentLogIndex;
+
 }
+
+
+
+
+void TextArea::logBackwards() {
+    if (logs.empty()) {
+        return;
+    }
+
+    // Check if the last entry in logs is "EMPTY"
+    if (logs.back() == "EMPTY") {
+        if (currentLogIndex > 0) {
+            --currentLogIndex;
+        }
+        return;
+    }
+
+    // Remove the last log from logs
+    std::string removedLog = logs.back();
+    logs.pop_back();
+
+    // Decrement the currentLogIndex only if it is greater than 0
+    if (currentLogIndex > 0) {
+        --currentLogIndex;
+    }
+
+    std::cout << "[INFO] Removed log: " << removedLog << std::endl;
+}
+
 

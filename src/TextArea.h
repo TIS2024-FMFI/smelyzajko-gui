@@ -7,7 +7,11 @@
 #include <vector>
 #include <string>
 #include <mutex>
+#include <thread>
 #include "Scrollbar.h"
+#include <atomic>
+
+
 
 class TextArea : public GraphicModule  {
 public:
@@ -19,20 +23,32 @@ public:
     void logFromJson() override;
     void logForward() override;
     void logBackwards() override;
-
-    // Manage logs
     void updateValueOfModule(std::string value ) override;
+    void startLoggingThread() override;
+
     void clearLogs();
 
     // Autoscroll control
     void setAutoscrollEnabled(bool enabled);
     bool isAutoscrollEnabled() const;
 
+
+
+
+
 private:
+    void stopLoggingThread();
+    void loggingThreadFunction();
+    std::thread loggingThread;
+    std::atomic<bool> loggingThreadRunning;
     Scrollbar scrollbar;              // Scrollbar instance
     std::vector<std::string> logs;    // Logs displayed in the text area
     bool autoscrollEnabled = true;           // Autoscroll toggle
     std::mutex logMutex;              // Mutex for thread-safe log updates
+    std::vector<std::string> loadedLogs;
+    std::string lastNonEmptyLog;
+    size_t currentLogIndex = 0;
+
 };
 
 #endif // SMELYZAJKO_GUI_TEXTAREA_H

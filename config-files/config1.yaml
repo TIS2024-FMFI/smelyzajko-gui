@@ -1,19 +1,26 @@
 templates:
+  - template2.json
+  - template6.json
+  - template1.json
 
+#  - template3.json
+#  - template4.json
+#  - template5.json
+  - Template.json
 modules:
   - UltrasonicModule:
       graphicsLogEnabled: true
-      graphicsFrequency: 500
-      textLogEnabled: false
+      graphicsFrequency: 120
+      textLogEnabled: true
       textFrequency: 60
   - MapModule:
       graphicsLogEnabled: true
-      graphicsFrequency: 500
-      textLogEnabled: false
+      graphicsFrequency: 120
+      textLogEnabled: true
       textFrequency: 60
   - CounterModule:
       graphicsLogEnabled: true
-      graphicsFrequency: 500
-      textLogEnabled: false
+      graphicsFrequency: 120
+      textLogEnabled: true
       textFrequency: 60
 logDirectory:
