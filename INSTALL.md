@@ -38,13 +38,17 @@
    cd build
    ```
 3. Run the executable with one of the following options:
-    - **To run with a configuration file**:
+    - **To run the program in configuration mode**:
       ```bash
       ./smelyzajko-gui --config [path to config_file.yaml]
       ```
     - **To run the program in operation mode**:
       ```bash
       ./smelyzajko-gui --operate [path to config_file.yaml]
+      ```
+    - **To run the program in replay mode**:
+      ```bash
+      ./smelyzajko-gui --replay [path to config_file.yaml]
       ```
 
 
@@ -124,12 +128,16 @@ This guide provides step-by-step instructions on how to manually install the nec
    cd build
    ```
 3. Run the executable with one of the following options:
-    - **To run with a configuration file**:
-      ```bash
-      ./smelyzajko-gui --config [path to config_file.yaml]
-      ```
-    - **To run the program in operation mode**:
-      ```bash
-      ./smelyzajko-gui --operate [path to config_file.yaml]
-      ```
+   - **To run the program in configuration mode**:
+     ```bash
+     ./smelyzajko-gui --config [path to config_file.yaml]
+     ```
+   - **To run the program in operation mode**:
+     ```bash
+     ./smelyzajko-gui --operate [path to config_file.yaml]
+     ```
+   - **To run the program in replay mode**:
+     ```bash
+     ./smelyzajko-gui --replay [path to config_file.yaml]
+     ```
 

@@ -92,4 +92,4 @@ make
 # Run the executable
 echo "The project has been built."
 echo "To open the program, do 'cd build' and:"
-echo "./smelyzajko-gui (--config | --operate) [path for config_file.yaml]"
+echo "./smelyzajko-gui (--config | --operate | --replay) [path for config_file.yaml]"
